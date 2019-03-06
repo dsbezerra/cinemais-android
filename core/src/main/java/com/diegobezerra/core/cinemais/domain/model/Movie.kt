@@ -6,11 +6,12 @@ data class Movie(
     val id: Int,
     val title: String,
     val originalTitle: String,
+    val posters: Posters,
+    val htmlUrl: String?,
     val distributor: String?,
     val rating: Int,
     val runtime: Int,
     val releaseDate: Date?,
     val countries: List<String>,
     val genres: List<String>
-) {
-}
+)

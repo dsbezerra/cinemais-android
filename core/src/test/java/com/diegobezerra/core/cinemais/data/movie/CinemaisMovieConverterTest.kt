@@ -22,6 +22,8 @@ class CinemaisMovieConverterTest {
         assertNotNull(movie.distributor)
         assertNotNull(movie.countries)
         assertNotNull(movie.genres)
+        assertNotNull(movie.posters)
+        assertNotNull(movie.htmlUrl)
     }
 
     private fun loadPageHtml(path: String): String {

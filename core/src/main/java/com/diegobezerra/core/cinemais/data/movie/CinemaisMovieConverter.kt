@@ -1,6 +1,7 @@
 package com.diegobezerra.core.cinemais.data.movie
 
 import com.diegobezerra.core.cinemais.domain.model.Movie
+import com.diegobezerra.core.cinemais.domain.model.Posters
 import okhttp3.ResponseBody
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
@@ -13,11 +14,11 @@ private const val BASE_URI = "https://cinemais.com.br"
 
 object CinemaisMovieConverter : Converter<ResponseBody, Movie> {
 
-    const val COUNTRY = "país"
-    const val GENRES = "gênero"
-    const val RUNTIME = "duração"
-    const val RELEASE = "lançamento nacional"
-    const val DISTRIBUTION = "distribuição"
+    private const val COUNTRY = "país"
+    private const val GENRES = "gênero"
+    private const val RUNTIME = "duração"
+    private const val RELEASE = "lançamento nacional"
+    private const val DISTRIBUTION = "distribuição"
 
     override fun convert(value: ResponseBody): Movie {
         return parseMovie(Jsoup.parse(value.string(), BASE_URI).select("#filmeContainer").first())
@@ -30,6 +31,19 @@ object CinemaisMovieConverter : Converter<ResponseBody, Movie> {
         var countries = listOf<String>()
         var genres = listOf<String>()
 
+        // TODO: Don't forget to add this
+        // https://developer.android.com/training/articles/security-config
+        // To make sure we still loads HTTP images in Android 9+
+        val posterUrl = element.select("#sideBar > img").attr("src")
+        val posters = Posters(
+            medium = posterUrl,
+            small = posterUrl.replace("medio", "pequeno"),
+            large =  posterUrl.replace("medio", "grande")
+        )
+
+        // NOTE: The movie id can be found in the poster url
+        val id = posterUrl.replace("\\D+".toRegex(), "").toInt()
+        val htmlUrl = "$BASE_URI/filmes/filme.php?cf=$id"
         val title = element.select("h1").first().text()
         val originalTitle = element.select("small").text()
             .replace("^\\(|,\\s\\d{4}\\)\$".toRegex(), "")
@@ -63,9 +77,11 @@ object CinemaisMovieConverter : Converter<ResponseBody, Movie> {
         val rating = parseRating(rows.select("img").first())
 
         return Movie(
-            id = 0,
+            id = id,
             title = title,
             originalTitle = originalTitle,
+            posters = posters,
+            htmlUrl = htmlUrl,
             distributor = distributor,
             rating = rating,
             runtime = runtime,
