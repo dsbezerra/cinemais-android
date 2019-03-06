@@ -1,0 +1,8 @@
+dependencies {
+    implementation "com.squareup.retrofit2:retrofit:${versions.retrofit}"
+    implementation "com.squareup.retrofit2:converter-gson:${versions.retrofit}"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${versions.kotlin}"
+    implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:${versions.retrofitCoroutines}"
+    implementation "org.jsoup:jsoup:${versions.jsoup}"
+    testImplementation "junit:junit:${versions.junit}"
+}
