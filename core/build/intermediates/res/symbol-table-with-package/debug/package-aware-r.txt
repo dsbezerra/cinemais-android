@@ -1,2 +1,0 @@
-com.diegobezerra.core
-string app_name
