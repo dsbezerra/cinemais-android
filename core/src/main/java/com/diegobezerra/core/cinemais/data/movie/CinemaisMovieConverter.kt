@@ -7,7 +7,7 @@ import org.jsoup.nodes.Element
 import retrofit2.Converter
 import java.text.ParseException
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
 
 private const val BASE_URI = "https://cinemais.com.br"
 
