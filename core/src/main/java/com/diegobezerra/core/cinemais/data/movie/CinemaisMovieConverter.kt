@@ -14,7 +14,7 @@ private const val BASE_URI = "https://cinemais.com.br"
 object CinemaisMovieConverter : Converter<ResponseBody, Movie> {
 
     const val COUNTRY = "país"
-    const val GENRES = "gêneros"
+    const val GENRES = "gênero"
     const val RUNTIME = "duração"
     const val RELEASE = "lançamento nacional"
     const val DISTRIBUTION = "distribuição"
