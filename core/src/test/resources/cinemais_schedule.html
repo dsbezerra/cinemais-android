@@ -1,0 +1,588 @@
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="description"
+    content="Programação de Salas e Horários do cinema Cinemais Montes Claros , Montes Claros-MG " />
+  <meta name="keywords" content="Programação, Salas e Horários, Horário, Cinemais Montes Claros, Montes Claros-MG" />
+  <link rel="shortcut icon" href="http://www.cinemais.com.br/logo.ico">
+  <title>Salas e Horários do Cinemais Montes Claros (Montes Claros-MG) | Cinemais</title>
+  <script type="text/javascript" src="http://www.cinemais.com.br/lib/js/jquery.js"></script>
+  <link rel="shortcut icon" href="http://www.cinemais.com.br//favicon.ico" type="image/x-icon" />
+  <script type="text/javascript" src="http://www.cinemais.com.br//lib/js/footerSocialEfect.js"></script>
+  <link href="../lib/css/estilo_geral.css" rel="stylesheet" type="text/css" />
+  <link href="../lib/css/progamacao.css" rel="stylesheet" type="text/css" />
+  <script type="text/javascript" src="../lib/js/tabs_programacao.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function () {
+      $(".photoContainer img").click(function () {
+        var src = $(this).attr("src");
+        src = src.substring(52);
+        src = "http://www.cinemais.com.br/fotos/fotos_cine/fotos_g/" + src;
+        $(".imageSelectedProg img").attr("src", src);
+      });
+    });
+  </script>
+  <style type="text/css">
+
+  </style>
+  <!-- HEADER -->
+  <script>
+    !function (f, b, e, v, n, t, s) {
+      if (f.fbq)
+        return;
+      n = f.fbq = function () {
+        n.callMethod ?
+          n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+      };
+      if (!f._fbq)
+        f._fbq = n;
+      n.push = n;
+      n.loaded = !0;
+      n.version = '2.0';
+      n.queue = [];
+      t = b.createElement(e);
+      t.async = !0;
+      t.src = v;
+      s = b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t, s)
+    }(window,
+      document, 'script', '//connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '387344688119382');
+    fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+      src="https://www.facebook.com/tr?id=387344688119382&ev=PageView&noscript=1" /></noscript>
+  <!-- HEADER -->
+</head>
+<!-- HORARIOS -->
+
+<body class="tematizacao">
+  <script type="text/javascript">
+    function mouseOver() {
+      document.b1.src = "http://www.cinemais.com.br/images/layout/logo_cinemais_mouseover.png";
+    }
+    function mouseOut() {
+      document.b1.src = "http://www.cinemais.com.br/images/layout/IMG_Logo.png";
+    }
+
+  </script>
+  <div align="center">
+
+    <div class="faixaColor"></div>
+
+    <div id="logoMenu" style="height:115px; width:980px; display:block; margin:auto; position:relative; z-index:9999;">
+      <div id="logo" style="float:left; width:286px; ">
+        <a href="http://www.cinemais.com.br/" title="Ir para homepage" onMouseOver="mouseOver()"
+          onMouseOut="mouseOut()">
+          <img src="http://www.cinemais.com.br/images/layout/IMG_Logo.png" name="b1" border="0" align="left" width="286"
+            height="115" alt="Cinemais - Cinema al&eacute;m da tela" title="Cinemais - Cinema al&eacute;m da tela" />
+        </a>
+      </div>
+
+
+
+
+      <div id="menu_novo" style="float:left; position:absolute; left:300px; top:80px;">
+        <link type="text/css" href="http://www.cinemais.com.br/lib/css/menu.css" rel="stylesheet" />
+        <script type="text/javascript" src="http://www.cinemais.com.br/js/menu.js"></script>
+        <div id="menu">
+          <ul class="menu">
+            <li><a href="http://www.cinemais.com.br/institucional/index.php" class="parent"><span>Institucional
+                  <!--<span class="subtext">home</span>--></span></a>
+              <ul>
+                <li style="width:100%; height:2px; background:#fff;"></li>
+                <li><a href="http://www.cinemais.com.br/institucional/"><span>Quem Somos</span></a>
+                <li><a href="http://www.cinemais.com.br/produtos/anuncie.php"><span>Anuncie</span></a></li>
+                <li><a href="http://www.cinemais.com.br/institucional/bomboniere.php"><span>Bomboniere</span></a></li>
+                <li><a href="http://www.cinemais.com.br/3d/"><span>Salas 3D</span></a></li>
+                <li style="width:100%; height:2px; background:#fff;"></li>
+              </ul>
+            </li>
+            <li><a href="#" class="parent"><span>Filmes
+                  <!--<span class="subtext">home</span>--></span></a>
+              <ul>
+                <li style="width:100%; height:2px; background:#fff;"></li>
+                <li><a href="http://www.cinemais.com.br/programacao/"><span>Em Cartaz</span></a>
+                <li><a href="http://www.cinemais.com.br/proximos_lancamentos/"><span>Em Breve</span></a></li>
+                <li style="width:100%; height:2px; background:#fff;"></li>
+              </ul>
+            </li>
+            <li><a href="#" class="parent"><span>Produtos
+                  <!--<span class="subtext">home</span>--></span></a>
+              <ul>
+                <li style="width:100%; height:2px; background:#fff;"></li>
+                <li><a href="http://www.cinemais.com.br/produtos/cinemais_empresas.php"><span>Cinemais
+                      Empresa</span></a>
+                <li><a href="http://www.cinemais.com.br/produtos/cinemais_escola.php"><span>Cinemais Escola</span></a>
+                </li>
+                <li><a href="http://www.cinemais.com.br/produtos/anuncie.php"><span>Anuncie</span></a></li>
+                <li style="width:100%; height:2px; background:#fff;"></li>
+              </ul>
+            </li>
+            <li><a href="http://www.cinemais.com.br/cadastro" class="parent"><span>Cadastre-se
+                  <!--<span class="subtext">home</span>--></span></a></li>
+            <li><a href="http://www.cinemais.com.br/promocoes/" class="parent"><span>Promo&ccedil;&otilde;es
+                  <!--<span class="subtext">home</span>--></span></a></li>
+            <li class="last"><a href="http://www.cinemais.com.br/contato/"><span>Contato</span></a>
+              <ul>
+                <li style="width:100%; height:2px; background:#fff;"></li>
+                <li><a href="http://www.cinemais.com.br/contato/"><span>Fale Conosco</span></a>
+                <li><a href="http://www.cinemais.com.br/institucional/trabalhe_conosco.php"><span>Trabalhe
+                      Conosco</span></a></li>
+                <li style="width:100%; height:2px; background:#fff;"></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+
+      <div style="clear:both"></div>
+
+
+    </div>
+
+    <!--/logoMenu-->
+    <div style="clear:both"></div>
+    <div id="conteudo">
+      <div id="programacaoContainer">
+        <h2>
+          <div style="background-color:#bfce25; font-weight:bold">Programa&ccedil;&atilde;o</div>
+        </h2>
+        <div class="FacebookSpot">
+          <div id="fb-root"></div>
+          <div id="fb-root"></div>
+          <script>(function (d, s, id) {
+              var js, fjs = d.getElementsByTagName(s)[0];
+              if (d.getElementById(id))
+                return;
+              js = d.createElement(s);
+              js.id = id;
+              js.src = "//connect.facebook.net/pt_BR/all.js#xfbml=1";
+              fjs.parentNode.insertBefore(js, fjs);
+            }(document, 'script', 'facebook-jssdk'));
+          </script>
+          <div class="fb-like" data-send="false" data-width="450" data-show-faces="false"></div>
+        </div>
+        <!--/FacebookSpot-->
+        <div class="TwitterSpot">
+          <a href="https://twitter.com/share" class="twitter-share-button" data-via="cinemaisoficial"
+            data-lang="pt">Tweetar</a>
+          <script>!function (d, s, id) {
+              var js, fjs = d.getElementsByTagName(s)[0];
+              if (!d.getElementById(id)) {
+                js = d.createElement(s);
+                js.id = id;
+                js.src = "//platform.twitter.com/widgets.js";
+                fjs.parentNode.insertBefore(js, fjs);
+              }
+            }(document, "script", "twitter-wjs");</script>
+        </div>
+        <!--/TwitterSpot-->
+        <div class="tableContainer">
+          <ul>
+            <li rel="1" class="thisLiProgramacao"><img
+                src="http://www.cinemais.com.br/images/layout/BT_ico_li_programacao.png" /></li>
+            <li rel="2" id="2"><img src="http://www.cinemais.com.br/images/layout/BT_ico_li_ingressos.png" /></li>
+            <li rel="3"><img src="http://www.cinemais.com.br/images/layout/BT_ico_li_localizacao.png" /></li>
+            <li rel="4"><img src="http://www.cinemais.com.br/images/layout/BT_ico_li_informacao.png" /></li>
+          </ul>
+          <div class="tableContent">
+            <div rel="1" class="spotTabela" style="display:block">
+              <h3>Programa&ccedil;&atilde;o - <small>14/03 a 20/03/2019</small></h3>
+              <div class="InfosProgramacao">
+                <h3>Cinemais Montes Claros</h3>
+                <p>Montes Claros-MG</p>
+              </div>
+              <!--/InfosProgramacao-->
+              <img src="http://www.cinemais.com.br/images/layout/BG_progrmacao_tabs_ronded_top.png" />
+              <div class="tableContentIn">
+                <table width="95%" border="0" cellspacing="0" cellpadding="0">
+                  <tr style="background-color:#FFFFFF;">
+                    <td>
+                      <h5>Sala</h5>
+                    </td>
+                    <td width="55%">
+                      <h5>Filme</h5>
+                    </td>
+                    <td>
+                      <h5>Class.</h5>
+                    </td>
+                    <td width="35%">
+                      <h5>Hor&aacute;rio</h5>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align: center;">3</td>
+                    <td><a href="../filmes/filme.php?cf=11388">A Caminho de Casa</a>
+                      <span style="margin-left:5px;"></span>
+
+                    </td>
+                    <td align="center"><img src="../images/layout/ICO_LIV_programacao.png" width="22" height="21"
+                        alt="Classificação Indicativa: Livre" title="Classificação Indicativa: Livre" /></td>
+                    <td><small><strong>Dub. - </strong>14h00<sup><strong>C</strong></sup>,
+                        14h30<sup><strong>D</strong></sup>, 19h30</small></td>
+                    <!--<td align="center">3</td>-->
+                  </tr>
+                  <tr>
+                    <td style="text-align: center;">1</td>
+                    <td><a href="../filmes/filme.php?cf=12236">A Cinco Passos de Você</a>
+                      <span style="margin-left:5px;"></span>
+
+                    </td>
+                    <td align="center"><img src="../images/layout/ICO_14A_programacao.png" width="22" height="21"
+                        alt="Classificação Indicativa de 14 anos" title="Classificação Indicativa de 14 anos" /></td>
+                    <td><small><strong>Dub. - </strong>21h00<sup><strong>B</strong></sup></small></td>
+                    <!--<td align="center">1</td>-->
+                  </tr>
+                  <tr>
+                    <td style="text-align: center;">3</td>
+                    <td><a href="../filmes/filme.php?cf=7128">Capitã Marvel</a>
+                      <span style="margin-left:5px;"></span>
+
+                    </td>
+                    <td align="center"><img src="../images/layout/ICO_12A_programacao.png" width="22" height="21"
+                        alt="Classificação Indicativa de 12 anos" title="Classificação Indicativa de 12 anos" /></td>
+                    <td><small><strong>Dub. - </strong>16h50</small></td>
+                    <!--<td align="center">3</td>-->
+                  </tr>
+                  <tr>
+                    <td style="text-align: center;">4</td>
+                    <td><a href="../filmes/filme.php?cf=7128">Capitã Marvel</a>
+                      <img style="margin-left:5px;"
+                        src="http://www.cinemais.com.br/images/layout/ICO_3d_programacao.png" width="21" height="22"
+                        class="ico2" title="Em 3D" alt="Em 3D" />
+
+                    </td>
+                    <td align="center"><img src="../images/layout/ICO_12A_programacao.png" width="22" height="21"
+                        alt="Classificação Indicativa de 12 anos" title="Classificação Indicativa de 12 anos" /></td>
+                    <td><small><strong>Leg. - </strong>18h30 </small></td>
+                    <!--<td align="center">4</td>-->
+                  </tr>
+                  <tr>
+                    <td style="text-align: center;">4</td>
+                    <td><a href="../filmes/filme.php?cf=7128">Capitã Marvel</a>
+                      <img style="margin-left:5px;"
+                        src="http://www.cinemais.com.br/images/layout/ICO_3d_programacao.png" width="21" height="22"
+                        class="ico2" title="Em 3D" alt="Em 3D" />
+
+                    </td>
+                    <td align="center"><img src="../images/layout/ICO_12A_programacao.png" width="22" height="21"
+                        alt="Classificação Indicativa de 12 anos" title="Classificação Indicativa de 12 anos" /></td>
+                    <td><small><strong>Dub. - </strong>15h40, 21h10 </small></td>
+                    <!--<td align="center">4</td>-->
+                  </tr>
+                  <tr>
+                    <td style="text-align: center;">5</td>
+                    <td><a href="../filmes/filme.php?cf=7128">Capitã Marvel</a>
+                      <img style="margin-left:5px;"
+                        src="http://www.cinemais.com.br/images/layout/ICO_3d_programacao.png" width="21" height="22"
+                        class="ico2" title="Em 3D" alt="Em 3D" />
+
+                    </td>
+                    <td align="center"><img src="../images/layout/ICO_12A_programacao.png" width="22" height="21"
+                        alt="Classificação Indicativa de 12 anos" title="Classificação Indicativa de 12 anos" /></td>
+                    <td><small><strong>Dub. - </strong>14h20<sup><strong>A</strong></sup>, 18h00, 20h40 </small></td>
+                    <!--<td align="center">5</td>-->
+                  </tr>
+                  <tr>
+                    <td style="text-align: center;">2</td>
+                    <td><a href="../filmes/filme.php?cf=11841">Cinderela Pop</a>
+                      <span style="margin-left:5px;"></span>
+
+                    </td>
+                    <td align="center"><img src="../images/layout/ICO_LIV_programacao.png" width="22" height="21"
+                        alt="Classificação Indicativa: Livre" title="Classificação Indicativa: Livre" /></td>
+                    <td><small>16h30</small></td>
+                    <!--<td align="center">2</td>-->
+                  </tr>
+                  <tr>
+                    <td style="text-align: center;">2</td>
+                    <td><a href="../filmes/filme.php?cf=11695">Maligno</a>
+                      <span style="margin-left:5px;"></span>
+
+                    </td>
+                    <td align="center"><img src="../images/layout/ICO_16A_programacao.png" width="22" height="21"
+                        alt="Classificação Indicativa de 16 anos" title="Classificação Indicativa de 16 anos" /></td>
+                    <td><small><strong>Dub. - </strong>14h30<sup><strong>A</strong></sup>, 18h50</small></td>
+                    <!--<td align="center">2</td>-->
+                  </tr>
+                  <tr>
+                    <td style="text-align: center;">2</td>
+                    <td><a href="../filmes/filme.php?cf=11695">Maligno</a>
+                      <span style="margin-left:5px;"></span>
+
+                    </td>
+                    <td align="center"><img src="../images/layout/ICO_16A_programacao.png" width="22" height="21"
+                        alt="Classificação Indicativa de 16 anos" title="Classificação Indicativa de 16 anos" /></td>
+                    <td><small><strong>Leg. - </strong>20h50</small></td>
+                    <!--<td align="center">2</td>-->
+                  </tr>
+                  <tr>
+                    <td style="text-align: center;">1</td>
+                    <td><a href="../filmes/filme.php?cf=7743">O Parque dos Sonhos</a>
+                      <img style="margin-left:5px;"
+                        src="http://www.cinemais.com.br/images/layout/ICO_3d_programacao.png" width="21" height="22"
+                        class="ico2" title="Em 3D" alt="Em 3D" />
+
+                    </td>
+                    <td align="center"><img src="../images/layout/ICO_LIV_programacao.png" width="22" height="21"
+                        alt="Classificação Indicativa: Livre" title="Classificação Indicativa: Livre" /></td>
+                    <td><small><strong>Dub. - </strong>15h00<sup><strong>A</strong></sup>, 17h00, 19h00 </small></td>
+                    <!--<td align="center">1</td>-->
+                  </tr>
+                </table>
+                <div class="disclaimer" style="font-size:12px;">
+                  <strong>A</strong> - Exceto quinta (14/03)(14/03)<br><strong>B</strong> - Somente sábado
+                  (16/03)(16/03), domingo (17/03)(17/03)<br><strong>C</strong> - Somente terça
+                  (19/03)(19/03)<br><strong>D</strong> - Exceto quinta (14/03)(14/03), terça (19/03)(19/03) </div>
+                <!--/Disclaimer-->
+                <div style="clear:both"></div>
+                <div class="disclaimer">
+                  *PROGRAMA&Ccedil;&Atilde;O E HOR&Aacute;RIOS SUJEITOS A ALTERA&Ccedil;&Atilde;O SEM AVISO
+                  PR&Eacute;VIO.
+                </div>
+                <!--/Disclaimer-->
+                <br>
+                <div class="btFooter">
+                  <a href="imprimir.php?cc=34" target="_blank" title="Imprimir Programação"><img
+                      src="http://www.cinemais.com.br/images/layout/BT_imprimir.png" border="0" /></a>
+                </div>
+                <div style="clear:both"></div>
+              </div>
+              <!--/tableContentIn-->
+              <img src="http://www.cinemais.com.br/images/layout/BG_progrmacao_tabs_ronded_bottom.png" />
+            </div>
+            <!--/spotTabela1-->
+            <div rel="2" class="spotTabela">
+              <h3>Ingressos</h3>
+              <div class="InfosProgramacao">
+                <h3>Cinemais Montes Claros</h3>
+                <p>Montes Claros-MG</p>
+              </div>
+
+              <img src="http://www.cinemais.com.br/images/layout/BG_progrmacao_tabs_ronded_top.png" />
+              <div class="tableContentIn">
+                <iframe src="ingresso_velox.php?cc=34" frameborder="0" width="790" height="580"></iframe>
+                <a href="http://www.cinemais.com.br/ingresso/"></a>
+              </div>
+              <img src="http://www.cinemais.com.br/images/layout/BG_progrmacao_tabs_ronded_bottom.png" />
+            </div>
+            <div rel="3" class="spotTabela">
+              <h3>Localiza&ccedil;&atilde;o</h3>
+              <div class="InfosProgramacao">
+                <h3>Cinemais Montes Claros</h3>
+                <p>Montes Claros-MG</p>
+              </div>
+              <!--/InfosProgramacao-->
+              <img src="http://www.cinemais.com.br/images/layout/BG_progrmacao_tabs_ronded_top.png" />
+              <div class="tableContentIn">
+                <iframe src="mapa.php?cc=34" frameborder="0" width="790" height="580"></iframe>
+              </div>
+              <img src="http://www.cinemais.com.br/images/layout/BG_progrmacao_tabs_ronded_bottom.png" />
+            </div>
+            <div rel="4" class="spotTabela">
+              <h3>Informa&ccedil;&otilde;es</h3>
+              <div class="InfosProgramacao">
+                <h3>Cinemais Montes Claros</h3>
+                <p>Montes Claros-MG</p>
+              </div>
+              <!--/InfosProgramacao-->
+              <img src="http://www.cinemais.com.br/images/layout/BG_progrmacao_tabs_ronded_top.png" />
+              <div class="tableContentIn">
+                <h5>O Cinemais Montes Claros dispõe de:</h5>
+                <ul>
+                  <li>5 salas stadium
+                  <li> <a href="http://www.cinemais.com.br/3d">Salas com projeção digital 3D (SALA +4 e +5)</a>
+                  <li>Salas com som e imagem 100% digital
+                  <li>Bombonière
+                  <li>Ar-Condicionado
+                  <li>Poltronas reclináveis em couro
+                </ul>
+              </div>
+              <!--/tableContentIn-->
+              <img src="http://www.cinemais.com.br/images/layout/BG_progrmacao_tabs_ronded_bottom.png" />
+            </div>
+            <!--/spotTabela1-->
+          </div>
+          <!--tableContent-->
+          <!--</div><!--/tableContainer-->
+        </div>
+        <!--/programacaoContainer-->
+        <div style="clear:both"></div>
+      </div>
+    </div>
+    <div class="faixaColor"></div>
+
+    <div id="rodape">
+      <div class="containerRodape">
+        <div class="SocialLinksFooter">
+          <h3 style="width:200px;">Redes Sociais</h3>
+          <a href="http://www.facebook.com/cinemaisoficial" target="_blank" alt="Curta-nos"><img
+              src="http://www.cinemais.com.br/images/layout/BT_facebook.png"
+              onMouseOver="this.src='http://www.cinemais.com.br/images/layout/BT_facebook_on.png'"
+              onMouseOut="this.src='http://www.cinemais.com.br/images/layout/BT_facebook.png'" border="0"
+              alt="Curta-nos" /></a>
+          <a href="https://twitter.com/cinemaisoficial" target="_blank" alt="Siga-nos"><img
+              src="http://www.cinemais.com.br/images/layout/BT_twitter..png"
+              onMouseOver="this.src='http://www.cinemais.com.br/images/layout/BT_twitter_on.png'"
+              onMouseOut="this.src='http://www.cinemais.com.br/images/layout/BT_twitter..png'" border="0"
+              alt="Siga-nos" /></a>
+        </div>
+
+        <div class="colunaRodape" style="width:250px; float:left; margin:0px 10px 0px 0px;">
+
+          <ul>
+            <li>
+              <h3>Estreia</h3>
+            </li>
+            <li><a href="http://www.cinemais.com.br/filmes/filme.php?cf=12236">A Cinco Passos de Você</a></li>
+            <li><a href="http://www.cinemais.com.br/filmes/filme.php?cf=11695">Maligno</a></li>
+            <li><a href="http://www.cinemais.com.br/filmes/filme.php?cf=7743">O Parque dos Sonhos</a></li>
+            <li><a href="http://www.cinemais.com.br/filmes/filme.php?cf=12007">Suprema</a></li>
+          </ul>
+          <ul>
+            <li>
+              <h3>Continua&ccedil;&atilde;o</h3>
+            </li>
+            <li><a href="http://www.cinemais.com.br/filmes/filme.php?cf=11388">A Caminho de Casa</a></li>
+            <li><a href="http://www.cinemais.com.br/filmes/filme.php?cf=7128">Capitã Marvel</a></li>
+            <li><a href="http://www.cinemais.com.br/filmes/filme.php?cf=11841">Cinderela Pop</a></li>
+          </ul>
+        </div>
+        <!--/colunaRodape-->
+
+        <div class="colunaRodape" style="width:420px; float:left; margin:0px 0px 0px 0px">
+          <ul>
+            <li>
+              <h3>Salas &amp; Horários</h3>
+            </li>
+            <li><a href="http://www.cinemais.com.br/programacao/cinema.php?cc=32">Cinemais Anápolis (Cinemais
+                Anápolis-GO)</a></li>
+            <li><a href="http://www.cinemais.com.br/programacao/cinema.php?cc=37">Cinemais Araxá (Cinemais Araxá-MG)</a>
+            </li>
+            <li><a href="http://www.cinemais.com.br/programacao/cinema.php?cc=21">Cinemais Guaratinguetá (Cinemais
+                Guaratinguetá-SP)</a></li>
+            <li><a href="http://www.cinemais.com.br/programacao/cinema.php?cc=36">Cinemais Ituiutaba (Cinemais Ituiutaba
+                -MG)</a></li>
+            <li><a href="http://www.cinemais.com.br/programacao/cinema.php?cc=39">Cinemais Jardim Norte (Cinemais Jardim
+                Norte -MG)</a></li>
+            <li><a href="http://www.cinemais.com.br/programacao/cinema.php?cc=38">Cinemais Lorena (Cinemais
+                Lorena-SP)</a></li>
+            <li><a href="http://www.cinemais.com.br/programacao/cinema.php?cc=34">Cinemais Montes Claros (Cinemais
+                Montes Claros-MG)</a></li>
+            <li><a href="http://www.cinemais.com.br/programacao/cinema.php?cc=11">Cinemais Patos de Minas (Cinemais
+                Patos de Minas-MG)</a></li>
+            <li><a href="http://www.cinemais.com.br/programacao/cinema.php?cc=35">Cinemais Shop. Alameda (Cinemais Shop.
+                Alameda-MG)</a></li>
+            <li><a href="http://www.cinemais.com.br/programacao/cinema.php?cc=9">Cinemais Uberaba (Cinemais Uberaba
+                -MG)</a></li>
+          </ul>
+        </div>
+        <!--/colunaRodape-->
+
+        <div style="width:200px; float:left; margin:0; text-align:left!important;">
+          <h3>Promo&ccedil;&otilde;es</h3>
+
+          <span style="width:200px; text-align:left;"><a
+              href="http://www.cinemais.com.br/promocoes/promocao.php?cp=13">Promo&ccedil;&atilde;o &quot;Promoção
+              Mais&quot;</a></span>
+          <br clear="all" />
+          <span style="width:200px; text-align:left;"><a
+              href="http://www.cinemais.com.br/promocoes/promocao.php?cp=12">Promo&ccedil;&atilde;o &quot;Quarta
+              Mais&quot;</a></span>
+          <br clear="all" />
+
+
+          <br clear="all" /><br />
+
+          <ul>
+            <li>
+              <h3>Institucional</h3>
+            </li>
+            <li><a href="http://www.cinemais.com.br/institucional/index.php">Quem Somos</a></li>
+            <li><a href="http://www.cinemais.com.br/institucional/dicas.php">Dicas Cinemais</a></li>
+            <li><a href="http://www.cinemais.com.br/institucional/classificacao_indicativa.php">Lei da Classificação
+                Indicativa</a></li>
+            <li><a href="http://www.cinemais.com.br/institucional/meia_entrada.php">Lei da Meia Entrada</a></li>
+            <li><a href="http://www.cinemais.com.br/institucional/noticias.php">Not&iacute;cias Cinemais</a></li>
+            <li><a href="http://www.cinemais.com.br/3d/index.php">Tecnologia 3D</a></li>
+            <li><a href="http://www.cinemais.com.br/institucional/trabalhe_conosco.php">Trabalhe Conosco</a></li>
+            <li><a href="#" target="_blank">Política de Privacidade</a></li>
+            <li><a href="http://www.cinemais.com.br/rps/index.php">CPF na Nota Fiscal do Ingresso</a></li>
+          </ul>
+        </div>
+        <!--/colunaRodape-->
+
+        <div style="clear:both"></div>
+        <!--/Clear-->
+
+      </div>
+      <!--/containerRodape-->
+
+      <div class="copyrightFooter">
+        <p>Copyright© 2019 - Cinemais Cinemas Ltda. | Todos os direitos reservados <a href="http://www.tonks.com.br/"
+            target="_blank" style="text-decoration:none;"><img
+              src="http://www.cinemais.com.br/images/layout/tonks_footer.png" border="0" align="right"
+              alt="Conhe&ccedil;a a Tonks" title="Conhe&ccedil;a a Tonks" /></a></p>
+      </div>
+    </div>
+    <!--/rodape-->
+    <iframe name="cinemais2" id="cinemais2" src="http://www.cinemais.com.br/includes/robo_mail.php" width="100%"
+      height="0" marginwidth="0" marginheight="0" frameborder="0" align="middle"></iframe>
+
+  </div>
+  <!--/Center-->
+
+  <script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+
+  </script>
+
+  <script type="text/javascript">
+
+    _uacct = "UA-3269539-5";
+
+    urchinTracker();
+
+  </script>
+
+  <!-- FOOTER -->
+  <script type="" text/javascript""> /* <![CDATA[ */ var google_conversion_id=947291076; var
+    google_custom_params=window.google_tag_params; var google_remarketing_only=true; /* ]]> */
+ </script>
+  <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
+  </script>
+  <noscript>
+    <div style="display:inline;">
+      <img height="1" width="1" style="border-style:none;" alt=""
+        src="//googleads.g.doubleclick.net/pagead/viewthroughconversion/947291076/?value=0&amp;guid=ON&amp;script=0" />
+    </div>
+  </noscript>
+  <!-- FOOTER -->
+
+  <!-- Begin comScore Tag -->
+  <script> var _comscore = _comscore || []; _comscore.push({ c1: "2", c2: "19400333" }); (function () { var s = document.createElement("script"), el = document.getElementsByTagName("script")[0]; s.async = true; s.src = (document.location.protocol == "https:" ? "https://sb" : "http://b") + ".scorecardresearch.com/beacon.js"; el.parentNode.insertBefore(s, el); })(); </script>
+  <noscript> <img src="http://b.scorecardresearch.com/p?c1=2&c2=19400333&cv=2.0&cj=1" /> </noscript>
+  <!-- End comScore Tag -->
+  <script>
+    $(function () {
+      // LE A URL E SEPARA OS PARAMETROS POR ? EM UM ARRAY
+      var url = location.href.split('?');
+      var url = url[1].split('&');
+      var abriu = false;
+      // VERIFICA SE ALGUM DOS PARAMETROS E O DA ABA E FAZ O CLIQUE
+      if (url[0] == 2) {
+        $(".tableContainer ul li#2").trigger('click');
+        abriu = true;
+      }
+      if (!abriu) {
+        $(".tableContainer ul li").eq(0).trigger('click');
+      }
+    });
+  </script>
+</body>
+
+</html>

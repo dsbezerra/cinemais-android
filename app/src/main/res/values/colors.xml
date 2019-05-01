@@ -1,6 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="primary">#ffffff</color>
+    <color name="primary_dark">#cccccc</color>
+    <color name="accent">#d81b60</color>
+
+    <color name="divider">#efefef</color>
+    <color name="placeholder">#eeeeee</color>
+
+    <color name="secondary_text">#888</color>
+
+    <color name="rating_l">#00b050</color>
+    <color name="rating_10">#00cdff</color>
+    <color name="rating_12">#ffcc00</color>
+    <color name="rating_14">#ff6600</color>
+    <color name="rating_16">#fe0000</color>
+    <color name="rating_18">#000000</color>
+
+    <color name="cinemais_green">#C7DA29</color>
+    <color name="cinemais_blue">#1B8FEB</color>
+    <color name="cinemais_pink">#EB008B</color>
+
+    <color name="alt_green">#00A651</color>
+
+    <color name="magic">#00A0E3</color>
+
+    <integer-array name="cinemais_colors">
+        <item>@color/cinemais_green</item>
+        <item>@color/cinemais_blue</item>
+        <item>@color/cinemais_pink</item>
+    </integer-array>
 </resources>

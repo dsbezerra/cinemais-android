@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="AutoSlideViewPager">
+        <attr format="integer" name="slideInterval"/>
+    </declare-styleable>
+
+    <declare-styleable name="MovieInfoView">
+        <attr format="string" name="infoLabel"/>
+        <attr format="string" name="infoContent"/>
+    </declare-styleable>
+
+    <declare-styleable name="SessionFilterView">
+        <attr format="string" name="filterId"/>
+        <attr format="string" name="filterName"/>
+    </declare-styleable>
+
+</resources>

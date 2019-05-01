@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?selectableItemBackground"
+    android:paddingStart="@dimen/spacing_medium"
+    android:paddingEnd="@dimen/spacing_medium"
+    android:paddingBottom="@dimen/spacing_small"
+    android:paddingTop="@dimen/spacing_small"
+    >
+
+    <ImageView
+        android:id="@+id/poster"
+        android:layout_width="@dimen/movie_poster_width"
+        android:layout_height="@dimen/movie_poster_height"
+        android:contentDescription="@null"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/movie_poster_height"
+        android:paddingStart="@dimen/spacing_medium"
+        android:paddingEnd="@dimen/spacing_medium"
+        android:orientation="vertical"
+        >
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@color/cinemais_pink"
+            android:textStyle="bold"
+            tools:text="Captain Marvel"
+            />
+
+        <TextView
+            android:id="@+id/synopsis"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_small"
+            android:ellipsize="end"
+            android:maxLines="6"
+            android:textAppearance="@style/TextAppearance.Cinemais.Body"
+            tools:text="Some long synopsis [...]"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>

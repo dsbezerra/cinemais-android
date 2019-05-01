@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/playing_cinemas_sheet"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/bg_session_rooms"
+    android:focusable="true"
+    android:clickable="true"
+    >
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/btn_session_rooms_height"
+        android:gravity="center"
+        android:paddingTop="@dimen/spacing_small"
+        android:paddingBottom="@dimen/spacing_small"
+        style="@style/Platform.MaterialComponents"
+        >
+
+        <ImageButton
+            android:id="@+id/reset_arrow"
+            android:layout_gravity="start|center_vertical"
+            android:layout_marginStart="@dimen/spacing_tiny"
+            android:contentDescription="@null"
+            app:srcCompat="@drawable/ic_keyboard_arrow_left"
+            style="@style/Widget.Cinemais.ScheduleButton"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center"
+            android:gravity="center_vertical"
+            >
+
+            <TextView
+                android:id="@+id/sheet_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="sans-serif-medium"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                android:textAllCaps="true"
+                android:textAlignment="center"
+                />
+
+            <TextView
+                android:id="@+id/sheet_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="sans-serif-medium"
+                android:textSize="12sp"
+                android:textColor="#96FFFFFF"
+                android:textAlignment="center"
+                />
+
+        </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="end|center_vertical"
+            android:indeterminate="true"
+            android:indeterminateTint="@android:color/white"
+            android:layout_marginEnd="56dp"
+            style="@style/Widget.AppCompat.ProgressBar"
+            />
+
+        <ImageButton
+            android:id="@+id/expand_or_collapse_arrow"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginEnd="@dimen/spacing_tiny"
+            android:contentDescription="@null"
+            app:srcCompat="@drawable/ic_arrow_up"
+            style="@style/Widget.Cinemais.ScheduleButton"
+            />
+
+    </FrameLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbarStyle="outsideOverlay"
+        android:scrollbars="vertical"
+        android:requiresFadingEdge="vertical"
+        android:fadingEdgeLength="@dimen/spacing_medium"
+        app:layoutManager="LinearLayoutManager"
+        tools:listitem="@layout/item_playing_cinema"
+        />
+
+    <com.diegobezerra.cinemaisapp.widget.CinemaisTabLayout
+        android:id="@+id/tabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/Widget.Cinemais.TabLayout.Schedule"
+        />
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
+</LinearLayout>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.tickets.TicketsFragment"
+    >
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingBottom="?actionBarSize"
+        android:scrollbars="vertical"
+        android:requiresFadingEdge="vertical"
+        >
+
+        <TextView
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/spacing_medium"
+            android:textAppearance="@style/TextAppearance.Cinemais.Body"
+            />
+
+    </androidx.core.widget.NestedScrollView>
+
+    <Button
+        android:id="@+id/buy_online"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        style="@style/Widget.Cinemais.BuyTickets"
+        />
+
+</FrameLayout>

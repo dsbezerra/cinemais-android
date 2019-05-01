@@ -1,32 +1,80 @@
 apply plugin: 'com.android.application'
-
 apply plugin: 'kotlin-android'
-
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+apply from: '../dependencies.gradle'
+
+def versionMajor  = 0
+def versionMinor  = 0
+def versionPatch  = 21
+def versionSuffix = "beta"
 
 android {
     compileSdkVersion versions.compileSdk
     defaultConfig {
+        vectorDrawables.useSupportLibrary = true
+
         applicationId "com.diegobezerra.cinemaisapp"
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
-        versionCode 1
-        versionName "1.0"
+        versionCode 8
+        versionName "${versionMajor}.${versionMinor}.${versionPatch}-${versionSuffix}"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "ADMOB_APP_ID", "\"ca-app-pub-8142728452724363~3961172725\"")
     }
     buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        debug {
+            buildConfigField "String", "INTERSTITIAL", "\"ca-app-pub-3940256099942544/1033173712\""
         }
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),
+                'proguard-rules.pro'
+
+            buildConfigField "String", "INTERSTITIAL", "\"ca-app-pub-8142728452724363/6607517366\""
+        }
+    }
+    //    splits {
+    //        abi {
+    //            enable true
+    //            reset()
+    //            // Specify a list of ABIs that Gradle should create APKs for
+    //            include 'x86', 'x86_64', 'arm64-v8a', 'armeabi-v7a'
+    //            // If you don’t want to generate a universal APK that includes all ABIs.
+    //            universalApk false
+    //        }
+    //        density {
+    //            enable true
+    //            // Specify a list of screen densities which Gradle won't create multiple APKs for
+    //            exclude 'ldpi', 'mdpi'
+    //            // Specify a list of compatible screen size for the manifest
+    //            compatibleScreens 'small', 'normal', 'large', 'xlarge'
+    //        }
+    //    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.appcompat:appcompat:1.0.0-beta01'
-    implementation 'androidx.core:core-ktx:1.1.0-alpha04'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.1.0-alpha4'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-alpha4'
+    implementation project(':core')
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+
+    implementation "com.google.firebase:firebase-ads:${versions.firebaseAds}"
+    implementation "com.google.firebase:firebase-core:${versions.firebaseCore}"
+
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.0.0'
+    kapt "com.github.bumptech.glide:compiler:${versions.glide}"
+    kapt "com.google.dagger:dagger-compiler:${versions.dagger}"
+    kapt "com.google.dagger:dagger-android-processor:${versions.dagger}"
 }
+
+repositories {
+    mavenCentral()
+}
+
+apply plugin: 'com.google.gms.google-services'

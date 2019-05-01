@@ -1,11 +1,120 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="Base" parent="Theme.MaterialComponents.Light">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorAccent">@color/accent</item>
+    </style>
+
+    <style name="Base.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Cinemais" parent="Base.NoActionBar" />
+
+    <!-- Widgets -->
+    <style name="Widget" />
+
+    <style name="Widget.Cinemais" />
+
+    <style name="Widget.Cinemais.ScheduleButton">
+        <item name="android:background">?selectableItemBackgroundBorderless</item>
+        <item name="android:layout_width">48dp</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:tint">@android:color/white</item>
+        <item name="android:colorControlHighlight">#42FFFFFF</item>
+        <item name="android:padding">@dimen/spacing_medium</item>
+        <item name="android:scaleType">center</item>
+    </style>
+
+    <style name="Widget.Cinemais.BuyTickets" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="android:text">@string/text_buy_tickets</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/cinemais_blue</item>
+        <item name="android:layout_gravity">bottom</item>
+        <item name="android:gravity">center</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="rippleColor">@color/cinemais_blue</item>
+    </style>
+
+    <style name="Widget.Cinemais.TabLayout" parent="Widget.Design.TabLayout">
+        <item name="tabIndicatorFullWidth">true</item>
+        <item name="tabIndicatorHeight">3dp</item>
+        <item name="tabSelectedTextColor">#000</item>
+        <item name="tabTextAppearance">@style/TabTextAppearance</item>
+    </style>
+
+    <style name="Widget.Cinemais.TabLayout.Schedule">
+        <item name="tabMode">scrollable</item>
+        <item name="tabIndicatorHeight">3dp</item>
+        <item name="tabTextAppearance">@style/TabTextAppearance.Schedule</item>
+        <item name="tabSelectedTextColor">#FFFFFF</item>
+        <item name="tabRippleColor">#42FFFFFF</item>
+    </style>
+
+    <style name="Widget.Cinemais.TabLayout.Schedule.Light">
+        <item name="tabSelectedTextColor">#333</item>
+        <item name="tabTextAppearance">@style/TabTextAppearance.Schedule.Light</item>
+    </style>
+
+    <style name="Widget.Cinemais.SessionLabel">
+        <item name="android:layout_marginEnd">@dimen/spacing_tiny</item>
+        <item name="android:background">#46000000</item>
+        <item name="android:paddingStart">@dimen/spacing_tiny</item>
+        <item name="android:paddingEnd">@dimen/spacing_tiny</item>
+        <item name="android:textAppearance">@style/TextAppearance.Cinemais.SessionLabel</item>
+    </style>
+
+    <!-- Appearances -->
+    <style name="TextAppearance.Cinemais.Body" parent="@style/TextAppearance.AppCompat.Body1">
+        <item name="android:textColor">?android:textColorSecondary</item>
+        <item name="android:lineSpacingMultiplier">1.2</item>
+    </style>
+
+    <style name="TextAppearance.Cinemais.Homehead" parent="@style/TextAppearance.AppCompat.Subhead">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+
+    <style name="TextAppearance.Cinemais.MovieInfoLabel" parent="@style/TextAppearance.Cinemais.Body">
+        <item name="android:textColor">#00A651</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="TextAppearance.Cinemais.MovieInfoBody" parent="@style/TextAppearance.Cinemais.Body">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textIsSelectable">true</item>
+    </style>
+
+    <style name="TextAppearance.Cinemais.SessionLabel" parent="@style/TextAppearance.Cinemais.Body">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textAlignment">center</item>
+    </style>
+
+    <style name="TabTextAppearance" parent="TextAppearance.Design.Tab">
+        <item name="android:textAlignment">center</item>
+        <item name="android:textColor">@color/secondary_text</item>
+        <item name="android:textSize">14sp</item>
+        <item name="textAllCaps">false</item>
+    </style>
+
+    <style name="TabTextAppearance.Schedule" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">#64FFFFFF</item>
+        <item name="textAllCaps">true</item>
+    </style>
+
+    <style name="TabTextAppearance.Schedule.Light">
+        <item name="android:textColor">@color/secondary_text</item>
     </style>
 
 </resources>

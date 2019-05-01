@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingStart="@dimen/spacing_medium"
+    android:paddingEnd="@dimen/spacing_medium"
+    android:paddingTop="@dimen/spacing_small"
+    android:paddingBottom="@dimen/spacing_small"
+    >
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        >
+
+        <TextView
+            style="@style/Widget.Cinemais.SessionLabel"
+            android:id="@+id/version"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="DUB"
+            />
+
+        <TextView
+            style="@style/Widget.Cinemais.SessionLabel"
+            android:id="@+id/format"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_format_3d"
+            android:text="@string/_3d"
+            />
+
+        <TextView
+            style="@style/Widget.Cinemais.SessionLabel"
+            android:id="@+id/magic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/magic"
+            android:text="@string/magic"
+            />
+
+        <TextView
+            style="@style/Widget.Cinemais.SessionLabel"
+            android:id="@+id/vip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/vip"
+            android:background="@android:color/black"
+            />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/times"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_small"
+        android:textAppearance="@style/TextAppearance.Cinemais.Body"
+        tools:text="Temporary time"
+        />
+
+</LinearLayout>

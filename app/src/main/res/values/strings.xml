@@ -1,3 +1,58 @@
 <resources>
-    <string name="app_name">cinemaisapp</string>
+    <string name="app_name">Cine+</string>
+
+    <string name="title_home">Início</string>
+    <string name="title_movies">Filmes</string>
+    <string name="title_theaters">Cinemas</string>
+    <string name="title_tickets">Ingressos</string>
+    <string name="title_upcoming_movies">Próximos lançamentos</string>
+    <string name="title_tab_now_playing">Em cartaz</string>
+    <string name="title_tab_upcoming">Próximos lançamentos</string>
+    <string name="title_about">Sobre</string>
+    <string name="title_cinemas">Cinemas</string>
+    <string name="title_movie">Filme</string>
+
+    <!-- Home Strings -->
+    <string name="home_header_playing">Em cartaz</string>
+    <string name="home_header_upcoming">Próximos lançamentos</string>
+
+    <string name="show_all">Mostrar tudo</string>
+
+    <!-- Movie Strings -->
+    <string name="original_title">%s (título original)</string>
+    <string name="unavailable_synopsis">Indisponível</string>
+
+    <!-- Cinema Strings -->
+    <string name="all">Todos</string>
+    <string name="header_sessions">Sessões</string>
+    <string name="header_playing_rooms">Salas em exibição</string>
+    <string name="label_cinema" translatable="false">%1$s - %2$s</string>
+    <string name="label_cinema_info">Informações</string>
+    <string name="label_cinema_location">Localização</string>
+    <string name="label_cinema_tickets">Ingressos</string>
+    <string name="label_cinema_change">Alterar cinema</string>
+
+    <!-- Tickets Strings -->
+    <string name="text_buy_tickets">Comprar ingressos on-line</string>
+
+    <!-- Session Strings -->
+    <string name="magic">MAGIC D</string>
+    <string name="vip">VIP</string>
+    <string name="_3d">3D</string>
+    <string name="label_session_national">NAC</string>
+    <string name="label_session_dubbed">DUB</string>
+    <string name="label_session_subtitled">LEG</string>
+
+    <!-- About Strings -->
+    <string name="about_app_0">Este aplicativo foi desenvolvido para servir como uma alternativa ao site mobile do Cinemais. Todos os dados são retirados diretamente das páginas oficiais e, como não possui vínculo algum com a rede de cinemas Cinemais, o aplicativo não deve ser visto como oficial.</string>
+    <string name="about_app_1"><![CDATA[
+    Desenvolvido por <a href="https://github.com/dsbezerra">Diego Bezerra</a>
+    ]]></string>
+    <string name="about_app_2"><![CDATA[
+    O código-fonte pode ser encontrado no <a href="https://github.com/dsbezerra/cinemais-android">GitHub</a>
+    ]]></string>
+
+
+    <!-- Transition Strings -->
+    <string name="transition_cinema_to_schedule" translatable="false">transition_cinema_to_schedule</string>
 </resources>

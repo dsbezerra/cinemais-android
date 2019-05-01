@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinator_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.movie.MovieFragment"
+    >
+
+    <com.diegobezerra.cinemaisapp.widget.CinemaisSwipeRefreshLayout
+        android:id="@+id/swipe_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        >
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/scroll"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:animateLayoutChanges="true"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/btn_session_rooms_height"
+                >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:animateLayoutChanges="true"
+                    android:orientation="horizontal"
+                    android:paddingBottom="@dimen/spacing_medium"
+                    android:paddingTop="@dimen/spacing_medium"
+                    >
+
+                    <ImageView
+                        android:id="@+id/poster"
+                        android:layout_width="@dimen/movie_poster_width"
+                        android:layout_height="@dimen/movie_poster_height"
+                        android:layout_marginEnd="@dimen/spacing_medium"
+                        android:layout_marginStart="@dimen/spacing_medium"
+                        android:contentDescription="@null"
+                        />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="@dimen/spacing_medium"
+                        android:orientation="vertical"
+                        >
+
+                        <TextView
+                            android:id="@+id/title"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="#273896"
+                            android:textSize="20sp"
+                            tools:text="Movie Title"
+                            />
+
+                        <TextView
+                            android:id="@+id/originalTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/title"
+                            android:layout_marginTop="@dimen/spacing_tiny"
+                            android:textColor="@color/secondary_text"
+                            android:textSize="14sp"
+                            tools:text="Movie Original Title (original title)"
+                            />
+
+                        <TextView
+                            android:id="@+id/releaseRuntime"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/originalTitle"
+                            android:layout_marginTop="@dimen/spacing_small"
+                            android:textColor="@color/secondary_text"
+                            android:textSize="12sp"
+                            tools:text="9 de março  •  114 min"
+                            />
+
+                        <ImageView
+                            android:id="@+id/ratingImage"
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:layout_marginTop="@dimen/spacing_small"
+                            android:contentDescription="@null"
+                            android:layout_below="@+id/releaseRuntime"
+                            tools:background="@drawable/ic_rating_l"
+                            />
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/synopsis"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/spacing_medium"
+                    android:textColor="@color/secondary_text"
+                    android:textIsSelectable="true"
+                    />
+
+                <com.diegobezerra.cinemaisapp.widget.MovieInfoView
+                    android:id="@+id/genres"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:infoLabel="GÊNEROS"
+                    />
+
+                <com.diegobezerra.cinemaisapp.widget.MovieInfoView
+                    android:id="@+id/cast"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:infoLabel="ELENCO"
+                    />
+
+                <com.diegobezerra.cinemaisapp.widget.MovieInfoView
+                    android:id="@+id/screenplay"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:infoLabel="ROTEIRO"
+                    />
+
+                <com.diegobezerra.cinemaisapp.widget.MovieInfoView
+                    android:id="@+id/executiveProduction"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:infoLabel="PRODUÇÃO EXECUTIVA"
+                    />
+
+                <com.diegobezerra.cinemaisapp.widget.MovieInfoView
+                    android:id="@+id/production"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:infoLabel="PRODUÇÃO"
+                    />
+
+                <com.diegobezerra.cinemaisapp.widget.MovieInfoView
+                    android:id="@+id/direction"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:infoLabel="DIREÇÃO"
+                    />
+
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+    </com.diegobezerra.cinemaisapp.widget.CinemaisSwipeRefreshLayout>
+
+    <include layout="@layout/include_progress_bar"/>
+
+    <include layout="@layout/include_movie_toolbar" />
+
+    <fragment
+        android:id="@+id/playing_cinemas_sheet"
+        android:name="com.diegobezerra.cinemaisapp.ui.movie.playingcinemas.PlayingCinemasFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="4dp"
+        android:layout_gravity="bottom"
+        app:behavior_peekHeight="0dp"
+        app:layout_behavior="@string/bottom_sheet_behavior"
+        tools:layout="@layout/fragment_playing_cinemas"
+        />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
