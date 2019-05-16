@@ -44,11 +44,12 @@
     <string name="label_session_subtitled">LEG</string>
 
     <!-- About Strings -->
-    <string name="about_app_0">Este aplicativo foi desenvolvido para servir como uma alternativa ao site mobile do Cinemais. Todos os dados são retirados diretamente das páginas oficiais e, como não possui vínculo algum com a rede de cinemas Cinemais, o aplicativo não deve ser visto como oficial.</string>
-    <string name="about_app_1"><![CDATA[
+    <string name="about_app_0">Este aplicativo foi desenvolvido para servir como uma alternativa ao site mobile do Cinemais.</string>
+    <string name="about_app_1">Todos os dados são retirados diretamente das páginas oficiais e, como não possui vínculo algum com a rede de cinemas Cinemais, o aplicativo não deve ser visto como oficial.</string>
+    <string name="about_app_2"><![CDATA[
     Desenvolvido por <a href="https://github.com/dsbezerra">Diego Bezerra</a>
     ]]></string>
-    <string name="about_app_2"><![CDATA[
+    <string name="about_app_3"><![CDATA[
     O código-fonte pode ser encontrado no <a href="https://github.com/dsbezerra/cinemais-android">GitHub</a>
     ]]></string>
 

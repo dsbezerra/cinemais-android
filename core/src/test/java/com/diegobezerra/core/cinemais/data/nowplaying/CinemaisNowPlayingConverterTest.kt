@@ -10,7 +10,7 @@ class CinemaisNowPlayingConverterTest {
 
     @Test
     fun parsesHtml() {
-        val response = ResponseBody.create(null, TestUtil.loadHtmlPage("/cinemais_nowplaying.html"))
+        val response = ResponseBody.create(null, TestUtil.loadCinemaisHtmlPage("nowplaying"))
 
         val result = CinemaisNowPlayingConverter.convert(response)
 

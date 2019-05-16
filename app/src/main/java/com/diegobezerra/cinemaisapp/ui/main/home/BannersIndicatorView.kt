@@ -10,9 +10,10 @@ import android.os.Parcelable
 import android.os.Parcelable.Creator
 import android.util.AttributeSet
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.viewpager.widget.ViewPager
-import timber.log.Timber
+import com.diegobezerra.cinemaisapp.R
 
 class BannersIndicatorView @JvmOverloads constructor(
     context: Context,
@@ -23,38 +24,42 @@ class BannersIndicatorView @JvmOverloads constructor(
 ), ViewPager.OnPageChangeListener {
 
     companion object {
-        const val GREEN = 0xFFCBDB2A
-        const val BLUE = 0xFF0295FF
-        const val PINK = 0xFFFF00C7
-
         /**  TODO: Add these as styleable attrs **/
         const val DEFAULT_GAP = 10f
-        const val DEFAULT_RADIUS = 5f
     }
 
-    private var gradientPaint = Paint().apply {
+    private var activeIndicatorPaint = Paint().apply {
         isAntiAlias = true
     }
-    private val inactivePaint = Paint().apply {
-        color = 0x32000000.toInt()
+    private val inactiveIndicatorPaint = Paint().apply {
         isAntiAlias = true
+        color = 0x34000000
     }
 
-    private var itemCount = -1
-    private var itemWidth = 0f
-    private var currentLeft = 0f
+    /**  TODO: Add these as styleable attrs **/
+    private val defaultColors = intArrayOf(
+        ContextCompat.getColor(context, R.color.cinemais_green),
+        ContextCompat.getColor(context, R.color.cinemais_blue),
+        ContextCompat.getColor(context, R.color.cinemais_pink)
+    )
+    private val defaultPositions = floatArrayOf(0f, .5f, 1f)
 
-    // NOTE: This was created just to avoid adding two page change listeners to the viewpager.
-    private var pageSelectedListener: ((Int) -> Unit)? = null
-
-    private val gradientShader by lazy {
+    private val activeIndicatorShader by lazy {
         LinearGradient(
-            0f, 0f, right.toFloat(), bottom.toFloat(),
-            intArrayOf(GREEN.toInt(), BLUE.toInt(), PINK.toInt()),
-            floatArrayOf(0f, 0.5f, 1f),
+            0f,
+            0f,
+            width.toFloat(),
+            height.toFloat(),
+            defaultColors,
+            defaultPositions,
             Shader.TileMode.CLAMP
         )
     }
+
+    // These are calculated by the view
+    private var indicatorCount = -1
+    private var indicatorWidth = 0f
+    private var activeIndicatorLeft = 0f
 
     var viewPager: ViewPager? = null
         set(value) {
@@ -66,45 +71,46 @@ class BannersIndicatorView @JvmOverloads constructor(
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
 
-        if (itemCount > 0) {
-            val width = measuredWidth.toFloat()
-            itemWidth = (width - DEFAULT_GAP * (itemCount - 1)) / itemCount
+        if (indicatorCount == 0) {
+            return
         }
+
+        val indicatorGap = DEFAULT_GAP * (indicatorCount - 1)
+        indicatorWidth = (measuredWidth.toFloat() - indicatorGap) / indicatorCount
     }
 
     override fun onDraw(canvas: Canvas) {
         if (!isViewPagerAttached()) return
 
+        // Draw all indicators
         val saveCount = canvas.save()
-        for (i in 0..itemCount) {
-            canvas.drawRoundRect(
+        for (i in 0 until indicatorCount) {
+            canvas.drawRect(
                 0f,
                 0f,
-                itemWidth,
-                bottom.toFloat(),
-                DEFAULT_RADIUS,
-                DEFAULT_RADIUS,
-                inactivePaint
+                indicatorWidth,
+                height.toFloat(),
+                inactiveIndicatorPaint
             )
-            canvas.translate(itemWidth + DEFAULT_GAP, 0f)
+            // Translate canvas to next x position
+            canvas.translate(indicatorWidth + DEFAULT_GAP, 0f)
         }
         canvas.restoreToCount(saveCount)
 
-        if (gradientPaint.shader == null) {
-            gradientPaint.shader = gradientShader
+        // Prepare active indicator shader
+        if (activeIndicatorPaint.shader == null) {
+            activeIndicatorPaint.shader = activeIndicatorShader
         }
 
-        val current = viewPager?.currentItem!!
-        val gap = DEFAULT_GAP * current
-        val currentRight = currentLeft + itemWidth
-        canvas.drawRoundRect(
-            currentLeft + gap,
+        // Draw active indicator
+        val left = activeIndicatorLeft + (DEFAULT_GAP * viewPager?.currentItem!!)
+        val right = left + indicatorWidth
+        canvas.drawRect(
+            left,
             0f,
-            currentRight + gap,
-            bottom.toFloat(),
-            DEFAULT_RADIUS,
-            DEFAULT_RADIUS,
-            gradientPaint
+            right,
+            height.toFloat(),
+            activeIndicatorPaint
         )
     }
 
@@ -112,7 +118,7 @@ class BannersIndicatorView @JvmOverloads constructor(
         if (!isViewPagerAttached()) return
 
         viewPager?.run {
-            itemCount = adapter?.count!!
+            indicatorCount = adapter?.count!!
         }
 
         invalidate()
@@ -138,8 +144,8 @@ class BannersIndicatorView @JvmOverloads constructor(
     }
 
     private fun onPageScroll(position: Int, positionOffset: Float) {
-        val currentIndicatorStart = position * itemWidth
-        currentLeft = currentIndicatorStart + positionOffset * itemWidth
+        val currentIndicatorStart = position * indicatorWidth
+        activeIndicatorLeft = currentIndicatorStart + positionOffset * indicatorWidth
         ViewCompat.postInvalidateOnAnimation(this)
     }
 

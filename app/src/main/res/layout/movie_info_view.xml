@@ -5,18 +5,19 @@
     tools:parentTag="android.widget.LinearLayout"
     >
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingBottom="@dimen/spacing_medium"
+        android:layout_marginTop="@dimen/spacing_small"
+        android:layout_marginBottom="@dimen/spacing_small"
         >
 
         <TextView
             android:id="@+id/label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="@dimen/spacing_medium"
+            android:paddingTop="@dimen/spacing_small"
             android:paddingStart="@dimen/spacing_medium"
             android:paddingEnd="@dimen/spacing_medium"
             android:textAppearance="@style/TextAppearance.Cinemais.MovieInfoLabel"

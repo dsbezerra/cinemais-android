@@ -4,5 +4,6 @@
     android:layout_height="wrap_content"
     android:text="@string/home_header_upcoming"
     android:padding="@dimen/spacing_medium"
+    android:background="@android:color/white"
     android:textAppearance="@style/TextAppearance.Cinemais.Homehead"
     />

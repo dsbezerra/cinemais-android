@@ -10,7 +10,6 @@ class CinemaisScheduleConverterTest {
     @Test
     fun parsesHtml() {
         val response = ResponseBody.create(null, TestUtil.loadCinemaisHtmlPage("schedule"))
-
         val result = CinemaisScheduleConverter.convert(response)
 
         assertNotNull(result)

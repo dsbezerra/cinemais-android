@@ -32,7 +32,6 @@
             android:layout_height="wrap_content"
             android:textSize="16sp"
             android:textColor="@color/cinemais_pink"
-            android:textStyle="bold"
             tools:text="Captain Marvel"
             />
 
@@ -41,8 +40,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_small"
+            android:textSize="14sp"
             android:ellipsize="end"
-            android:maxLines="6"
+            android:maxLines="5"
             android:textAppearance="@style/TextAppearance.Cinemais.Body"
             tools:text="Some long synopsis [...]"
             />

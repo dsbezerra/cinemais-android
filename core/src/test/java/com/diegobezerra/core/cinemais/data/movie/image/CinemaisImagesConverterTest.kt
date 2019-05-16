@@ -9,8 +9,7 @@ class CinemaisImagesConverterTest {
 
     @Test
     fun parsesHtml() {
-        val response = ResponseBody.create(null, TestUtil.loadHtmlPage("/cinemais_images.html"))
-
+        val response = ResponseBody.create(null, TestUtil.loadCinemaisHtmlPage("images"))
         val result = CinemaisImagesConverter.convert(response)
 
         Assert.assertNotNull(result)

@@ -42,8 +42,8 @@
 
                     <ImageView
                         android:id="@+id/poster"
-                        android:layout_width="@dimen/movie_poster_width"
-                        android:layout_height="@dimen/movie_poster_height"
+                        android:layout_width="@dimen/movie_poster_width_detail"
+                        android:layout_height="@dimen/movie_poster_height_detail"
                         android:layout_marginEnd="@dimen/spacing_medium"
                         android:layout_marginStart="@dimen/spacing_medium"
                         android:contentDescription="@null"
@@ -51,9 +51,8 @@
 
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/spacing_medium"
-                        android:orientation="vertical"
                         >
 
                         <TextView

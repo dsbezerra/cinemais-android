@@ -16,13 +16,19 @@ import androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_IDLE
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import androidx.viewpager.widget.ViewPager.SimpleOnPageChangeListener
 import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.BaseRequestOptions
 import com.diegobezerra.cinemaisapp.GlideApp
+import com.diegobezerra.cinemaisapp.GlideOptions
+import com.diegobezerra.cinemaisapp.GlideOptions.bitmapTransform
 import com.diegobezerra.cinemaisapp.R
 import com.diegobezerra.cinemaisapp.ui.main.home.HomeViewHolder.BannersViewHolder
 import com.diegobezerra.cinemaisapp.ui.main.home.HomeViewHolder.HeaderViewHolder
 import com.diegobezerra.cinemaisapp.ui.main.home.HomeViewHolder.PlayingMoviesViewHolder
 import com.diegobezerra.cinemaisapp.ui.main.home.HomeViewHolder.UpcomingAllViewHolder
 import com.diegobezerra.cinemaisapp.ui.main.home.HomeViewHolder.UpcomingMovieViewHolder
+import com.diegobezerra.cinemaisapp.util.ImageUtils
+import com.diegobezerra.cinemaisapp.util.ImageUtils.Companion.posterTransformation
 import com.diegobezerra.cinemaisapp.widget.AutoSlideViewPager
 import com.diegobezerra.core.cinemais.domain.model.Banner
 import com.diegobezerra.core.cinemais.domain.model.Banner.Action.MOVIE
@@ -74,16 +80,15 @@ class HomeAdapter(
             buildList()
         }
 
-    private var placeholder: ColorDrawable? = null
+    private var posterOptions: BaseRequestOptions<*>? = null
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
     ): HomeViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        if (placeholder == null) {
-            placeholder =
-                ColorDrawable(ContextCompat.getColor(parent.context, R.color.placeholder))
+        if (posterOptions == null) {
+            posterOptions = bitmapTransform(posterTransformation(parent.context.applicationContext))
         }
         return when (viewType) {
             VIEW_TYPE_BANNERS -> BannersViewHolder(
@@ -128,7 +133,12 @@ class HomeAdapter(
                         MOVIE -> homeViewModel.onMovieClicked(it.resourceId)
                         else -> {
                             if (it.htmlUrl.isNotEmpty()) {
-                                itemView.context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(it.htmlUrl)))
+                                itemView.context.startActivity(
+                                    Intent(
+                                        Intent.ACTION_VIEW,
+                                        Uri.parse(it.htmlUrl)
+                                    )
+                                )
                             }
                         }
                     }
@@ -167,7 +177,7 @@ class HomeAdapter(
                         GlideApp.with(this)
                             .asBitmap()
                             .load(item.posters.medium)
-                            .placeholder(placeholder)
+                            .apply(posterOptions!!)
                             .transition(crossFade)
                             .into(poster)
                     }
@@ -245,7 +255,6 @@ class HomeAdapter(
         }
         list = result
     }
-
 }
 
 object PlayingMoviesHeader

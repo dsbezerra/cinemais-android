@@ -28,7 +28,7 @@ class BannersAdapter(
         container.addView(banner)
 
         val b = banners[position]
-        if (!b.imageUrl.isEmpty()) {
+        if (b.imageUrl.isNotEmpty()) {
             GlideApp.with(container.context)
                 .asBitmap()
                 .load(b.imageUrl)

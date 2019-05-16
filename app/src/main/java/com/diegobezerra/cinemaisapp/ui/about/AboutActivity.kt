@@ -31,11 +31,11 @@ class AboutActivity : AppCompatActivity() {
             onBackPressed()
         }
 
-        findViewById<TextView>(R.id.about_app_1)
-            .setLinkable(R.string.about_app_1)
-
         findViewById<TextView>(R.id.about_app_2)
             .setLinkable(R.string.about_app_2)
+
+        findViewById<TextView>(R.id.about_app_3)
+            .setLinkable(R.string.about_app_3)
     }
 
     private fun TextView.setLinkable(resId: Int) {

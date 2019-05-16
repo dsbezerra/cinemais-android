@@ -12,7 +12,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions.withCrossFade
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.diegobezerra.cinemaisapp.GlideApp
+import com.diegobezerra.cinemaisapp.GlideOptions.bitmapTransform
 import com.diegobezerra.cinemaisapp.R
 import com.diegobezerra.cinemaisapp.ui.movie.playingcinemas.PlayingCinemasFragment
 import com.diegobezerra.cinemaisapp.util.ImageUtils
@@ -154,12 +156,15 @@ class MovieFragment : DaggerFragment() {
 
     private fun initPoster(posters: Posters) {
         if (!posters.medium.isNullOrEmpty()) {
-            GlideApp.with(requireContext())
-                .asBitmap()
-                .load(posters.medium)
-                .placeholder(ImageUtils.placeholder(requireActivity()))
-                .transition(withCrossFade())
-                .into(poster)
+            requireContext().run {
+                GlideApp.with(this)
+                    .asBitmap()
+                    .load(posters.medium)
+                    .apply(bitmapTransform(RoundedCorners(resources.getDimension(R.dimen.spacing_small).toInt())))
+                    .transition(withCrossFade())
+                    .into(poster)
+            }
+
         }
     }
 

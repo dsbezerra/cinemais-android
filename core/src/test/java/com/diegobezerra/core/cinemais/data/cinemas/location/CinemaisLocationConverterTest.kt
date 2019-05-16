@@ -9,10 +9,8 @@ class CinemaisLocationConverterTest {
 
     @Test
     fun parsesHtml() {
-        val response = ResponseBody.create(null, TestUtil.loadHtmlPage("/cinemais_location.html"))
-
+        val response = ResponseBody.create(null, TestUtil.loadCinemaisHtmlPage("location"))
         val result = CinemaisLocationConverter.convert(response)
-
         assertNotNull(result)
     }
 

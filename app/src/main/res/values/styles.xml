@@ -6,6 +6,7 @@
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/accent</item>
+        <item name="android:fontFamily">@font/opensans</item>
     </style>
 
     <style name="Base.NoActionBar">
@@ -59,6 +60,7 @@
     <style name="Widget.Cinemais.TabLayout.Schedule.Light">
         <item name="tabSelectedTextColor">#333</item>
         <item name="tabTextAppearance">@style/TabTextAppearance.Schedule.Light</item>
+        <item name="tabRippleColor">?attr/colorControlHighlight</item>
     </style>
 
     <style name="Widget.Cinemais.SessionLabel">
@@ -71,7 +73,7 @@
 
     <!-- Appearances -->
     <style name="TextAppearance.Cinemais.Body" parent="@style/TextAppearance.AppCompat.Body1">
-        <item name="android:textColor">?android:textColorSecondary</item>
+        <item name="android:textColor">@color/secondary_text</item>
         <item name="android:lineSpacingMultiplier">1.2</item>
     </style>
 
@@ -83,19 +85,18 @@
     <style name="TextAppearance.Cinemais.MovieInfoLabel" parent="@style/TextAppearance.Cinemais.Body">
         <item name="android:textColor">#00A651</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textSize">14sp</item>
         <item name="android:textAllCaps">true</item>
     </style>
 
     <style name="TextAppearance.Cinemais.MovieInfoBody" parent="@style/TextAppearance.Cinemais.Body">
-        <item name="android:textSize">14sp</item>
         <item name="android:textIsSelectable">true</item>
+        <item name="android:textColor">@color/secondary_text</item>
     </style>
 
     <style name="TextAppearance.Cinemais.SessionLabel" parent="@style/TextAppearance.Cinemais.Body">
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">12sp</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:textAlignment">center</item>
     </style>

@@ -10,12 +10,16 @@ import android.widget.TextView
 import androidx.core.view.isGone
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions
+import com.bumptech.glide.request.BaseRequestOptions
 import com.bumptech.glide.signature.ObjectKey
 import com.diegobezerra.cinemaisapp.GlideApp
+import com.diegobezerra.cinemaisapp.GlideOptions
+import com.diegobezerra.cinemaisapp.GlideOptions.bitmapTransform
 import com.diegobezerra.cinemaisapp.R
 import com.diegobezerra.cinemaisapp.ui.main.movies.MoviesAdapter.MovieViewHolder
 import com.diegobezerra.cinemaisapp.ui.main.movies.MoviesFragment.Companion.UPCOMING
 import com.diegobezerra.cinemaisapp.util.ImageUtils
+import com.diegobezerra.cinemaisapp.util.ImageUtils.Companion
 import com.diegobezerra.core.cinemais.domain.model.Movie
 import com.diegobezerra.core.util.DateUtils
 import com.diegobezerra.core.util.DateUtils.Companion.BRAZIL
@@ -35,6 +39,7 @@ class MoviesAdapter(
     var list: List<Movie> = emptyList()
 
     private val crossFade = BitmapTransitionOptions.withCrossFade()
+    private var posterOptions: BaseRequestOptions<*>? = null
 
     // This will ensure cache invalidation at least one time per week.
     // Necessary because images here can change and URLs will still be the same.
@@ -57,15 +62,19 @@ class MoviesAdapter(
         )
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
+
         holder.apply {
             val movie = list[position]
             val context = itemView.context
-
             movie.posters.best(isWifiConnection)?.let {
+                if (posterOptions == null) {
+                    posterOptions =
+                        bitmapTransform(ImageUtils.posterTransformation(context.applicationContext))
+                }
                 GlideApp.with(context)
                     .asBitmap()
                     .load(it)
-                    .placeholder(ImageUtils.placeholder(context))
+                    .apply(posterOptions!!)
                     .transition(crossFade)
                     .signature(signature)
                     .into(poster)
@@ -94,7 +103,8 @@ class MoviesAdapter(
         init {
             val lp = textContainer.layoutParams
             if (type == UPCOMING) {
-                lp.height = itemView.resources.getDimension(R.dimen.grid_movie_text_upcoming_height).toInt()
+                lp.height =
+                    itemView.resources.getDimension(R.dimen.grid_movie_text_upcoming_height).toInt()
             }
         }
     }

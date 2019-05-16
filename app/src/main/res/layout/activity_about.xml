@@ -50,7 +50,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="24sp"
+                    android:textSize="18sp"
                     android:textColor="#555"
                     android:text="@string/title_about"
                     android:layout_marginStart="@dimen/spacing_medium"
@@ -64,14 +64,23 @@
                 android:orientation="vertical"
                 android:padding="@dimen/spacing_medium"
                 android:gravity="center_horizontal"
-                android:layout_marginTop="@dimen/spacing_medium"
                 >
+
+                <ImageView
+                    android:id="@+id/logo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/logo"
+                    android:layout_margin="@dimen/spacing_large"
+                    android:contentDescription="@null"
+                    />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/about_app_0"
                     android:textSize="16sp"
+                    android:layout_marginTop="@dimen/spacing_large"
                     style="@style/TextAppearance.Cinemais.Body"
                     />
 
@@ -80,12 +89,22 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/spacing_medium"
+                    android:text="@string/about_app_1"
                     android:textSize="16sp"
                     style="@style/TextAppearance.Cinemais.Body"
                     />
 
                 <TextView
                     android:id="@+id/about_app_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_medium"
+                    android:textSize="16sp"
+                    style="@style/TextAppearance.Cinemais.Body"
+                    />
+
+                <TextView
+                    android:id="@+id/about_app_3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/spacing_medium"

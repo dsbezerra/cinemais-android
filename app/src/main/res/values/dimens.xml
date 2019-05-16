@@ -19,6 +19,9 @@
     <dimen name="movie_poster_width">90dp</dimen>
     <dimen name="movie_poster_height">133dp</dimen>
 
+    <dimen name="movie_poster_width_detail">108dp</dimen>
+    <dimen name="movie_poster_height_detail">159dp</dimen>
+
     <dimen name="grid_movie_text_min_height">56dp</dimen>
     <dimen name="grid_movie_text_upcoming_height">80dp</dimen>
 

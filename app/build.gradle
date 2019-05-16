@@ -7,18 +7,16 @@ apply from: '../dependencies.gradle'
 
 def versionMajor  = 0
 def versionMinor  = 0
-def versionPatch  = 21
+def versionPatch  = 23
 def versionSuffix = "beta"
 
 android {
     compileSdkVersion versions.compileSdk
     defaultConfig {
-        vectorDrawables.useSupportLibrary = true
-
         applicationId "com.diegobezerra.cinemaisapp"
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
-        versionCode 8
+        versionCode 10
         versionName "${versionMajor}.${versionMinor}.${versionPatch}-${versionSuffix}"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 

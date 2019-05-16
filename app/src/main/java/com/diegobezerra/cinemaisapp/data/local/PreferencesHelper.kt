@@ -10,7 +10,6 @@ class PreferencesHelper @Inject constructor(context: Context) {
 
         const val PREFS_NAME = "cinemais"
         const val PREF_SELECTED_CINEMA = "pref_selected_cinema"
-        const val PREF_SELECTED_FILTERS = "pref_selected_filters"
 
     }
 
@@ -24,8 +23,6 @@ class PreferencesHelper @Inject constructor(context: Context) {
             id
         }
     }
-
-    fun getSelectedFilters(): String? = prefs.getString(PREF_SELECTED_FILTERS, null)
 
     fun setSelectedCinemaId(cinemaId: Int) {
         prefs.update {

@@ -3,6 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:text="@string/home_header_playing"
-    android:padding="@dimen/spacing_medium"
+    android:paddingTop="@dimen/spacing_medium"
+    android:paddingStart="@dimen/spacing_medium"
+    android:paddingEnd="@dimen/spacing_medium"
+    android:paddingBottom="@dimen/spacing_small"
     android:textAppearance="@style/TextAppearance.Cinemais.Homehead"
     />
