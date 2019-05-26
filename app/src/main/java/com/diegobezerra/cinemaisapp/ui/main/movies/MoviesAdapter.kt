@@ -1,16 +1,16 @@
 package com.diegobezerra.cinemaisapp.ui.main.movies
 
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.core.view.isGone
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions
-import com.bumptech.glide.request.BaseRequestOptions
 import com.bumptech.glide.signature.ObjectKey
 import com.diegobezerra.cinemaisapp.GlideApp
 import com.diegobezerra.cinemaisapp.GlideOptions
@@ -19,11 +19,11 @@ import com.diegobezerra.cinemaisapp.R
 import com.diegobezerra.cinemaisapp.ui.main.movies.MoviesAdapter.MovieViewHolder
 import com.diegobezerra.cinemaisapp.ui.main.movies.MoviesFragment.Companion.UPCOMING
 import com.diegobezerra.cinemaisapp.util.ImageUtils
-import com.diegobezerra.cinemaisapp.util.ImageUtils.Companion
 import com.diegobezerra.core.cinemais.domain.model.Movie
 import com.diegobezerra.core.util.DateUtils
 import com.diegobezerra.core.util.DateUtils.Companion.BRAZIL
 import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.concurrent.TimeUnit
 
 class MoviesAdapter(
@@ -33,13 +33,16 @@ class MoviesAdapter(
 ) : RecyclerView.Adapter<MovieViewHolder>() {
 
     companion object {
-        private val FORMAT = SimpleDateFormat("dd MMMM yyyy", BRAZIL)
+        private val FORMAT = SimpleDateFormat("d MMM yyyy", BRAZIL)
+        private val NO_YEAR_FORMAT = SimpleDateFormat("d MMM", BRAZIL)
     }
 
     var list: List<Movie> = emptyList()
 
+    private val currentYear = Date(System.currentTimeMillis()).year
     private val crossFade = BitmapTransitionOptions.withCrossFade()
-    private var posterOptions: BaseRequestOptions<*>? = null
+    private var placeholder: Drawable? = null
+    private var posterOptions: GlideOptions? = null
 
     // This will ensure cache invalidation at least one time per week.
     // Necessary because images here can change and URLs will still be the same.
@@ -52,14 +55,22 @@ class MoviesAdapter(
         ObjectKey(Math.round(current / expiration).toString())
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-        MovieViewHolder(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
+        if (placeholder == null) {
+            placeholder = ContextCompat.getDrawable(parent.context, R.drawable.poster_placeholder)
+        }
+        if (posterOptions == null) {
+            posterOptions =
+                bitmapTransform(ImageUtils.posterTransformation(parent.context.applicationContext))
+        }
+        return MovieViewHolder(
             LayoutInflater.from(parent.context).inflate(
                 R.layout.item_grid_movie,
                 parent,
                 false
             )
         )
+    }
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
 
@@ -74,6 +85,7 @@ class MoviesAdapter(
                 GlideApp.with(context)
                     .asBitmap()
                     .load(it)
+                    .placeholder(placeholder)
                     .apply(posterOptions!!)
                     .transition(crossFade)
                     .signature(signature)
@@ -82,7 +94,12 @@ class MoviesAdapter(
 
             title.text = movie.title
             release.isGone = movie.releaseDate == null
-            movie.releaseDate?.let { release.text = FORMAT.format(it) }
+            movie.releaseDate?.let {
+                release.text = if (it.year == currentYear)
+                    NO_YEAR_FORMAT.format(it)
+                else
+                    FORMAT.format(it)
+            }
 
             itemView.setOnClickListener {
                 moviesViewModel.onMovieClicked(movie.id)

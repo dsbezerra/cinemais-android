@@ -1,7 +1,7 @@
 package com.diegobezerra.cinemaisapp.ui.main.home
 
 import android.content.Intent
-import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,11 +13,8 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_IDLE
-import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import androidx.viewpager.widget.ViewPager.SimpleOnPageChangeListener
 import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.bumptech.glide.request.BaseRequestOptions
 import com.diegobezerra.cinemaisapp.GlideApp
 import com.diegobezerra.cinemaisapp.GlideOptions
 import com.diegobezerra.cinemaisapp.GlideOptions.bitmapTransform
@@ -28,7 +25,6 @@ import com.diegobezerra.cinemaisapp.ui.main.home.HomeViewHolder.PlayingMoviesVie
 import com.diegobezerra.cinemaisapp.ui.main.home.HomeViewHolder.UpcomingAllViewHolder
 import com.diegobezerra.cinemaisapp.ui.main.home.HomeViewHolder.UpcomingMovieViewHolder
 import com.diegobezerra.cinemaisapp.util.ImageUtils
-import com.diegobezerra.cinemaisapp.util.ImageUtils.Companion.posterTransformation
 import com.diegobezerra.cinemaisapp.widget.AutoSlideViewPager
 import com.diegobezerra.core.cinemais.domain.model.Banner
 import com.diegobezerra.core.cinemais.domain.model.Banner.Action.MOVIE
@@ -58,6 +54,8 @@ class HomeAdapter(
 
     private val playingMoviesAdapter by lazy { PlayingMoviesAdapter(homeViewModel) }
     private val crossFade = BitmapTransitionOptions.withCrossFade()
+    private var placeholder: Drawable? = null
+    private var posterOptions: GlideOptions? = null
     private val viewPool = RecyclerView.RecycledViewPool()
 
     var currentBannerIndex = 0
@@ -80,16 +78,19 @@ class HomeAdapter(
             buildList()
         }
 
-    private var posterOptions: BaseRequestOptions<*>? = null
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
     ): HomeViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        if (posterOptions == null) {
-            posterOptions = bitmapTransform(posterTransformation(parent.context.applicationContext))
+        val context = parent.context
+        if (placeholder == null) {
+            placeholder = ContextCompat.getDrawable(context, R.drawable.poster_placeholder)
         }
+        if (posterOptions == null) {
+            posterOptions =
+                bitmapTransform(ImageUtils.posterTransformation(parent.context.applicationContext))
+        }
+        val inflater = LayoutInflater.from(context)
         return when (viewType) {
             VIEW_TYPE_BANNERS -> BannersViewHolder(
                 inflater.inflate(R.layout.item_home_banners, parent, false)
@@ -177,6 +178,7 @@ class HomeAdapter(
                         GlideApp.with(this)
                             .asBitmap()
                             .load(item.posters.medium)
+                            .placeholder(placeholder)
                             .apply(posterOptions!!)
                             .transition(crossFade)
                             .into(poster)
@@ -204,8 +206,7 @@ class HomeAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        val item = list[position]
-        return when (item) {
+        return when (val item = list[position]) {
             is PlayingMoviesHeader -> VIEW_TYPE_PLAYING_HEADER
             is UpcomingMoviesHeader -> VIEW_TYPE_UPCOMING_HEADER
             is BannersViewHolder -> VIEW_TYPE_BANNERS
@@ -286,7 +287,6 @@ sealed class HomeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) 
     class UpcomingMovieViewHolder(
         itemView: View
     ) : HomeViewHolder(itemView) {
-
         val title: TextView = itemView.findViewById(R.id.title)
         val poster: ImageView = itemView.findViewById(R.id.poster)
         val synopsis: TextView = itemView.findViewById(R.id.synopsis)

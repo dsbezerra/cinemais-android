@@ -2,9 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:background="?selectableItemBackground"
     android:orientation="vertical"
     android:padding="@dimen/spacing_small"
-    android:background="?selectableItemBackground">
+    >
 
     <ImageView
         android:id="@+id/poster"
@@ -18,9 +19,11 @@
         android:layout_width="@dimen/movie_poster_width"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_small"
-        android:textColor="@color/cinemais_pink"
-        android:maxLines="2"
         android:ellipsize="end"
+        android:maxLines="2"
+        android:textAlignment="center"
+        android:textColor="@color/secondary_text"
+        android:textSize="12sp"
         />
 
 </LinearLayout>

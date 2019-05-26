@@ -7,7 +7,7 @@
     <color name="divider">#efefef</color>
     <color name="placeholder">#eeeeee</color>
 
-    <color name="secondary_text">#888</color>
+    <color name="secondary_text">#999</color>
 
     <color name="rating_l">#00b050</color>
     <color name="rating_10">#00cdff</color>
@@ -21,6 +21,7 @@
     <color name="cinemais_pink">#EB008B</color>
 
     <color name="alt_green">#00A651</color>
+    <color name="alt_pink">#d81b60</color>
 
     <color name="magic">#00A0E3</color>
 

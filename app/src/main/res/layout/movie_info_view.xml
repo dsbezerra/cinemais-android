@@ -20,7 +20,7 @@
             android:paddingTop="@dimen/spacing_small"
             android:paddingStart="@dimen/spacing_medium"
             android:paddingEnd="@dimen/spacing_medium"
-            android:textAppearance="@style/TextAppearance.Cinemais.MovieInfoLabel"
+            android:textAppearance="@style/TextAppearance.Cinemais.Subhead"
             tools:text="LABEL"
             />
 
@@ -30,8 +30,8 @@
             android:layout_height="wrap_content"
             android:paddingStart="@dimen/spacing_medium"
             android:paddingEnd="@dimen/spacing_medium"
-            android:layout_marginTop="@dimen/spacing_small"
-            android:textAppearance="@style/TextAppearance.Cinemais.MovieInfoBody"
+            android:layout_marginTop="@dimen/spacing_tiny"
+            style="@style/Widget.Cinemais.MovieInfoBody"
             tools:text="Content"
             />
 

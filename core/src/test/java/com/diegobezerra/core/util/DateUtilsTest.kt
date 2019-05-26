@@ -3,6 +3,7 @@ package com.diegobezerra.core.util
 import com.diegobezerra.core.cinemais.domain.model.DateRange
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import java.util.Calendar
 import java.util.GregorianCalendar
 
 class DateUtilsTest {
@@ -28,5 +29,46 @@ class DateUtilsTest {
         )
         actualRange = DateUtils.playingRange(GregorianCalendar(2018, 11, 30).time)
         assertEquals(expectedRange, actualRange)
+    }
+
+    @Test
+    fun isTomorrow_isCorrect() {
+        val a = Calendar.getInstance()
+        val b = Calendar.getInstance().apply {
+            add(Calendar.DATE, 1)
+        }
+        var expected = true
+        var actual = DateUtils.isTomorrow(a, b)
+        assertEquals(expected, actual)
+
+        val c = Calendar.getInstance()
+        val d = Calendar.getInstance().apply {
+            add(Calendar.DATE, 2)
+        }
+        expected = false
+        actual = DateUtils.isTomorrow(c, d)
+        assertEquals(expected, actual)
+
+        val e = Calendar.getInstance()
+        val f = Calendar.getInstance().apply {
+            add(Calendar.DATE, -1)
+        }
+        expected = false
+        actual = DateUtils.isTomorrow(e, f)
+        assertEquals(expected, actual)
+
+        val g = Calendar.getInstance().apply {
+            add(Calendar.DATE, 1)
+        }
+        expected = true
+        actual = DateUtils.isTomorrow(g.timeInMillis)
+        assertEquals(expected, actual)
+
+        val h = Calendar.getInstance().apply {
+            add(Calendar.DATE, 2)
+        }
+        expected = false
+        actual = DateUtils.isTomorrow(h.timeInMillis)
+        assertEquals(expected, actual)
     }
 }

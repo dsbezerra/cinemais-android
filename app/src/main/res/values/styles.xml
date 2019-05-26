@@ -4,22 +4,45 @@
     <style name="Base" parent="Theme.MaterialComponents.Light">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/primary</item>
-        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorPrimaryDark">@color/primary</item>
         <item name="colorAccent">@color/accent</item>
         <item name="android:fontFamily">@font/opensans</item>
+
+        <item name="toolbarStyle">@style/Widget.Cinemais.Toolbar</item>
     </style>
 
     <style name="Base.NoActionBar">
         <item name="windowActionBar">false</item>
+        <item name="windowActionBarOverlay">true</item>
         <item name="windowNoTitle">true</item>
     </style>
 
     <style name="Cinemais" parent="Base.NoActionBar" />
 
+    <style name="Cinemais.Transparent">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
+
     <!-- Widgets -->
     <style name="Widget" />
 
     <style name="Widget.Cinemais" />
+
+    <style name="Widget.Cinemais.Toolbar" parent="Widget.AppCompat.Toolbar">
+        <item name="titleTextAppearance">@style/TextAppearance.Cinemais.ToolbarTitle</item>
+    </style>
+
+    <style name="Widget.Cinemais.Toolbar.Light" parent="Widget.AppCompat.Toolbar">
+        <item name="titleTextAppearance">@style/TextAppearance.Cinemais.ToolbarTitle.Light</item>
+    </style>
+
+    <style name="Widget.Cinemais.ProgressBar" parent="Widget.AppCompat.ProgressBar">
+        <item name="android:indeterminateTint">#AAFFFFFF</item>
+    </style>
 
     <style name="Widget.Cinemais.ScheduleButton">
         <item name="android:background">?selectableItemBackgroundBorderless</item>
@@ -54,12 +77,13 @@
         <item name="tabIndicatorHeight">3dp</item>
         <item name="tabTextAppearance">@style/TabTextAppearance.Schedule</item>
         <item name="tabSelectedTextColor">#FFFFFF</item>
+        <item name="tabTextColor">#99FFFFFF</item>
         <item name="tabRippleColor">#42FFFFFF</item>
     </style>
 
     <style name="Widget.Cinemais.TabLayout.Schedule.Light">
         <item name="tabSelectedTextColor">#333</item>
-        <item name="tabTextAppearance">@style/TabTextAppearance.Schedule.Light</item>
+        <item name="tabTextColor">@color/secondary_text</item>
         <item name="tabRippleColor">?attr/colorControlHighlight</item>
     </style>
 
@@ -71,25 +95,33 @@
         <item name="android:textAppearance">@style/TextAppearance.Cinemais.SessionLabel</item>
     </style>
 
+    <style name="Widget.Cinemais.MovieInfoBody">
+        <item name="android:textAppearance">@style/TextAppearance.Cinemais.MovieInfoBody</item>
+        <item name="android:textIsSelectable">true</item>
+    </style>
+
     <!-- Appearances -->
+    <style name="TextAppearance.Cinemais.ToolbarTitle" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:fontFamily">@font/opensans_bold</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="TextAppearance.Cinemais.ToolbarTitle.Light">
+        <item name="android:textColor">#FFFFFFFF</item>
+    </style>
+
     <style name="TextAppearance.Cinemais.Body" parent="@style/TextAppearance.AppCompat.Body1">
         <item name="android:textColor">@color/secondary_text</item>
         <item name="android:lineSpacingMultiplier">1.2</item>
     </style>
 
-    <style name="TextAppearance.Cinemais.Homehead" parent="@style/TextAppearance.AppCompat.Subhead">
+    <style name="TextAppearance.Cinemais.Subhead" parent="@style/TextAppearance.AppCompat.Subhead">
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@android:color/black</item>
     </style>
 
-    <style name="TextAppearance.Cinemais.MovieInfoLabel" parent="@style/TextAppearance.Cinemais.Body">
-        <item name="android:textColor">#00A651</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textAllCaps">true</item>
-    </style>
-
     <style name="TextAppearance.Cinemais.MovieInfoBody" parent="@style/TextAppearance.Cinemais.Body">
-        <item name="android:textIsSelectable">true</item>
         <item name="android:textColor">@color/secondary_text</item>
     </style>
 
@@ -104,18 +136,12 @@
     <style name="TabTextAppearance" parent="TextAppearance.Design.Tab">
         <item name="android:textAlignment">center</item>
         <item name="android:textColor">@color/secondary_text</item>
-        <item name="android:textSize">14sp</item>
+        <item name="android:textAllCaps">false</item>
         <item name="textAllCaps">false</item>
     </style>
 
-    <style name="TabTextAppearance.Schedule" parent="TextAppearance.Design.Tab">
-        <item name="android:textSize">18sp</item>
-        <item name="android:textColor">#64FFFFFF</item>
-        <item name="textAllCaps">true</item>
-    </style>
-
-    <style name="TabTextAppearance.Schedule.Light">
-        <item name="android:textColor">@color/secondary_text</item>
+    <style name="TabTextAppearance.Schedule">
+        <item name="android:textStyle">bold</item>
     </style>
 
 </resources>

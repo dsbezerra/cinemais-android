@@ -54,9 +54,8 @@
             android:id="@+id/release"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/secondary_text"
-            android:textAllCaps="true"
             android:textSize="12sp"
+            android:textAppearance="@style/TextAppearance.Cinemais.Body"
             tools:text="12 março 2019"
             />
 

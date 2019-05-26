@@ -23,6 +23,7 @@
 
         <activity
             android:name=".ui.tickets.TicketsActivity"
+            android:theme="@style/Cinemais.Transparent"
             />
 
         <activity

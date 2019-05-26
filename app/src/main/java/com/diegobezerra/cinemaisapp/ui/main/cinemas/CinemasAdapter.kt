@@ -4,25 +4,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.view.isGone
 import androidx.recyclerview.widget.RecyclerView
 import com.diegobezerra.cinemaisapp.R
-import com.diegobezerra.cinemaisapp.ui.main.cinemas.CinemasViewHolder.AllCinemasViewHolder
 import com.diegobezerra.cinemaisapp.ui.main.cinemas.CinemasViewHolder.CinemaViewHolder
 import com.diegobezerra.cinemaisapp.ui.main.cinemas.CinemasViewHolder.StateViewHolder
 import com.diegobezerra.core.cinemais.domain.model.Cinema
-import com.diegobezerra.core.cinemais.domain.model.Cinemas
 import com.diegobezerra.core.cinemais.domain.model.State
-import timber.log.Timber
 
 class CinemasAdapter(
     private val cinemasViewModel: CinemasViewModel
 ) : RecyclerView.Adapter<CinemasViewHolder>() {
 
     companion object {
-        private const val VIEW_TYPE_ALL = 0
-        private const val VIEW_TYPE_STATE = 1
-        private const val VIEW_TYPE_CINEMA = 2
+        private const val VIEW_TYPE_STATE = 0
+        private const val VIEW_TYPE_CINEMA = 1
     }
 
     private var list: MutableList<Any> = mutableListOf()
@@ -36,9 +31,6 @@ class CinemasAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CinemasViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         return when (viewType) {
-            VIEW_TYPE_ALL -> AllCinemasViewHolder(
-                inflater.inflate(R.layout.item_cinema_header_all, parent, false)
-            )
             VIEW_TYPE_STATE -> StateViewHolder(
                 inflater.inflate(R.layout.item_cinema_state, parent, false)
             )
@@ -54,7 +46,6 @@ class CinemasAdapter(
             is StateViewHolder -> holder.apply {
                 val state = list[position] as State
                 name.text = state.name
-                divider.isGone = position == 1
             }
             is CinemaViewHolder -> holder.apply {
                 val cinema = list[position] as Cinema
@@ -69,14 +60,11 @@ class CinemasAdapter(
                     cinemasViewModel.onCinemaClicked(cinema.id)
                 }
             }
-            is AllCinemasViewHolder -> Unit
         }
     }
 
     override fun getItemViewType(position: Int): Int {
-        val item = list[position]
-        return when (item) {
-            is AllCinemasHeader -> VIEW_TYPE_ALL
+        return when (list[position]) {
             is State -> VIEW_TYPE_STATE
             is Cinema -> VIEW_TYPE_CINEMA
             else -> throw IllegalStateException("Unknown view type at position $position")
@@ -91,7 +79,6 @@ class CinemasAdapter(
         if (data.isEmpty()) return
 
         val result = mutableListOf<Any>()
-        result += AllCinemasHeader
 
         // Used just to keep track of inserted states
         val stateMap = hashMapOf<String, Unit>()
@@ -110,18 +97,11 @@ class CinemasAdapter(
     }
 }
 
-object AllCinemasHeader
-
 sealed class CinemasViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-    class AllCinemasViewHolder(
-        itemView: View
-    ) : CinemasViewHolder(itemView)
 
     class StateViewHolder(
         itemView: View
     ) : CinemasViewHolder(itemView) {
-        val divider: View = itemView.findViewById(R.id.divider)
         val name: TextView = itemView.findViewById(R.id.name)
     }
 

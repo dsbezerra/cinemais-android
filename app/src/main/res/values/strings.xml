@@ -11,6 +11,7 @@
     <string name="title_about">Sobre</string>
     <string name="title_cinemas">Cinemas</string>
     <string name="title_movie">Filme</string>
+    <string name="title_cinema">Cinema</string>
 
     <!-- Home Strings -->
     <string name="home_header_playing">Em cartaz</string>
@@ -20,6 +21,8 @@
 
     <!-- Movie Strings -->
     <string name="original_title">%s (título original)</string>
+    <string name="release_with_runtime">%1$s  •  %2$d min</string>
+    <string name="runtime_only">%d min</string>
     <string name="unavailable_synopsis">Indisponível</string>
 
     <!-- Cinema Strings -->
@@ -56,4 +59,12 @@
 
     <!-- Transition Strings -->
     <string name="transition_cinema_to_schedule" translatable="false">transition_cinema_to_schedule</string>
+    <string name="today">Hoje</string>
+    <string name="tomorrow">Amanhã</string>
+    <string name="label_direction">Direção</string>
+    <string name="label_production">Produção</string>
+    <string name="label_executive_production">Produção executiva</string>
+    <string name="label_screenplay">Roteiro</string>
+    <string name="label_cast">Elenco</string>
+    <string name="label_genres">Gêneros</string>
 </resources>

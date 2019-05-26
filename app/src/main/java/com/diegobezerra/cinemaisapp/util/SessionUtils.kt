@@ -42,7 +42,8 @@ class SessionUtils {
                             group!!.add(session)
                         }
                         group?.let { sg ->
-                            // We don't care about room number and because of this times may be unsorted
+                            // We don't care about room number and because of this times may
+                            // be unsorted
                             sg.sessions.sortBy { s ->
                                 s.startTime
                             }

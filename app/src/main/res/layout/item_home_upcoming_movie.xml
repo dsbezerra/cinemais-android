@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?selectableItemBackground"
-    android:paddingStart="@dimen/spacing_medium"
-    android:paddingEnd="@dimen/spacing_medium"
+    android:orientation="horizontal"
     android:paddingBottom="@dimen/spacing_small"
+    android:paddingEnd="@dimen/spacing_medium"
+    android:paddingStart="@dimen/spacing_medium"
     android:paddingTop="@dimen/spacing_small"
     >
 
@@ -21,17 +21,19 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/movie_poster_height"
-        android:paddingStart="@dimen/spacing_medium"
-        android:paddingEnd="@dimen/spacing_medium"
         android:orientation="vertical"
+        android:paddingEnd="@dimen/spacing_medium"
+        android:paddingStart="@dimen/spacing_medium"
         >
 
         <TextView
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
+            android:ellipsize="end"
+            android:maxLines="2"
             android:textColor="@color/cinemais_pink"
+            android:textSize="16sp"
             tools:text="Captain Marvel"
             />
 
@@ -40,10 +42,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_small"
-            android:textSize="14sp"
             android:ellipsize="end"
-            android:maxLines="5"
+            android:maxLines="4"
             android:textAppearance="@style/TextAppearance.Cinemais.Body"
+            android:textSize="14sp"
             tools:text="Some long synopsis [...]"
             />
 

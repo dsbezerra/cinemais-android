@@ -3,14 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
     tools:context=".ui.tickets.TicketsFragment"
     >
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clipToPadding="false"
         android:paddingBottom="?actionBarSize"
+        android:paddingTop="58dp"
         android:scrollbars="vertical"
         android:requiresFadingEdge="vertical"
         >
@@ -20,15 +21,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/spacing_medium"
+            android:textColor="@android:color/white"
             android:textAppearance="@style/TextAppearance.Cinemais.Body"
             />
 
     </androidx.core.widget.NestedScrollView>
 
+    <include layout="@layout/include_normal_progress_bar" />
+
     <Button
         android:id="@+id/buy_online"
         android:layout_width="match_parent"
-        android:layout_height="?actionBarSize"
+        android:layout_height="50dp"
+        android:visibility="gone"
+        android:layout_marginStart="@dimen/spacing_medium"
+        android:layout_marginEnd="@dimen/spacing_medium"
+        android:layout_marginBottom="@dimen/spacing_small"
         style="@style/Widget.Cinemais.BuyTickets"
         />
 

@@ -10,7 +10,8 @@ class PreferencesHelper @Inject constructor(context: Context) {
 
         const val PREFS_NAME = "cinemais"
         const val PREF_SELECTED_CINEMA = "pref_selected_cinema"
-
+        const val PREF_INTERSTITIAL_LAST_DISPLAY_TIMESTAMP =
+            "pref_interstitial_last_display_timestamp"
     }
 
     private val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
@@ -30,4 +31,12 @@ class PreferencesHelper @Inject constructor(context: Context) {
         }
     }
 
+    fun getInterstitialLastDisplayTimestamp() =
+        prefs.getLong(PREF_INTERSTITIAL_LAST_DISPLAY_TIMESTAMP, 0)
+
+    fun setInterstitialLastDisplayTimestamp(value: Long) {
+        prefs.update {
+            putLong(PREF_INTERSTITIAL_LAST_DISPLAY_TIMESTAMP, value)
+        }
+    }
 }

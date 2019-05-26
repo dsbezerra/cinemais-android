@@ -3,6 +3,7 @@ package com.diegobezerra.cinemaisapp.ui.main
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import com.diegobezerra.cinemaisapp.BuildConfig
 import com.diegobezerra.cinemaisapp.R
@@ -14,6 +15,8 @@ import com.diegobezerra.cinemaisapp.ui.main.home.HomeFragment
 import com.diegobezerra.cinemaisapp.ui.main.movies.MoviesFragment
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.InterstitialAd
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.android.support.DaggerAppCompatActivity
@@ -22,20 +25,24 @@ import javax.inject.Inject
 class MainActivity : DaggerAppCompatActivity() {
 
     companion object {
+
         const val FRAGMENT_ID = R.id.fragment_container
+
+        const val INTERSTITIAL_INTERVAL = 1000 * 60 * 2
+
     }
 
     @Inject
     lateinit var preferencesHelper: PreferencesHelper
 
     private lateinit var fragment: Fragment
-    private lateinit var interstitialAd: InterstitialAd
+    private var interstitialAd: InterstitialAd? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        setupBottomNav()
+        setupViews()
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
@@ -46,16 +53,24 @@ class MainActivity : DaggerAppCompatActivity() {
         } else {
             fragment = supportFragmentManager.findFragmentById(FRAGMENT_ID) as Fragment
         }
+    }
 
-        setupAds()
+    override fun onDestroy() {
+        super.onDestroy()
+
+        interstitialAd?.adListener = null
     }
 
     override fun onResume() {
         super.onResume()
 
-        if (interstitialAd.isLoaded) {
-            interstitialAd.show()
+        val lastDisplayTimestamp = preferencesHelper.getInterstitialLastDisplayTimestamp()
+        interstitialAd?.let {
+            if (it.isLoaded && System.currentTimeMillis() - lastDisplayTimestamp > INTERSTITIAL_INTERVAL) {
+                interstitialAd?.show()
+            }
         }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -73,10 +88,11 @@ class MainActivity : DaggerAppCompatActivity() {
         }
     }
 
-    private fun setupBottomNav() {
-        findViewById<BottomNavigationView>(R.id.bottom_nav)?.let {
-            it.itemIconTintList = null
-            it.setOnNavigationItemSelectedListener { menuItem ->
+    private fun setupViews() {
+        val navContainer = findViewById<LinearLayout>(R.id.nav_container)
+        findViewById<BottomNavigationView>(R.id.bottom_nav).apply {
+            itemIconTintList = null
+            setOnNavigationItemSelectedListener { menuItem ->
                 when (menuItem.itemId) {
                     R.id.home -> {
                         switchFragment(HomeFragment())
@@ -99,31 +115,39 @@ class MainActivity : DaggerAppCompatActivity() {
                     else -> false
                 }
             }
-            // NOTE: No-op. Added just to prevent above listener being called
+            // NOTE: No-op. Added just to prevent setOnNavigationItemSelectedListener being called
             // whenever we reselect an item
-            it.setOnNavigationItemReselectedListener {}
+            setOnNavigationItemReselectedListener {}
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-        interstitialAd.adListener = null
-    }
-
-    private fun setupAds() {
-        interstitialAd = InterstitialAd(applicationContext)
-        interstitialAd.adUnitId = BuildConfig.INTERSTITIAL
-        interstitialAd.loadAd(AdRequest.Builder().build())
-        interstitialAd.adListener = object : AdListener() {
-            override fun onAdClosed() {
-                interstitialAd.loadAd(AdRequest.Builder().build())
+        // TODO: Add check for ads enabled or disabled
+        AdView(this).apply {
+            adSize = AdSize.SMART_BANNER
+            adUnitId = BuildConfig.BANNER
+            if (navContainer.childCount == 2) {
+                navContainer.addView(this, 0)
             }
+            loadAd(AdRequest.Builder().build())
+        }
+
+        interstitialAd = InterstitialAd(applicationContext).apply {
+            adUnitId = BuildConfig.INTERSTITIAL
+            adListener = object : AdListener() {
+                override fun onAdClosed() {
+                    preferencesHelper.setInterstitialLastDisplayTimestamp(System.currentTimeMillis())
+                    interstitialAd?.loadAd(AdRequest.Builder().build())
+                }
+            }
+            loadAd(AdRequest.Builder().build())
         }
     }
 
     private fun switchFragment(to: Fragment) {
         supportFragmentManager.beginTransaction().run {
+            if (fragment is CinemasFragment && to is CinemaFragment) {
+                setCustomAnimations(R.anim.slide_in_from_right, R.anim.slide_out_to_left)
+            } else if (fragment is CinemaFragment && to is CinemasFragment) {
+                setCustomAnimations(R.anim.slide_in_from_left, R.anim.slide_out_to_right)
+            }
             replace(FRAGMENT_ID, to.also {
                 fragment = it
             })

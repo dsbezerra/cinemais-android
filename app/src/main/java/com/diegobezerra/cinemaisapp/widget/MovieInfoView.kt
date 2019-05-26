@@ -19,8 +19,8 @@ class MovieInfoView @JvmOverloads constructor(
     init {
         val arr = context.obtainStyledAttributes(attrs, R.styleable.MovieInfoView,
             defStyleAttr, 0)
-        val label = arr.getString(R.styleable.MovieInfoView_infoLabel)
-        val content = arr.getString(R.styleable.MovieInfoView_infoContent)
+        val label = arr.getString(R.styleable.MovieInfoView_miLabel)
+        val content = arr.getString(R.styleable.MovieInfoView_miContent)
         arr.recycle()
 
         LayoutInflater.from(context)

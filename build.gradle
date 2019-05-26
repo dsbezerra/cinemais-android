@@ -5,7 +5,7 @@ buildscript {
         'compileSdk'            : 28,
         'minSdk'                : 21,
         'targetSdk'             : 28,
-        'buildTools'            : '3.4.0',
+        'buildTools'            : '3.4.1',
         'androidx'              : '1.1.0-alpha04',
         'coreKtx'               : '1.0.0',
         'dagger'                : '2.16',

@@ -1,9 +1,9 @@
 package com.diegobezerra.cinemaisapp.ui.cinema
 
+import android.app.ActivityOptions
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.transition.Fade.IN
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -22,16 +22,20 @@ import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
 import androidx.viewpager.widget.ViewPager
 import com.diegobezerra.cinemaisapp.R
+import com.diegobezerra.cinemaisapp.ui.main.MainFragment
 import com.diegobezerra.cinemaisapp.ui.schedule.ScheduleAdapter
-import com.diegobezerra.cinemaisapp.ui.schedule.ScheduleViewModel
 import com.diegobezerra.cinemaisapp.ui.tickets.TicketsActivity
+import com.diegobezerra.cinemaisapp.ui.tickets.TicketsActivity.Companion.EXTRA_CINEMA_ID
+import com.diegobezerra.cinemaisapp.ui.tickets.TicketsActivity.Companion.EXTRA_REVEAL_START_RADIUS
+import com.diegobezerra.cinemaisapp.ui.tickets.TicketsActivity.Companion.EXTRA_REVEAL_X
+import com.diegobezerra.cinemaisapp.ui.tickets.TicketsActivity.Companion.EXTRA_REVEAL_Y
 import com.diegobezerra.cinemaisapp.util.setupToolbarAsActionBar
+import com.diegobezerra.cinemaisapp.widget.CinemaActionView
 import com.diegobezerra.cinemaisapp.widget.CinemaisTabLayout
 import com.google.android.material.appbar.AppBarLayout
-import dagger.android.support.DaggerFragment
 import javax.inject.Inject
 
-class CinemaFragment : DaggerFragment() {
+class CinemaFragment : MainFragment() {
 
     companion object {
 
@@ -68,15 +72,16 @@ class CinemaFragment : DaggerFragment() {
         val appbar = root.findViewById<AppBarLayout>(R.id.appbar)
         val progressBar = root.findViewById<View>(R.id.progress_bar)
         val cinemaLayout = root.findViewById<View>(R.id.cinema_layout)
+        val cinemaActions = root.findViewById<ViewGroup>(R.id.cinema_actions)
         val sessionsLayout = root.findViewById<ViewGroup>(R.id.sessions_layout)
+        val sessionCinemaName = root.findViewById<TextView>(R.id.session_cinema_name)
         val name = root.findViewById<TextView>(R.id.cinema_name)
         val address = root.findViewById<TextView>(R.id.cinema_address)
         val pager = root.findViewById<ViewPager>(R.id.viewpager)
         val tabs = root.findViewById<CinemaisTabLayout>(R.id.tabs)
 
-
         setupToolbarAsActionBar(root, R.id.toolbar) {
-            title = getString(R.string.title_theaters)
+            title = getString(R.string.title_cinema)
             setDisplayHomeAsUpEnabled(true)
         }
 
@@ -89,16 +94,22 @@ class CinemaFragment : DaggerFragment() {
 
                 if (it) {
                     TransitionManager.beginDelayedTransition(root as ViewGroup)
-                    appbar.isGone = true
                     tabs.isGone = true
                     pager.isGone = true
+                    sessionsLayout.isGone = true
                 }
             })
 
             schedule.observe(this@CinemaFragment, Observer {
                 name.text = it.cinema.name
+                sessionCinemaName.text = it.cinema.name
 
-                pager.adapter = ScheduleAdapter(it, childFragmentManager)
+                val context = requireContext()
+                val titles = listOf<String>(
+                    context.getString(R.string.today),
+                    context.getString(R.string.tomorrow)
+                )
+                pager.adapter = ScheduleAdapter(titles, it, childFragmentManager)
                 tabs.setupWithViewPager(pager)
 
                 it.cinema.location?.let { location ->
@@ -124,42 +135,57 @@ class CinemaFragment : DaggerFragment() {
                             Slide(Gravity.BOTTOM)
                                 .addTarget(pager)
                         )
-                        .addTransition(Fade(IN))
-                        .setStartDelay(400L)
+                        .addTransition(
+                            Fade(Fade.IN)
+                                .setStartDelay(200L)
+                        )
+                        .addTransition(
+                            Slide(Gravity.TOP)
+                                .setDuration(500L)
+                                .addTarget(cinemaActions)
+                        )
                         .setDuration(400L)
                         .setInterpolator(FastOutSlowInInterpolator())
                 )
-                appbar.isGone = false
                 tabs.isGone = false
                 pager.isGone = false
+                cinemaActions.isGone = false
+                sessionsLayout.isGone = false
             })
 
             setCinemaId(cinemaId)
         }
 
         val appBarMaxElevation = resources.getDimension(R.dimen.sessions_max_elevation)
+        val sessionCinemaNameSpacing = resources.getDimension(R.dimen.spacing_medium)
         appbar.addOnOffsetChangedListener(
             AppBarLayout.OnOffsetChangedListener { v, verticalOffset ->
                 val ratio = Math.abs(verticalOffset).toFloat() / v.totalScrollRange.toFloat()
-                val alpha = 1.0f - ratio
-                cinemaLayout.alpha = alpha
+                val offsetValue = 1.0f - ratio
+
+                cinemaLayout.alpha = offsetToProperty(offsetValue, 0.33f, 0.67f)
                 sessionsLayout.translationZ = ratio * appBarMaxElevation
+
+                val v = offsetToProperty(offsetValue, 0.33f, 0f)
+                sessionCinemaName.alpha = v
+                sessionCinemaName.translationX =
+                    -sessionCinemaNameSpacing + (sessionCinemaNameSpacing * 2 * v)
             }
         )
 
-        root.findViewById<View>(R.id.change)
-            .apply {
-                setOnClickListener {
-                    back()
-                }
-            }
-
-        root.findViewById<View>(R.id.tickets)
+        root.findViewById<CinemaActionView>(R.id.tickets)
             .apply {
                 setOnClickListener {
                     requireActivity().run {
-                        TicketsActivity.startActivity(this, cinemaId)
-                        overridePendingTransition(R.anim.slide_in, R.anim.fade_out)
+                        val revealOpts = getRevealOptions()
+                        val intent = Intent(this, TicketsActivity::class.java).apply {
+                            putExtra(EXTRA_CINEMA_ID, cinemaId)
+                            putExtra(EXTRA_REVEAL_X, revealOpts[0])
+                            putExtra(EXTRA_REVEAL_Y, revealOpts[1])
+                            putExtra(EXTRA_REVEAL_START_RADIUS, revealOpts[2])
+                        }
+                        val opts = ActivityOptions.makeSceneTransitionAnimation(this).toBundle()
+                        startActivity(intent, opts)
                     }
                 }
             }
@@ -172,6 +198,15 @@ class CinemaFragment : DaggerFragment() {
             }
 
         return root
+    }
+
+    /**
+     * Map a slideOffset (in the range `[-1, 1]`) to an property value based on the desired range.
+     * For example, `offsetToProperty(0.5, 0.25, 1) = 0.33` because 0.5 is 1/3 of the way between 0.25
+     * and 1. The result value is additionally clamped to the range `[0, 1]`.
+     */
+    private fun offsetToProperty(value: Float, rangeMin: Float, rangeMax: Float): Float {
+        return ((value - rangeMin) / (rangeMax - rangeMin)).coerceIn(0f, 1f)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -189,4 +224,6 @@ class CinemaFragment : DaggerFragment() {
             onBackPressed()
         }
     }
+
+    override fun title(): String? = ""
 }

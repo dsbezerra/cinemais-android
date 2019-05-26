@@ -26,14 +26,13 @@ class MoviesRemoteDataSource @Inject constructor(
                 }
             }
             .flatMap { movie ->
-                if (!movie.containsTrailer()) {
+                if (movie.trailer == null || movie.trailer!!.isYoutube()) {
                     Single.just(movie)
                 } else {
-                    service.trailer(movie.trailer!!.id)
-                        .map {
-                            movie.trailer = it
-                            movie
-                        }
+                    service.trailer(movie.trailer!!.id).map {
+                        movie.trailer = it
+                        movie
+                    }
                 }
             }
     }

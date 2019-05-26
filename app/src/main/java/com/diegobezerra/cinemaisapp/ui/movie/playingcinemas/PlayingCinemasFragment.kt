@@ -86,7 +86,12 @@ class PlayingCinemasFragment : DaggerFragment() {
 
             schedule.observe(this@PlayingCinemasFragment, Observer {
                 if (it != prevSchedule) {
-                    viewPager.adapter = ScheduleAdapter(it, childFragmentManager, false)
+                    val context = requireContext()
+                    val titles = listOf<String>(
+                        context.getString(R.string.today),
+                        context.getString(R.string.tomorrow)
+                    )
+                    viewPager.adapter = ScheduleAdapter(titles, it, childFragmentManager, false)
                     prevSchedule = it
                 }
             })

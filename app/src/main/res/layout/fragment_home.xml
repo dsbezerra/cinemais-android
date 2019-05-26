@@ -8,16 +8,17 @@
     tools:context=".ui.main.home.HomeFragment"
     >
 
-    <include layout="@layout/include_appbar"/>
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingTop="?actionBarSize"
         app:layoutManager="LinearLayoutManager"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         />
 
-    <include layout="@layout/include_progress_bar"/>
+    <include layout="@layout/include_progress_bar" />
+
+    <include layout="@layout/include_gradient_appbar" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

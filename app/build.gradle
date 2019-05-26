@@ -7,7 +7,7 @@ apply from: '../dependencies.gradle'
 
 def versionMajor  = 0
 def versionMinor  = 0
-def versionPatch  = 23
+def versionPatch  = 24
 def versionSuffix = "beta"
 
 android {
@@ -16,7 +16,7 @@ android {
         applicationId "com.diegobezerra.cinemaisapp"
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
-        versionCode 10
+        versionCode 11
         versionName "${versionMajor}.${versionMinor}.${versionPatch}-${versionSuffix}"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -25,6 +25,7 @@ android {
     buildTypes {
         debug {
             buildConfigField "String", "INTERSTITIAL", "\"ca-app-pub-3940256099942544/1033173712\""
+            buildConfigField "String", "BANNER", "\"ca-app-pub-3940256099942544/6300978111\""
         }
         release {
             minifyEnabled true
@@ -33,6 +34,7 @@ android {
                 'proguard-rules.pro'
 
             buildConfigField "String", "INTERSTITIAL", "\"ca-app-pub-8142728452724363/6607517366\""
+            buildConfigField "String", "BANNER", "\"ca-app-pub-8142728452724363/5193070712\""
         }
     }
     //    splits {

@@ -1,12 +1,19 @@
 package com.diegobezerra.cinemaisapp.ui.movie
 
+import android.animation.ObjectAnimator
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isGone
+import androidx.core.widget.NestedScrollView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
@@ -17,15 +24,16 @@ import com.diegobezerra.cinemaisapp.GlideApp
 import com.diegobezerra.cinemaisapp.GlideOptions.bitmapTransform
 import com.diegobezerra.cinemaisapp.R
 import com.diegobezerra.cinemaisapp.ui.movie.playingcinemas.PlayingCinemasFragment
-import com.diegobezerra.cinemaisapp.util.ImageUtils
 import com.diegobezerra.cinemaisapp.util.setupToolbarAsActionBar
 import com.diegobezerra.core.cinemais.domain.model.Movie
 import com.diegobezerra.core.cinemais.domain.model.Posters
+import com.diegobezerra.core.util.DateUtils.Companion.BRAZIL
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
 import dagger.android.support.DaggerFragment
 import fr.castorflex.android.circularprogressbar.CircularProgressBar
+import kotlinx.android.synthetic.main.fragment_movie.backdrop
 import kotlinx.android.synthetic.main.fragment_movie.cast
 import kotlinx.android.synthetic.main.fragment_movie.direction
 import kotlinx.android.synthetic.main.fragment_movie.executiveProduction
@@ -36,18 +44,25 @@ import kotlinx.android.synthetic.main.fragment_movie.production
 import kotlinx.android.synthetic.main.fragment_movie.ratingImage
 import kotlinx.android.synthetic.main.fragment_movie.releaseRuntime
 import kotlinx.android.synthetic.main.fragment_movie.screenplay
+import kotlinx.android.synthetic.main.fragment_movie.scroll
 import kotlinx.android.synthetic.main.fragment_movie.synopsis
 import kotlinx.android.synthetic.main.fragment_movie.title
+import kotlinx.android.synthetic.main.include_movie_toolbar.cinemais_border
+import kotlinx.android.synthetic.main.include_trailer.trailer
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import javax.inject.Inject
 
-private val FORMAT = SimpleDateFormat("dd MMMM")
+private val FORMAT = SimpleDateFormat("dd MMMM", BRAZIL)
 
 class MovieFragment : DaggerFragment() {
 
     companion object {
 
         const val MOVIE_ID = "arg.MOVIE_ID"
+
+        // 1 second delay peek for playing rooms sheet
+        const val PEEK_DELAY = 1000L
 
         fun newInstance(id: Int): MovieFragment {
             return MovieFragment().apply {
@@ -68,7 +83,10 @@ class MovieFragment : DaggerFragment() {
     }
 
     private lateinit var toolbar: Toolbar
+    private var displayingTitleInToolbar = false
 
+    private val peekHandler = Handler()
+    private var peekRunnable: Runnable? = null
     private lateinit var playingCinemasFragment: PlayingCinemasFragment
     private lateinit var playingCinemasSheet: ViewGroup
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<*>
@@ -96,10 +114,9 @@ class MovieFragment : DaggerFragment() {
         val args = requireNotNull(arguments)
 
         toolbar = setupToolbarAsActionBar(root, R.id.toolbar) {
-            title = getString(R.string.title_movie)
+            title = null
             setDisplayHomeAsUpEnabled(true)
         }
-
         viewModel.apply {
             loading.observe(this@MovieFragment, Observer {
                 val firstLoad = viewModel.movie.value == null
@@ -125,6 +142,12 @@ class MovieFragment : DaggerFragment() {
         return root
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+
+        peekHandler.removeCallbacks(peekRunnable)
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
@@ -136,6 +159,16 @@ class MovieFragment : DaggerFragment() {
     }
 
     private fun initMovie(movie: Movie) {
+        requireContext().run {
+            val weekday = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)
+            val image = movie.images.getBackdrop(weekday) ?: movie.images.getPoster(weekday)
+            ?: movie.posters.large
+            GlideApp.with(this)
+                .asBitmap()
+                .load(image)
+                .transition(withCrossFade())
+                .into(backdrop)
+        }
         initPoster(movie.posters)
         initInfo(movie)
         initRating(movie.rating)
@@ -147,8 +180,31 @@ class MovieFragment : DaggerFragment() {
         initExecutiveProduction(movie.executiveProduction)
         initDirection(movie.direction)
 
+        movie.trailer?.let {
+            if (!it.isYoutube()) {
+                return
+            }
+            trailer.apply {
+                isGone = false
+                setOnClickListener { _ ->
+                    val youtubeUrl = "https://youtube.com/watch?v=${it.id}"
+                    try {
+                        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(youtubeUrl)))
+                    } catch (e: Exception) {
+                        // No-op
+                    }
+                }
+            }
+        }
+
+        cinemais_border.scaleX = 0f
+        cinemais_border.visibility = View.VISIBLE
+
         if (movie.isPlaying()) {
-            playingCinemasFragment.peek(movie.id)
+            peekRunnable = Runnable {
+                playingCinemasFragment.peek(movie.id)
+            }
+            peekHandler.postDelayed(peekRunnable, PEEK_DELAY)
         } else {
             playingCinemasSheet.isGone = true
         }
@@ -164,12 +220,10 @@ class MovieFragment : DaggerFragment() {
                     .transition(withCrossFade())
                     .into(poster)
             }
-
         }
     }
 
     private fun initInfo(movie: Movie) {
-//        toolbar.title = movie.title
         title.text = movie.title
 
         if (movie.originalTitle != "" && movie.originalTitle != movie.title) {
@@ -180,36 +234,52 @@ class MovieFragment : DaggerFragment() {
         }
 
         if (movie.releaseDate != null && movie.runtime > 0) {
-            releaseRuntime.text = "${FORMAT.format(movie.releaseDate)}  •  ${movie.runtime} min"
+            releaseRuntime.text = getString(
+                R.string.release_with_runtime,
+                FORMAT.format(movie.releaseDate),
+                movie.runtime
+            )
         } else if (movie.releaseDate != null) {
-            releaseRuntime.text = "${FORMAT.format(movie.releaseDate)}"
+            releaseRuntime.text = FORMAT.format(movie.releaseDate)
         } else if (movie.rating > 0) {
-            releaseRuntime.text = "${movie.runtime} min"
+            releaseRuntime.text = getString(R.string.runtime_only, movie.runtime)
+        }
+
+        var borderAnimator: ObjectAnimator? = null
+        scroll.setOnScrollChangeListener { v: NestedScrollView?, scrollX: Int, scrollY: Int, oldScrollX: Int, oldScrollY: Int ->
+            val displayTitle = scrollY >= backdrop.bottom
+            if (displayingTitleInToolbar && !displayTitle) {
+                borderAnimator?.cancel()
+                borderAnimator = ObjectAnimator.ofFloat(cinemais_border, "scaleX", 1f, 0f).apply {
+                    start()
+                }
+                displayingTitleInToolbar = false
+                toolbar.title = null
+            } else if (displayTitle && !displayingTitleInToolbar) {
+                borderAnimator?.cancel()
+                borderAnimator = ObjectAnimator.ofFloat(cinemais_border, "scaleX", 0f, 1f).apply {
+                    start()
+                }
+                displayingTitleInToolbar = true
+                toolbar.title = movie.title
+            } else {
+                // No-op.
+            }
         }
     }
 
     private fun initRating(rating: Int) {
         if (rating != 0) {
+            var resId = 0
             when (rating) {
-                -1 -> {
-                    ratingImage.setImageResource(R.drawable.ic_rating_l)
-                }
-                10 -> {
-                    ratingImage.setImageResource(R.drawable.ic_rating_10)
-                }
-                12 -> {
-                    ratingImage.setImageResource(R.drawable.ic_rating_12)
-                }
-                14 -> {
-                    ratingImage.setImageResource(R.drawable.ic_rating_14)
-                }
-                16 -> {
-                    ratingImage.setImageResource(R.drawable.ic_rating_16)
-                }
-                18 -> {
-                    ratingImage.setImageResource(R.drawable.ic_rating_18)
-                }
+                -1 -> resId = R.drawable.ic_rating_l
+                10 -> resId = R.drawable.ic_rating_10
+                12 -> resId = R.drawable.ic_rating_12
+                14 -> resId = R.drawable.ic_rating_14
+                16 -> resId = R.drawable.ic_rating_16
+                18 -> resId = R.drawable.ic_rating_18
             }
+            ratingImage.setImageResource(resId)
         }
     }
 
@@ -246,6 +316,15 @@ class MovieFragment : DaggerFragment() {
     private fun initDirection(list: List<String>) {
         direction.setContent(list.joinToString(", "))
         direction.isGone = list.isEmpty()
+    }
+
+    private fun isYoutubeInstalled(context: Context): Boolean {
+        return try {
+            context.packageManager.getPackageInfo("com.google.android.youtube", 0)
+            true
+        } catch (e: PackageManager.NameNotFoundException) {
+            false
+        }
     }
 
     fun onBackPressed(): Boolean {

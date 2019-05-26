@@ -78,5 +78,5 @@ data class Movie(
 
     fun isPlaying() = playingCinemas.isNotEmpty()
 
-    fun containsTrailer() = trailer?.isYoutube() ?: false
+    fun isTrailerPresent() = trailer != null && trailer!!.isValid() && trailer!!.isCinemais()
 }
