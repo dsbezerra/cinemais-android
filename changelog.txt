@@ -1,0 +1,42 @@
+Changelog
+
+VersionName (VersionCode)
+
+0.0.24-beta (11)
+- Major design changes
+- Add trailer functionality
+- Add banner ad in MainActivity
+- Interstitial ad is now displayed with a interval of 2 minutes
+- Add placeholder for images
+
+0.0.23-beta (10)
+- Use Open Sans as main font
+- Apply rounded corners transformation to all posters
+- Add movie title for now playing movies in HomeFragment
+- Little design changes in AboutActivity
+- Other simple design changes
+  
+
+0.0.22-beta (9) 
+- Fix crash preventing app to start in <28 API devices caused by misusage of VectorDrawables
+
+0.0.21-beta (8) 
+- Use new color for Magic D logo
+- Add movie ratings in schedule views
+- Change author link from Twitter to GitHub page
+- Poster quality is based on connection speed for lists and grids views
+- Fix tabs color for selected state
+
+0.0.2-beta (7)
+- Implement a better way to get format of session
+
+0.0.1-beta (6)
+- Fixes in PlayingCinemas BottomSheet:
+    - Now uses default BottomSheetBehavior from material-components. We *STILL* don't have the desired behavior, but the old one was buggy
+- AutoSlideViewPager changes:
+    - Manage its own interval
+    - Doesn't slide when user is interacting
+    - Always smooth scroll on page changes
+
+0.0.1-beta (5)
+- Implement PlayingCinemas use case
