@@ -25,6 +25,8 @@
             android:layout_gravity="top"
             android:layout_marginBottom="?actionBarSize"
             android:layout_marginTop="?actionBarSize"
+            android:paddingStart="@dimen/spacing_medium"
+            android:paddingEnd="@dimen/spacing_medium"
             android:gravity="center_horizontal"
             app:layout_collapseMode="parallax"
             app:layout_collapseParallaxMultiplier="0.7"

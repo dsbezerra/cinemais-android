@@ -89,9 +89,9 @@
 
     <style name="Widget.Cinemais.SessionLabel">
         <item name="android:layout_marginEnd">@dimen/spacing_tiny</item>
-        <item name="android:background">#46000000</item>
-        <item name="android:paddingStart">@dimen/spacing_tiny</item>
-        <item name="android:paddingEnd">@dimen/spacing_tiny</item>
+        <item name="android:background">@drawable/bg_session_label</item>
+        <item name="android:paddingStart">@dimen/spacing_small</item>
+        <item name="android:paddingEnd">@dimen/spacing_small</item>
         <item name="android:textAppearance">@style/TextAppearance.Cinemais.SessionLabel</item>
     </style>
 
@@ -128,7 +128,7 @@
     <style name="TextAppearance.Cinemais.SessionLabel" parent="@style/TextAppearance.Cinemais.Body">
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">14sp</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:textAlignment">center</item>
     </style>

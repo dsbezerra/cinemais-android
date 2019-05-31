@@ -45,6 +45,7 @@
     <string name="label_session_national">NAC</string>
     <string name="label_session_dubbed">DUB</string>
     <string name="label_session_subtitled">LEG</string>
+    <string name="label_session_room">SALA %d</string>
 
     <!-- About Strings -->
     <string name="about_app_0">Este aplicativo foi desenvolvido para servir como uma alternativa ao site mobile do Cinemais.</string>

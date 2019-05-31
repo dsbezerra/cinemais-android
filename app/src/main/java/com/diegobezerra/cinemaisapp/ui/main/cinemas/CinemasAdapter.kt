@@ -51,9 +51,9 @@ class CinemasAdapter(
                 val cinema = list[position] as Cinema
 
                 if (cinema.cityName != cinema.name) {
-                    name.text = "${cinema.name} - ${cinema.cityName}"
+                    name.text =  itemView.resources.getString(R.string.label_cinema, cinema.name, cinema.cityName)
                 } else {
-                    name.text = "${cinema.name}"
+                    name.text = cinema.name
                 }
 
                 itemView.setOnClickListener {

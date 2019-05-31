@@ -2,6 +2,10 @@ Changelog
 
 VersionName (VersionCode)
 
+0.0.25-beta (12)
+- Add room information in sessions
+- Minor design changes in sessions
+
 0.0.24-beta (11)
 - Major design changes
 - Add trailer functionality

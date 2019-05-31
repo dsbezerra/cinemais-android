@@ -93,6 +93,8 @@ class SessionsAdapter(
             is SessionsViewHolder -> holder.apply {
                 val sessions = list[position] as SessionGroup
                 val context = itemView.context
+
+                room.text = context.getString(R.string.label_session_room, sessions.room)
                 when (sessions.version) {
                     VersionNational -> {
                         version.text = context.getString(R.string.label_session_national)
@@ -167,6 +169,7 @@ sealed class SessionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemVie
 
     class SessionsViewHolder(itemView: View) : SessionViewHolder(itemView) {
 
+        val room: TextView = itemView.findViewById(R.id.room)
         val version: TextView = itemView.findViewById(R.id.version)
         val format: TextView = itemView.findViewById(R.id.format)
         val magic: TextView = itemView.findViewById(R.id.magic)
@@ -188,6 +191,7 @@ class SessionGroup(
     val movieId: Int,
     val movieTitle: String,
     val movieRating: Int,
+    val room: Int,
     val format: String,
     val version: String,
     val magic: Boolean,

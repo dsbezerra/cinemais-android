@@ -7,4 +7,5 @@
         android:endColor="@color/cinemais_pink"
         android:angle="45"
         />
+    <corners android:radius="@dimen/spacing_medium" />
 </shape>

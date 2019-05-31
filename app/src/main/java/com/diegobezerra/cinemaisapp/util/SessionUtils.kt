@@ -10,7 +10,7 @@ class SessionUtils {
         fun group(sessions: List<Session>): List<SessionGroup> {
             val result = mutableListOf<SessionGroup>()
             val groups = sessions.groupBy {
-                var key = "${it.movieTitle}.${it.format}.${it.version}"
+                var key = "${it.movieTitle}.${it.room}.${it.format}.${it.version}"
                 if (it.magic) {
                     key += ".magic"
                 }
@@ -33,6 +33,7 @@ class SessionUtils {
                                     movieId = session.movieId,
                                     movieTitle = session.movieTitle,
                                     movieRating = session.movieRating,
+                                    room = session.room,
                                     format = session.format,
                                     version = session.version,
                                     magic = session.magic,
