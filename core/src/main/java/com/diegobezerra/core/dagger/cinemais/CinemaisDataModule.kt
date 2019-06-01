@@ -1,13 +1,15 @@
 package com.diegobezerra.core.dagger.cinemais
 
+import android.content.Context
 import com.diegobezerra.core.cinemais.data.CinemaisConverterFactory
 import com.diegobezerra.core.cinemais.data.CinemaisService
+import com.diegobezerra.core.util.NetworkUtils
 import dagger.Module
 import dagger.Provides
+import okhttp3.Cache
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
-import okhttp3.OkHttpClient
-import java.util.concurrent.TimeUnit
 
 @Module
 class CinemaisDataModule {
@@ -18,18 +20,35 @@ class CinemaisDataModule {
 
     @Provides
     fun provideCinemaisService(
+        context: Context,
         converterFactory: CinemaisConverterFactory
     ): CinemaisService {
-        // NOTE: The page sometimes takes too long to respond
+        // NOTE: Each cache must have its own directory.
+        // See https://github.com/square/okhttp/wiki/Recipes#response-caching for more information!
+        val cacheSize = 10L * 1024 * 1024 // 10 MiB
+        val maxStale = 60L * 60 * 24 * 6 // 6 days
+        val maxAge = 5 // 5 secs
         val client = OkHttpClient.Builder()
-            .connectTimeout(15, TimeUnit.SECONDS)
-            .readTimeout(15, TimeUnit.SECONDS)
+            .cache(Cache(context.cacheDir, cacheSize))
+            .addInterceptor { chain ->
+                val request = chain.request().newBuilder().run {
+                    if (NetworkUtils.isConnected(context)!!) {
+                        header("Cache-Control", "public, max-age=$maxAge").build()
+                    } else {
+                        header(
+                            "Cache-Control",
+                            "public, only-if-cached, max-stale=$maxStale"
+                        ).build()
+                    }
+                }
+                chain.proceed(request)
+            }
             .build()
         return Retrofit.Builder()
-            .client(client)
             .baseUrl(CinemaisService.ENDPOINT)
             .addConverterFactory(converterFactory)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .client(client)
             .build()
             .create(CinemaisService::class.java)
     }
