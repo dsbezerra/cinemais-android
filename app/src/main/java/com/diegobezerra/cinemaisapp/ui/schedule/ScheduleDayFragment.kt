@@ -16,16 +16,14 @@ class ScheduleDayFragment : DaggerFragment() {
 
     companion object {
 
-        const val LIGHT = "arg.LIGHT"
         const val CINEMA_ID = "arg.CINEMA_ID"
         const val DAY_POSITION = "arg.DAY_POSITION"
 
-        fun newInstance(cinema: Int, day: Int, light: Boolean = true): ScheduleDayFragment {
+        fun newInstance(cinema: Int, day: Int): ScheduleDayFragment {
             return ScheduleDayFragment().apply {
                 arguments = Bundle().apply {
                     putInt(CINEMA_ID, cinema)
                     putInt(DAY_POSITION, day)
-                    putBoolean(LIGHT, light)
                 }
             }
         }
@@ -50,7 +48,7 @@ class ScheduleDayFragment : DaggerFragment() {
 
         val recyclerView = root.findViewById<RecyclerView>(R.id.recyclerView)
         recyclerView.run {
-            adapter = SessionsAdapter(args.getBoolean(LIGHT)).also {
+            adapter = SessionsAdapter().also {
                 sessionsAdapter = it
             }
             setHasFixedSize(true)

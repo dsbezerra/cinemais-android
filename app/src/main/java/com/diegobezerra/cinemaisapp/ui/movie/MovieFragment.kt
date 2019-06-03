@@ -1,9 +1,8 @@
 package com.diegobezerra.cinemaisapp.ui.movie
 
-import android.animation.ObjectAnimator
-import android.content.Context
+import android.animation.ArgbEvaluator
+import android.animation.ValueAnimator
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
@@ -47,7 +46,8 @@ import kotlinx.android.synthetic.main.fragment_movie.screenplay
 import kotlinx.android.synthetic.main.fragment_movie.scroll
 import kotlinx.android.synthetic.main.fragment_movie.synopsis
 import kotlinx.android.synthetic.main.fragment_movie.title
-import kotlinx.android.synthetic.main.include_movie_toolbar.cinemais_border
+import kotlinx.android.synthetic.main.include_movie_appbar.appbar
+import kotlinx.android.synthetic.main.include_movie_appbar.cinemais_border
 import kotlinx.android.synthetic.main.include_trailer.trailer
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -245,19 +245,31 @@ class MovieFragment : DaggerFragment() {
             releaseRuntime.text = getString(R.string.runtime_only, movie.runtime)
         }
 
-        var borderAnimator: ObjectAnimator? = null
+        var toolbarAnimator: ValueAnimator? = null
+        val toolbarColors = getToolbarColors()
+        val argbEvaluator = ArgbEvaluator()
         scroll.setOnScrollChangeListener { v: NestedScrollView?, scrollX: Int, scrollY: Int, oldScrollX: Int, oldScrollY: Int ->
             val displayTitle = scrollY >= backdrop.bottom
             if (displayingTitleInToolbar && !displayTitle) {
-                borderAnimator?.cancel()
-                borderAnimator = ObjectAnimator.ofFloat(cinemais_border, "scaleX", 1f, 0f).apply {
+                toolbarAnimator?.cancel()
+                toolbarAnimator = ValueAnimator.ofFloat(1f, 0f).apply {
+                    addUpdateListener {
+                        val value = animatedValue as Float
+                        appbar.setBackgroundColor(argbEvaluator.evaluate(value, toolbarColors[0], toolbarColors[1]) as Int)
+                        cinemais_border.scaleX = value
+                    }
                     start()
                 }
                 displayingTitleInToolbar = false
                 toolbar.title = null
             } else if (displayTitle && !displayingTitleInToolbar) {
-                borderAnimator?.cancel()
-                borderAnimator = ObjectAnimator.ofFloat(cinemais_border, "scaleX", 0f, 1f).apply {
+                toolbarAnimator?.cancel()
+                toolbarAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
+                    addUpdateListener {
+                        val value = animatedValue as Float
+                        appbar.setBackgroundColor(argbEvaluator.evaluate(value, toolbarColors[0], toolbarColors[1]) as Int)
+                        cinemais_border.scaleX = value
+                    }
                     start()
                 }
                 displayingTitleInToolbar = true
@@ -284,7 +296,7 @@ class MovieFragment : DaggerFragment() {
     }
 
     private fun initGenres(list: List<String>) {
-        genres.setContent(list.joinToString(", "))
+        genres.content = list.joinToString(", ")
         genres.isGone = list.isEmpty()
     }
 
@@ -294,37 +306,28 @@ class MovieFragment : DaggerFragment() {
     }
 
     private fun initCast(list: List<String>) {
-        cast.setContent(list.joinToString(", "))
+        cast.content = list.joinToString(", ")
         cast.isGone = list.isEmpty()
     }
 
     private fun initScreenplay(list: List<String>) {
-        screenplay.setContent(list.joinToString(", "))
+        screenplay.content = list.joinToString(", ")
         screenplay.isGone = list.isEmpty()
     }
 
     private fun initProduction(list: List<String>) {
-        production.setContent(list.joinToString(", "))
+        production.content = list.joinToString(", ")
         production.isGone = list.isEmpty()
     }
 
     private fun initExecutiveProduction(list: List<String>) {
-        executiveProduction.setContent(list.joinToString(", "))
+        executiveProduction.content = list.joinToString(", ")
         executiveProduction.isGone = list.isEmpty()
     }
 
     private fun initDirection(list: List<String>) {
-        direction.setContent(list.joinToString(", "))
+        direction.content = list.joinToString(", ")
         direction.isGone = list.isEmpty()
-    }
-
-    private fun isYoutubeInstalled(context: Context): Boolean {
-        return try {
-            context.packageManager.getPackageInfo("com.google.android.youtube", 0)
-            true
-        } catch (e: PackageManager.NameNotFoundException) {
-            false
-        }
     }
 
     fun onBackPressed(): Boolean {
@@ -334,5 +337,18 @@ class MovieFragment : DaggerFragment() {
         } else {
             false
         }
+    }
+
+    private fun getToolbarColors(): IntArray {
+        val attrs = requireContext().obtainStyledAttributes(
+            intArrayOf(
+                R.attr.background_color_transparent,
+                R.attr.background_color
+            )
+        )
+        val startColor = attrs.getColor(0, 0)
+        val endColor = attrs.getColor(1, 1)
+        attrs.recycle()
+        return intArrayOf(startColor, endColor)
     }
 }

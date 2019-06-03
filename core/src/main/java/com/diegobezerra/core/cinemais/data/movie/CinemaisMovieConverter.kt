@@ -54,8 +54,8 @@ object CinemaisMovieConverter : Converter<ResponseBody, Movie> {
             .children()
             .forEach {
                 if (it.`is`("h3")) {
-                    val label = it.text().toLowerCase()
-                    val content = it.nextElementSibling().text()
+                    val label = it.text().trim().toLowerCase()
+                    val content = it.nextElementSibling().text().trim()
                     when (label) {
                         SYNOPSIS -> {
                             synopsis = content

@@ -2,6 +2,12 @@ Changelog
 
 VersionName (VersionCode)
 
+0.0.27-beta (14)
+- Add Dark theme
+- Some colors corrections
+- Add simple settings view
+- Add splash screen
+
 0.0.26-beta (13)
 - Add simple offline mode by adding cache configuration to OkHttpClient
 

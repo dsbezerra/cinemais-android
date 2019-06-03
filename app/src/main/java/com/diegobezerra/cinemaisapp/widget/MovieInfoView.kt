@@ -1,6 +1,11 @@
 package com.diegobezerra.cinemaisapp.widget
 
 import android.content.Context
+import android.graphics.Typeface
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
+import android.text.style.StyleSpan
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.LinearLayout
@@ -13,28 +18,61 @@ class MovieInfoView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr) {
 
-    private val labelView: TextView by lazy { findViewById<TextView>(R.id.label) }
+    private val labelColor by lazy {
+        var result: Int
+        context.obtainStyledAttributes(intArrayOf(R.attr.primary_text_color)).apply {
+            result = getColor(0, 0)
+            recycle()
+        }
+        result
+    }
+
+    var label: String? = null
+        set(value) {
+            if (field != value) {
+                field = value
+                update()
+            }
+        }
+
+    var content: String? = null
+        set(value) {
+            if (field != value) {
+                field = value
+                update()
+            }
+        }
+
     private val contentView: TextView by lazy { findViewById<TextView>(R.id.content) }
 
     init {
-        val arr = context.obtainStyledAttributes(attrs, R.styleable.MovieInfoView,
-            defStyleAttr, 0)
-        val label = arr.getString(R.styleable.MovieInfoView_miLabel)
-        val content = arr.getString(R.styleable.MovieInfoView_miContent)
-        arr.recycle()
-
         LayoutInflater.from(context)
             .inflate(R.layout.movie_info_view, this, true)
 
-        labelView.text = label
-        contentView.text = content
+        val arr = context.obtainStyledAttributes(
+            attrs, R.styleable.MovieInfoView,
+            defStyleAttr, 0
+        )
+        label = arr.getString(R.styleable.MovieInfoView_miLabel)
+        content = arr.getString(R.styleable.MovieInfoView_miContent)
+        arr.recycle()
     }
 
-    fun setLabel(label: String) {
-        labelView.text = label
-    }
-
-    fun setContent(content: String) {
-        contentView.text = content
+    private fun update() {
+        val string = SpannableString("$label   $content").apply {
+            setSpan(
+                StyleSpan(Typeface.BOLD),
+                0,
+                label?.length!!,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+            setSpan(
+                ForegroundColorSpan(labelColor),
+                0,
+                label?.length!!,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+        }
+        contentView.text = string
     }
 }

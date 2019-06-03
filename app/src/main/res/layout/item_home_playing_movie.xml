@@ -22,7 +22,8 @@
         android:ellipsize="end"
         android:maxLines="2"
         android:textAlignment="center"
-        android:textColor="@color/secondary_text"
+        android:gravity="center"
+        android:textColor="?attr/secondary_text_color"
         android:textSize="12sp"
         />
 

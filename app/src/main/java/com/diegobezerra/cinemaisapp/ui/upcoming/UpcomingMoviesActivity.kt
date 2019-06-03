@@ -5,17 +5,16 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import com.diegobezerra.cinemaisapp.R
-import com.diegobezerra.cinemaisapp.R.id
+import com.diegobezerra.cinemaisapp.ui.BaseActivity
 import com.diegobezerra.cinemaisapp.ui.main.movies.TabMoviesFragment
 import com.diegobezerra.cinemaisapp.util.setupActionBar
 import com.diegobezerra.core.cinemais.data.movie.MoviesRepository.Companion.UPCOMING
-import dagger.android.support.DaggerAppCompatActivity
 
-class UpcomingMoviesActivity : DaggerAppCompatActivity() {
+class UpcomingMoviesActivity : BaseActivity() {
 
     companion object {
 
-        const val FRAGMENT_ID = id.fragment_container
+        const val FRAGMENT_ID = R.id.fragment_container
 
         fun getStartIntent(context: Context): Intent {
             return Intent(context, UpcomingMoviesActivity::class.java)

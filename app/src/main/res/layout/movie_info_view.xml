@@ -5,36 +5,16 @@
     tools:parentTag="android.widget.LinearLayout"
     >
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/content"
+        style="@style/Widget.Cinemais.MovieInfoBody"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="@dimen/spacing_small"
-        android:layout_marginBottom="@dimen/spacing_small"
-        >
-
-        <TextView
-            android:id="@+id/label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingTop="@dimen/spacing_small"
-            android:paddingStart="@dimen/spacing_medium"
-            android:paddingEnd="@dimen/spacing_medium"
-            android:textAppearance="@style/TextAppearance.Cinemais.Subhead"
-            tools:text="LABEL"
-            />
-
-        <TextView
-            android:id="@+id/content"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingStart="@dimen/spacing_medium"
-            android:paddingEnd="@dimen/spacing_medium"
-            android:layout_marginTop="@dimen/spacing_tiny"
-            style="@style/Widget.Cinemais.MovieInfoBody"
-            tools:text="Content"
-            />
-
-    </LinearLayout>
+        android:paddingTop="@dimen/spacing_tiny"
+        android:paddingBottom="@dimen/spacing_tiny"
+        android:paddingStart="@dimen/spacing_medium"
+        android:paddingEnd="@dimen/spacing_medium"
+        android:textIsSelectable="false"
+        />
 
 </merge>

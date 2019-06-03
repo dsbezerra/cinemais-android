@@ -10,8 +10,12 @@ class ImageUtils {
 
     companion object {
 
-        fun placeholder(context: Context) =
-            ColorDrawable(ContextCompat.getColor(context, R.color.placeholder))
+        fun placeholder(context: Context): ColorDrawable {
+            val a = context.obtainStyledAttributes(intArrayOf(R.attr.placeholder_color))
+            val color = a.getColor(0, ContextCompat.getColor(context, R.color.placeholder))
+            a.recycle()
+            return ColorDrawable(color)
+        }
 
         fun posterTransformation(context: Context) =
             RoundedCorners(context.resources.getDimension(R.dimen.spacing_small).toInt())

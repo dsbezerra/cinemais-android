@@ -1,0 +1,20 @@
+<androidx.preference.PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:iconSpaceReserved="false">
+
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:title="@string/appearance_header">
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="pref_dark_theme"
+            android:title="@string/pref_dark_theme"
+            app:iconSpaceReserved="false"
+            />
+
+
+    </PreferenceCategory>
+
+</androidx.preference.PreferenceScreen>

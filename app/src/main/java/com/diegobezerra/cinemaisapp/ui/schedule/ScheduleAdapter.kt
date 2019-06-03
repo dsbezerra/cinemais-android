@@ -13,8 +13,7 @@ private val DATE_TITLE_FORMAT = SimpleDateFormat("E', 'd MMM", BRAZIL)
 class ScheduleAdapter(
     private val titles: List<String>,
     var schedule: Schedule,
-    fm: FragmentManager,
-    val light: Boolean = true
+    fm: FragmentManager
 ) : FragmentStatePagerAdapter(fm) {
 
     companion object {
@@ -31,7 +30,7 @@ class ScheduleAdapter(
     }
 
     override fun getItem(position: Int): Fragment {
-        return ScheduleDayFragment.newInstance(schedule.cinema.id, position, light)
+        return ScheduleDayFragment.newInstance(schedule.cinema.id, position)
     }
 
     override fun getPageTitle(position: Int): CharSequence? {

@@ -6,10 +6,12 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Html
 import android.text.method.LinkMovementMethod
-import android.view.View
+import android.view.MenuItem
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.diegobezerra.cinemaisapp.R
+import com.diegobezerra.cinemaisapp.util.setupActionBar
+import com.diegobezerra.cinemaisapp.util.setupTheme
 
 class AboutActivity : AppCompatActivity() {
 
@@ -24,11 +26,12 @@ class AboutActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setupTheme()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_about)
 
-        findViewById<View>(R.id.back).setOnClickListener {
-            onBackPressed()
+        setupActionBar(R.id.toolbar) {
+            setDisplayHomeAsUpEnabled(true)
         }
 
         findViewById<TextView>(R.id.about_app_2)
@@ -44,6 +47,16 @@ class AboutActivity : AppCompatActivity() {
             Html.fromHtml(getString(resId), Html.FROM_HTML_MODE_LEGACY)
         } else {
             Html.fromHtml(getString(resId))
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+                return true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 }

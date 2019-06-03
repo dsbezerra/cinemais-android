@@ -8,21 +8,22 @@ import androidx.fragment.app.Fragment
 import com.diegobezerra.cinemaisapp.BuildConfig
 import com.diegobezerra.cinemaisapp.R
 import com.diegobezerra.cinemaisapp.data.local.PreferencesHelper
+import com.diegobezerra.cinemaisapp.ui.BaseActivity
 import com.diegobezerra.cinemaisapp.ui.about.AboutActivity
 import com.diegobezerra.cinemaisapp.ui.cinema.CinemaFragment
 import com.diegobezerra.cinemaisapp.ui.main.cinemas.CinemasFragment
 import com.diegobezerra.cinemaisapp.ui.main.home.HomeFragment
 import com.diegobezerra.cinemaisapp.ui.main.movies.MoviesFragment
+import com.diegobezerra.cinemaisapp.ui.settings.SettingsActivity
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.InterstitialAd
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject
 
-class MainActivity : DaggerAppCompatActivity() {
+class MainActivity : BaseActivity() {
 
     companion object {
 
@@ -41,7 +42,6 @@ class MainActivity : DaggerAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         setupViews()
 
         if (savedInstanceState == null) {
@@ -80,6 +80,10 @@ class MainActivity : DaggerAppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         return when (item?.itemId) {
+            R.id.settings -> {
+                SettingsActivity.startActivity(this)
+                true
+            }
             R.id.about -> {
                 AboutActivity.startActivity(this)
                 true

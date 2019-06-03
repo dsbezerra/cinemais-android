@@ -8,9 +8,9 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isGone
 import androidx.recyclerview.widget.RecyclerView
 import com.diegobezerra.cinemaisapp.R
+import com.diegobezerra.cinemaisapp.ui.movie.MovieActivity
 import com.diegobezerra.cinemaisapp.ui.schedule.SessionViewHolder.MovieTitleViewHolder
 import com.diegobezerra.cinemaisapp.ui.schedule.SessionViewHolder.SessionsViewHolder
-import com.diegobezerra.cinemaisapp.ui.movie.MovieActivity
 import com.diegobezerra.cinemaisapp.util.groups
 import com.diegobezerra.core.cinemais.domain.model.Session
 import com.diegobezerra.core.cinemais.domain.model.Session.Companion.VersionDubbed
@@ -18,11 +18,7 @@ import com.diegobezerra.core.cinemais.domain.model.Session.Companion.VersionNati
 import com.diegobezerra.core.cinemais.domain.model.Session.Companion.VersionSubtitled
 import com.diegobezerra.core.cinemais.domain.model.Session.Companion.VideoFormat3D
 
-
-
-class SessionsAdapter(
-    var light: Boolean = true
-) : RecyclerView.Adapter<SessionViewHolder>() {
+class SessionsAdapter : RecyclerView.Adapter<SessionViewHolder>() {
 
     companion object {
 
@@ -56,14 +52,6 @@ class SessionsAdapter(
         when (holder) {
             is MovieTitleViewHolder -> holder.apply {
                 (list[position] as MovieMinimal).let { movie ->
-
-                    val textColor = if (light) {
-                        0xFF555555.toInt()
-                    } else {
-                        0xFFFFFFFF.toInt()
-                    }
-                    title.setTextColor(textColor)
-
                     title.text = movie.title
                     title.setOnClickListener {
                         it.context.startActivity(MovieActivity.getStartIntent(it.context, movie.id))
@@ -78,12 +66,14 @@ class SessionsAdapter(
                         else -> 0
                     }
                     if (drawableRes != 0) {
-                        with (itemView.context) {
+                        with(itemView.context) {
                             ContextCompat.getDrawable(this, drawableRes)?.let {
-                                val size = resources.getDimension(R.dimen.size_compound_rating).toInt()
+                                val size =
+                                    resources.getDimension(R.dimen.size_compound_rating).toInt()
                                 it.setBounds(0, 0, size, size)
                                 title.setCompoundDrawables(null, null, it, null)
-                                title.compoundDrawablePadding = resources.getDimension(R.dimen.spacing_small).toInt()
+                                title.compoundDrawablePadding =
+                                    resources.getDimension(R.dimen.spacing_small).toInt()
                             }
 
                         }
@@ -110,15 +100,8 @@ class SessionsAdapter(
                 magic.isGone = !sessions.magic
                 format.isGone = sessions.format != VideoFormat3D
 
-                val textColor = if (light) {
-                    0xFF555555.toInt()
-                } else {
-                    0xFFFFFFFF.toInt()
-                }
                 // TODO: Replace this TextView with a RecyclerView once we integrate with VeloxTickets
-                times.setTextColor(textColor)
                 times.text = sessions.sessions.joinToString(", ") { it.startTime }
-
 
             }
         }

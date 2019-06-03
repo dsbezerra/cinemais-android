@@ -12,6 +12,7 @@
     <string name="title_cinemas">Cinemas</string>
     <string name="title_movie">Filme</string>
     <string name="title_cinema">Cinema</string>
+    <string name="title_settings">Configurações</string>
 
     <!-- Home Strings -->
     <string name="home_header_playing">Em cartaz</string>
@@ -68,4 +69,11 @@
     <string name="label_screenplay">Roteiro</string>
     <string name="label_cast">Elenco</string>
     <string name="label_genres">Gêneros</string>
+    <string name="watch_trailer">Assistir Trailer</string>
+
+    <!-- Preference Titles -->
+    <string name="appearance_header">Aparência</string>
+
+    <!-- Appearance Preferences -->
+    <string name="pref_dark_theme">Tema escuro</string>
 </resources>

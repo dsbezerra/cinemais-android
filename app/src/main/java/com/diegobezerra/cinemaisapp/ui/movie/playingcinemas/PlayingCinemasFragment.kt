@@ -91,7 +91,7 @@ class PlayingCinemasFragment : DaggerFragment() {
                         context.getString(R.string.today),
                         context.getString(R.string.tomorrow)
                     )
-                    viewPager.adapter = ScheduleAdapter(titles, it, childFragmentManager, false)
+                    viewPager.adapter = ScheduleAdapter(titles, it, childFragmentManager)
                     prevSchedule = it
                 }
             })

@@ -39,7 +39,7 @@
             android:id="@+id/bottom_nav"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/primary"
+            android:background="?attr/colorPrimary"
             app:itemTextColor="@drawable/bottom_navigation_colors"
             app:labelVisibilityMode="labeled"
             app:menu="@menu/bottom_navigation_menu"

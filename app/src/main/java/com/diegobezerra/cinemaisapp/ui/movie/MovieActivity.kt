@@ -4,9 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import com.diegobezerra.cinemaisapp.R
-import dagger.android.support.DaggerAppCompatActivity
+import com.diegobezerra.cinemaisapp.ui.BaseActivity
 
-class MovieActivity : DaggerAppCompatActivity() {
+class MovieActivity : BaseActivity() {
 
     private lateinit var fragment: MovieFragment
 
