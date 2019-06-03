@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.TaskStackBuilder
 import androidx.preference.PreferenceFragmentCompat
 import com.diegobezerra.cinemaisapp.R
+import com.diegobezerra.cinemaisapp.data.local.PreferencesHelper.Companion.PREFS_NAME
 import com.diegobezerra.cinemaisapp.data.local.PreferencesHelper.Companion.PREF_DARK_THEME
 import com.diegobezerra.cinemaisapp.ui.main.MainActivity
 import com.diegobezerra.cinemaisapp.util.setupActionBar
@@ -42,6 +43,7 @@ class SettingsActivity : AppCompatActivity() {
     class SettingsFragment : PreferenceFragmentCompat(),
         SharedPreferences.OnSharedPreferenceChangeListener {
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+            preferenceManager.sharedPreferencesName = PREFS_NAME
             setPreferencesFromResource(R.xml.root_preferences, rootKey)
         }
 
