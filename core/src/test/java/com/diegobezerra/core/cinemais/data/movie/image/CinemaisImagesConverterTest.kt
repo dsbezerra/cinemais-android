@@ -13,8 +13,9 @@ class CinemaisImagesConverterTest {
         val result = CinemaisImagesConverter.convert(response)
 
         Assert.assertNotNull(result)
-        Assert.assertNotNull(result.images)
-        Assert.assertNotEquals(0, result.images.size)
+        Assert.assertEquals(true, result.exists())
+        Assert.assertNotEquals(0, result.backdrops.size)
+        Assert.assertNotEquals(0, result.posters.size)
     }
 
 }
