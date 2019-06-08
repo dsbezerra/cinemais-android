@@ -6,6 +6,7 @@ import com.diegobezerra.core.cinemais.domain.model.Cinema
 import com.diegobezerra.core.cinemais.domain.model.Movie
 import com.diegobezerra.core.cinemais.domain.model.Posters
 import com.diegobezerra.core.cinemais.domain.model.Trailer
+import com.diegobezerra.core.util.DateUtils.Companion.BRAZIL
 import okhttp3.ResponseBody
 import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
@@ -104,7 +105,7 @@ object CinemaisMovieConverter : Converter<ResponseBody, Movie> {
                             .toInt()
                         RELEASE -> {
                             releaseDate = try {
-                                SimpleDateFormat("dd/MM/yyyy").parse(contentText)
+                                SimpleDateFormat("dd/MM/yyyy", BRAZIL).parse(contentText)
                             } catch (e: ParseException) {
                                 null
                             }
@@ -167,7 +168,7 @@ object CinemaisMovieConverter : Converter<ResponseBody, Movie> {
                                 id = cinemaId,
                                 name = it[1].replace("Cinemais", "").trim(),
                                 cityName = it[2],
-                                federativeUnit = it[3]
+                                fu = it[3]
                             )
                         )
                     }

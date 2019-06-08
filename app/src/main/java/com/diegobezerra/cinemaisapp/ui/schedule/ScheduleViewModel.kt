@@ -12,7 +12,7 @@ import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
 class ScheduleViewModel @Inject constructor(
-    private val cinemasRespository: CinemasRepository
+    private val cinemasRepository: CinemasRepository
 ) : ViewModel() {
 
     private val disposables = CompositeDisposable()
@@ -42,7 +42,7 @@ class ScheduleViewModel @Inject constructor(
     private fun fetchSchedule() {
         val id = cinemaId.value!!
         disposables.add(
-            RxUtils.getSingle(cinemasRespository.getSchedule(id))
+            RxUtils.getSingle(cinemasRepository.getSchedule(id))
             .subscribe { schedule, throwable ->
                 _scheduleDays.clear()
                 for (day in schedule.days) {

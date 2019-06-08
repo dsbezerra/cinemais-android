@@ -20,7 +20,6 @@ class SessionUtils {
                 key
             }.toSortedMap()
 
-            // Now generate the list
             groups.keys.forEach { groupKey ->
                 val localSessions = groups[groupKey]
                 localSessions?.let {
@@ -43,11 +42,7 @@ class SessionUtils {
                             group!!.add(session)
                         }
                         group?.let { sg ->
-                            // We don't care about room number and because of this times may
-                            // be unsorted
-                            sg.sessions.sortBy { s ->
-                                s.startTime
-                            }
+                            sg.sessions.sortBy { s -> s.startTime }
                             result.add(sg)
                         }
                     }

@@ -29,6 +29,10 @@ import javax.inject.Inject
 
 class PlayingCinemasFragment : DaggerFragment() {
 
+    companion object {
+        val TITLES = listOf(R.string.today, R.string.tomorrow)
+    }
+
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
@@ -72,7 +76,7 @@ class PlayingCinemasFragment : DaggerFragment() {
 
             currentCinema.observe(this@PlayingCinemasFragment, Observer {
                 val text = if (it != null) {
-                    getString(R.string.label_cinema, it.name, it.federativeUnit)
+                    getString(R.string.label_cinema, it.name, it.fu)
                 } else {
                     null
                 }
@@ -84,15 +88,11 @@ class PlayingCinemasFragment : DaggerFragment() {
                 playingCinemasAdapter.notifyDataSetChanged()
             })
 
-            schedule.observe(this@PlayingCinemasFragment, Observer {
-                if (it != prevSchedule) {
-                    val context = requireContext()
-                    val titles = listOf<String>(
-                        context.getString(R.string.today),
-                        context.getString(R.string.tomorrow)
-                    )
-                    viewPager.adapter = ScheduleAdapter(titles, it, childFragmentManager)
-                    prevSchedule = it
+            schedule.observe(this@PlayingCinemasFragment, Observer { schedule ->
+                if (schedule != prevSchedule) {
+                    val titleList = TITLES.map { requireContext().getString(it) }
+                    viewPager.adapter = ScheduleAdapter(titleList, schedule, childFragmentManager)
+                    prevSchedule = schedule
                 }
             })
 

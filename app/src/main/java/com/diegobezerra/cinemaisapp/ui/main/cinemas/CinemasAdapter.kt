@@ -78,16 +78,12 @@ class CinemasAdapter(
 
         if (data.isEmpty()) return
 
+        val set = hashSetOf<String>()
         val result = mutableListOf<Any>()
-
-        // Used just to keep track of inserted states
-        val stateMap = hashMapOf<String, Unit>()
-        data.sortedBy { it.federativeUnit }.forEach { cinema ->
-            if (!stateMap.containsKey(cinema.federativeUnit)) {
-                val state = State.buildFromFederativeUnit(cinema.federativeUnit)
-                state?.let {
+        data.sortedBy { it.fu }.forEach { cinema ->
+            if (set.add(cinema.fu)) {
+                State.buildFromFU(cinema.fu)?.let {
                     result += it
-                    stateMap.put(it.federativeUnit, Unit)
                 }
             }
             result += cinema
@@ -102,7 +98,9 @@ sealed class CinemasViewHolder(itemView: View) : RecyclerView.ViewHolder(itemVie
     class StateViewHolder(
         itemView: View
     ) : CinemasViewHolder(itemView) {
+
         val name: TextView = itemView.findViewById(R.id.name)
+
     }
 
     class CinemaViewHolder(
@@ -110,5 +108,6 @@ sealed class CinemasViewHolder(itemView: View) : RecyclerView.ViewHolder(itemVie
     ) : CinemasViewHolder(itemView) {
 
         val name: TextView = itemView.findViewById(R.id.name)
+
     }
 }

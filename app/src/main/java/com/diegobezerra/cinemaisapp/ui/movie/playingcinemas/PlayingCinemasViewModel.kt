@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 class PlayingCinemasViewModel@Inject constructor(
     private val cinemasRepository: CinemasRepository,
-    private val moviesRespository: MoviesRepository
+    private val moviesRepository: MoviesRepository
 ) : ViewModel(), PlayingCinemasEventListener {
 
     companion object {
@@ -69,7 +69,7 @@ class PlayingCinemasViewModel@Inject constructor(
 
     private fun fetchPlayingCinemas(movieId: Int) {
         disposables.add(
-            RxUtils.getSingle(moviesRespository.getPlayingCinemas(movieId))
+            RxUtils.getSingle(moviesRepository.getPlayingCinemas(movieId))
                 .doOnSubscribe {
                     _loading.value = LOADING_PLAYING_ROOMS
                 }

@@ -122,17 +122,15 @@ class SessionsAdapter : RecyclerView.Adapter<SessionViewHolder>() {
 
         if (data.isEmpty()) return
 
+        val set = HashSet<Int>()
         val result = mutableListOf<Any>()
-        // Used just to keep track of inserted titles
-        val movieIdMap = hashMapOf<Int, Unit>()
         data.groups().forEach { group ->
-            if (!movieIdMap.containsKey(group.movieId)) {
+            if (set.add(group.movieId)) {
                 result += MovieMinimal(
                     group.movieId,
                     group.movieTitle,
                     group.movieRating
                 )
-                movieIdMap[group.movieId] = Unit
             }
             result += group
         }

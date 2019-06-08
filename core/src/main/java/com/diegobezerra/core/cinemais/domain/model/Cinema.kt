@@ -4,7 +4,7 @@ data class Cinema(
     val id: Int,
     val name: String,
     val cityName: String,
-    val federativeUnit: String,
+    val fu: String,
     var location: Location? = null,
     var information: List<String> = listOf()
 ) {

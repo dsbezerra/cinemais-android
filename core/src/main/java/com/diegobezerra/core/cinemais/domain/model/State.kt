@@ -2,21 +2,21 @@ package com.diegobezerra.core.cinemais.domain.model
 
 data class State(
     val name: String,
-    val federativeUnit: String
+    val fu: String
 ) {
     companion object {
 
-        fun buildFromFederativeUnit(federativeUnit: String): State? {
-            val name = getNameFromFederativeUnit(federativeUnit)
+        fun buildFromFU(FU: String): State? {
+            val name = getNameFromFU(FU)
             return if (name != null) {
-                State (name = name, federativeUnit = federativeUnit)
+                State(name = name, fu = FU)
             } else {
                 null
             }
         }
 
-        private fun getNameFromFederativeUnit(federativeUnit: String): String? {
-            return when (federativeUnit) {
+        private fun getNameFromFU(FU: String): String? {
+            return when (FU) {
                 "AC" -> "Acre"
                 "AL" -> "Alagoas"
                 "AM" -> "Amazonas"

@@ -23,6 +23,7 @@ import androidx.transition.TransitionSet
 import androidx.viewpager.widget.ViewPager
 import com.diegobezerra.cinemaisapp.R
 import com.diegobezerra.cinemaisapp.ui.main.MainFragment
+import com.diegobezerra.cinemaisapp.ui.movie.playingcinemas.PlayingCinemasFragment.Companion.TITLES
 import com.diegobezerra.cinemaisapp.ui.schedule.ScheduleAdapter
 import com.diegobezerra.cinemaisapp.ui.tickets.TicketsActivity
 import com.diegobezerra.cinemaisapp.ui.tickets.TicketsActivity.Companion.EXTRA_CINEMA_ID
@@ -100,19 +101,16 @@ class CinemaFragment : MainFragment() {
                 }
             })
 
-            schedule.observe(this@CinemaFragment, Observer {
-                name.text = it.cinema.name
-                sessionCinemaName.text = it.cinema.name
+            schedule.observe(this@CinemaFragment, Observer { schedule ->
+                name.text = schedule.cinema.name
+                sessionCinemaName.text = schedule.cinema.name
 
                 val context = requireContext()
-                val titles = listOf<String>(
-                    context.getString(R.string.today),
-                    context.getString(R.string.tomorrow)
-                )
-                pager.adapter = ScheduleAdapter(titles, it, childFragmentManager)
+                val titleList = TITLES.map { context.getString(it) }
+                pager.adapter = ScheduleAdapter(titleList, schedule, childFragmentManager)
                 tabs.setupWithViewPager(pager)
 
-                it.cinema.location?.let { location ->
+                schedule.cinema.location?.let { location ->
                     address.text = location.addressLine
                     root.findViewById<View>(R.id.location).apply {
                         setOnClickListener {
@@ -166,10 +164,10 @@ class CinemaFragment : MainFragment() {
                 cinemaLayout.alpha = offsetToProperty(offsetValue, 0.33f, 0.67f)
                 sessionsLayout.translationZ = ratio * appBarMaxElevation
 
-                val v = offsetToProperty(offsetValue, 0.33f, 0f)
-                sessionCinemaName.alpha = v
+                val changedValue = offsetToProperty(offsetValue, 0.33f, 0f)
+                sessionCinemaName.alpha = changedValue
                 sessionCinemaName.translationX =
-                    -sessionCinemaNameSpacing + (sessionCinemaNameSpacing * 2 * v)
+                    -sessionCinemaNameSpacing + (sessionCinemaNameSpacing * 2 * changedValue)
             }
         )
 
@@ -204,6 +202,8 @@ class CinemaFragment : MainFragment() {
      * Map a slideOffset (in the range `[-1, 1]`) to an property value based on the desired range.
      * For example, `offsetToProperty(0.5, 0.25, 1) = 0.33` because 0.5 is 1/3 of the way between 0.25
      * and 1. The result value is additionally clamped to the range `[0, 1]`.
+     *
+     * Borrowed from Google's I/O 2018 source
      */
     private fun offsetToProperty(value: Float, rangeMin: Float, rangeMax: Float): Float {
         return ((value - rangeMin) / (rangeMax - rangeMin)).coerceIn(0f, 1f)

@@ -236,7 +236,7 @@ object CinemaisScheduleConverter : Converter<ResponseBody, Schedule> {
             id = id,
             name = name,
             cityName = cityName,
-            federativeUnit = fu,
+            fu = fu,
             information = information
         )
     }

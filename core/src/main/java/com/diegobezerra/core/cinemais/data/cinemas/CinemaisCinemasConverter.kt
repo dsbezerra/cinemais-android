@@ -28,7 +28,7 @@ object CinemaisCinemasConverter : Converter<ResponseBody, Cinemas> {
                             id = id,
                             name = parts[0],
                             cityName = parts[0],
-                            federativeUnit = parts[1]
+                            fu = parts[1]
                         )
                     }
                     // First is cinema name, second is city name and the last one is the
@@ -38,7 +38,7 @@ object CinemaisCinemasConverter : Converter<ResponseBody, Cinemas> {
                             id = id,
                             name = parts[0],
                             cityName = parts[1],
-                            federativeUnit = parts[2]
+                            fu = parts[2]
                         )
                     }
                     else -> Unit // No-op

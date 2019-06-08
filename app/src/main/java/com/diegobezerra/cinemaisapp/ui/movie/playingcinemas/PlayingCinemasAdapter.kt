@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.diegobezerra.cinemaisapp.R
 import com.diegobezerra.cinemaisapp.ui.movie.playingcinemas.PlayingCinemasAdapter.PlayingCinemasViewHolder
@@ -34,7 +33,7 @@ class PlayingCinemasAdapter(
             val res = itemView.resources
             val cinema = data[position]
             name.text = cinema.name
-            state.text = res.getString(R.string.label_cinema, cinema.cityName, cinema.federativeUnit)
+            state.text = res.getString(R.string.label_cinema, cinema.cityName, cinema.fu)
             itemView.apply {
                 setOnClickListener {
                     viewModel.onCinemaClicked(cinema.id)

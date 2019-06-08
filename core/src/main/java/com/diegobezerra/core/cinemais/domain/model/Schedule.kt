@@ -1,9 +1,9 @@
 package com.diegobezerra.core.cinemais.domain.model
 
 import com.diegobezerra.core.util.DateUtils
+import com.diegobezerra.core.util.DateUtils.Companion.BRAZIL
 import java.text.SimpleDateFormat
 import java.util.Date
-import java.util.Locale
 
 typealias Disclaimer = Map<Char, DisclaimerEntry>
 
@@ -15,17 +15,28 @@ data class Schedule(
 
     var days: List<ScheduleDay> = emptyList()
 
+    // Prevent unnecessary days map recreation
+    private var generatedTimestamp: Long = 0L
+
     init {
-        days = genDays()
+        days = createDays()
     }
 
-    private fun genDays(): List<ScheduleDay> {
+    fun recreateDays(): Schedule {
+        val todayMillis = DateUtils.calendarAtStartOfDay(null).timeInMillis
+        if (todayMillis != generatedTimestamp) {
+            createDays()
+        }
+        return this
+    }
+
+    private fun createDays(): List<ScheduleDay> {
         val map = linkedMapOf<String, ScheduleDay>()
         if (sessions.isNotEmpty()) {
             val today = DateUtils.calendarAtStartOfDay(null).timeInMillis
-            val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale("pt", "BR"))
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd", BRAZIL)
             for (session in sessions) {
-                // Ignore all sessions before the current time
+                // Ignore all sessions before the current day
                 if (session.startTimeDate == null || session.startTimeDate?.time!! < today) {
                     continue
                 }
@@ -47,6 +58,7 @@ data class Schedule(
                     // No-op
                 }
             }
+            generatedTimestamp = today
         }
         return map.toSortedMap().values.toList()
     }

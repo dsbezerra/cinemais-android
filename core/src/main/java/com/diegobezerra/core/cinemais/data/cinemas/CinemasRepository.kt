@@ -2,6 +2,7 @@ package com.diegobezerra.core.cinemais.data.cinemas
 
 import com.diegobezerra.core.cinemais.data.cinemas.remote.CinemasRemoteDataSource
 import com.diegobezerra.core.cinemais.data.home.HomeRepository
+import com.diegobezerra.core.cinemais.domain.model.Cinemas
 import com.diegobezerra.core.cinemais.domain.model.Location
 import com.diegobezerra.core.cinemais.domain.model.Schedule
 import com.diegobezerra.core.cinemais.domain.model.ScheduleDay
@@ -18,12 +19,15 @@ class CinemasRepository @Inject constructor(
     private val cachedLocations: HashMap<Int, Location> = hashMapOf()
     private val cachedTickets: HashMap<Int, Tickets> = hashMapOf()
 
-    fun getCinemas() = homeRepository.getHome().map { it.cinemas }
+    fun getCinemas(): Single<Cinemas> = homeRepository.getHome().map { it.cinemas }
 
     fun getSchedule(id: Int): Single<Schedule> {
         val cached = cachedSchedules[id]
         return if (cached != null) {
             Single.just(cached)
+                // NOTE(diego): We regenerate days here because these cached schedules may contain
+                // old sessions
+                .map(Schedule::recreateDays)
         } else {
             remoteDataSource.getSchedule(id)
                 .doOnSuccess {
