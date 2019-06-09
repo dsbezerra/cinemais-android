@@ -127,13 +127,14 @@
         <item name="tabIndicatorHeight">3dp</item>
         <item name="tabTextAppearance">@style/TabTextAppearance.Schedule</item>
         <item name="tabSelectedTextColor">?attr/primary_text_color</item>
-        <item name="tabTextColor">#aaffffff</item>
-        <item name="tabRippleColor">#42FFFFFF</item>
-    </style>
-
-    <style name="Widget.Cinemais.TabLayout.Schedule.Light">
         <item name="tabRippleColor">?attr/colorControlHighlight</item>
         <item name="tabTextColor">?attr/secondary_text_color</item>
+    </style>
+
+    <style name="Widget.Cinemais.TabLayout.Schedule.PlayingRooms">
+        <item name="tabSelectedTextColor">#ffffff</item>
+        <item name="tabTextColor">#aaffffff</item>
+        <item name="tabRippleColor">#42ffffff</item>
     </style>
 
     <style name="Widget.Cinemais.SessionLabel">
@@ -142,6 +143,10 @@
         <item name="android:paddingStart">@dimen/spacing_small</item>
         <item name="android:paddingEnd">@dimen/spacing_small</item>
         <item name="android:textAppearance">@style/TextAppearance.Cinemais.SessionLabel</item>
+    </style>
+
+    <style name="Widget.Cinemais.SessionLabel.PlayingRooms">
+        <item name="android:background">@drawable/bg_session_label_playing_rooms</item>
     </style>
 
     <style name="Widget.Cinemais.MovieInfoBody">

@@ -46,6 +46,7 @@
             android:maxLines="4"
             android:textAppearance="@style/TextAppearance.Cinemais.Body"
             android:textSize="14sp"
+            android:lineSpacingMultiplier="1.1"
             tools:text="Some long synopsis [...]"
             />
 

@@ -248,7 +248,7 @@ class MovieFragment : DaggerFragment() {
         var toolbarAnimator: ValueAnimator? = null
         val toolbarColors = getToolbarColors()
         val argbEvaluator = ArgbEvaluator()
-        scroll.setOnScrollChangeListener { v: NestedScrollView?, scrollX: Int, scrollY: Int, oldScrollX: Int, oldScrollY: Int ->
+        scroll.setOnScrollChangeListener { _: NestedScrollView?, _: Int, scrollY: Int, _: Int, _: Int ->
             val displayTitle = scrollY >= backdrop.bottom
             if (displayingTitleInToolbar && !displayTitle) {
                 toolbarAnimator?.cancel()

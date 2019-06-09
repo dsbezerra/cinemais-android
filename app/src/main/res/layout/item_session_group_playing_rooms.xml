@@ -1,62 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingStart="@dimen/spacing_medium"
-    android:paddingEnd="@dimen/spacing_medium"
+    android:orientation="vertical"
     android:paddingBottom="@dimen/spacing_medium"
+    android:paddingEnd="@dimen/spacing_medium"
+    android:paddingStart="@dimen/spacing_medium"
     >
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
+        android:orientation="horizontal"
         >
 
         <TextView
-            style="@style/Widget.Cinemais.SessionLabel"
             android:id="@+id/room"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="SALA X"
+            style="@style/Widget.Cinemais.SessionLabel.PlayingRooms"
             />
 
         <TextView
-            style="@style/Widget.Cinemais.SessionLabel"
             android:id="@+id/version"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="DUB"
+            style="@style/Widget.Cinemais.SessionLabel.PlayingRooms"
             />
 
         <TextView
-            style="@style/Widget.Cinemais.SessionLabel"
             android:id="@+id/format"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_format_3d"
             android:text="@string/_3d"
+            style="@style/Widget.Cinemais.SessionLabel.PlayingRooms"
             />
 
         <TextView
-            style="@style/Widget.Cinemais.SessionLabel"
             android:id="@+id/magic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_format_magicd"
             android:text="@string/magic"
+            style="@style/Widget.Cinemais.SessionLabel.PlayingRooms"
             />
 
         <TextView
-            style="@style/Widget.Cinemais.SessionLabel"
             android:id="@+id/vip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_format_vip"
             android:text="@string/vip"
+            style="@style/Widget.Cinemais.SessionLabel.PlayingRooms"
             />
 
     </LinearLayout>
@@ -67,6 +67,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_small"
         android:textAppearance="@style/TextAppearance.Cinemais.Body"
+        android:textColor="@color/primary"
         android:textSize="16sp"
         android:textStyle="bold"
         tools:text="Temporary time"

@@ -23,6 +23,8 @@ class ScheduleAdapter(
 
     }
 
+    var playingRooms: Boolean = false
+
     init {
         if (titles.size < 2) {
             throw IllegalStateException("schedule adapter requires title list")
@@ -30,7 +32,7 @@ class ScheduleAdapter(
     }
 
     override fun getItem(position: Int): Fragment {
-        return ScheduleDayFragment.newInstance(schedule.cinema.id, position)
+        return ScheduleDayFragment.newInstance(schedule.cinema.id, position, playingRooms)
     }
 
     override fun getPageTitle(position: Int): CharSequence? {

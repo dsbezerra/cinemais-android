@@ -18,16 +18,34 @@ import com.diegobezerra.core.cinemais.domain.model.Session.Companion.VersionNati
 import com.diegobezerra.core.cinemais.domain.model.Session.Companion.VersionSubtitled
 import com.diegobezerra.core.cinemais.domain.model.Session.Companion.VideoFormat3D
 
-class SessionsAdapter : RecyclerView.Adapter<SessionViewHolder>() {
+class SessionsAdapter(
+    playingRooms: Boolean = false
+) : RecyclerView.Adapter<SessionViewHolder>() {
 
     companion object {
 
         const val VIEW_TYPE_MOVIE = 0
         const val VIEW_TYPE_SESSIONS = 1
 
+        // Items must have the same order as above view types
+        val DEFAULT_VIEW_TYPES = listOf(R.layout.item_movie_title, R.layout.item_session_group)
+        val PLAYING_ROOMS_VIEW_TYPES =
+            listOf(
+                R.layout.item_movie_title_playing_rooms,
+                R.layout.item_session_group_playing_rooms
+            )
     }
 
+    private var viewTypes: List<Int> = DEFAULT_VIEW_TYPES
     private var list: MutableList<Any> = mutableListOf()
+
+    init {
+        viewTypes = if (playingRooms) {
+            PLAYING_ROOMS_VIEW_TYPES
+        } else {
+            DEFAULT_VIEW_TYPES
+        }
+    }
 
     var data: List<Session> = emptyList()
         set(value) {
@@ -39,10 +57,10 @@ class SessionsAdapter : RecyclerView.Adapter<SessionViewHolder>() {
         val inflater = LayoutInflater.from(parent.context)
         return when (viewType) {
             VIEW_TYPE_MOVIE -> MovieTitleViewHolder(
-                inflater.inflate(R.layout.item_movie_title, parent, false)
+                inflater.inflate(viewTypes[VIEW_TYPE_MOVIE], parent, false)
             )
             VIEW_TYPE_SESSIONS -> SessionsViewHolder(
-                inflater.inflate(R.layout.item_session_group, parent, false)
+                inflater.inflate(viewTypes[VIEW_TYPE_SESSIONS], parent, false)
             )
             else -> throw IllegalStateException("Unknown viewType $viewType")
         }

@@ -75,12 +75,11 @@ class PlayingCinemasFragment : DaggerFragment() {
             })
 
             currentCinema.observe(this@PlayingCinemasFragment, Observer {
-                val text = if (it != null) {
+                sheetDescription.text = if (it != null) {
                     getString(R.string.label_cinema, it.name, it.fu)
                 } else {
                     null
                 }
-                sheetDescription.text = text
             })
 
             cinemas.observe(this@PlayingCinemasFragment, Observer {
@@ -91,7 +90,10 @@ class PlayingCinemasFragment : DaggerFragment() {
             schedule.observe(this@PlayingCinemasFragment, Observer { schedule ->
                 if (schedule != prevSchedule) {
                     val titleList = TITLES.map { requireContext().getString(it) }
-                    viewPager.adapter = ScheduleAdapter(titleList, schedule, childFragmentManager)
+                    viewPager.adapter =
+                        ScheduleAdapter(titleList, schedule, childFragmentManager).apply {
+                            playingRooms = true
+                        }
                     prevSchedule = schedule
                 }
             })

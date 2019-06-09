@@ -196,7 +196,7 @@ object CinemaisScheduleConverter : Converter<ResponseBody, Schedule> {
                 }
             }
         }
-        // NOTE(diego): Make sure we don't have any duplicates
+        // NOTE(diego): Make sure we don't have any duplicates!
         return result.distinctBy { it.hashCode() }
     }
 

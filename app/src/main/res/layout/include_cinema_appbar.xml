@@ -140,7 +140,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clipToPadding="false"
-        style="@style/Widget.Cinemais.TabLayout.Schedule.Light"
+        style="@style/Widget.Cinemais.TabLayout.Schedule"
         />
 
 </com.google.android.material.appbar.AppBarLayout>

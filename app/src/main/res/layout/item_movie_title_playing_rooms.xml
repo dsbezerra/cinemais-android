@@ -3,22 +3,23 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    >
 
-    <include
-        layout="@layout/include_divider"
+    <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:background="#42ffffff"
         />
 
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
         android:layout_margin="@dimen/spacing_medium"
         android:background="?selectableItemBackground"
-        android:textColor="?attr/session_movie_title"
+        android:textColor="@color/primary"
+        android:textSize="16sp"
         tools:text="Captain Marvel"
         />
 

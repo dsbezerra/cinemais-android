@@ -13,6 +13,6 @@ class CinemaisSwipeRefreshLayout @JvmOverloads constructor(
     init {
         setColorSchemeResources(
             R.color.cinemais_green, R.color.cinemais_blue, R.color.cinemais_pink
-            )
+        )
     }
 }

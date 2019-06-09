@@ -18,12 +18,15 @@ class ScheduleDayFragment : DaggerFragment() {
 
         const val CINEMA_ID = "arg.CINEMA_ID"
         const val DAY_POSITION = "arg.DAY_POSITION"
+        // Whether the fragment was created inside a PlayingRoomsFragment or not.
+        const val PLAYING_ROOMS = "arg.PLAYING_ROOMS"
 
-        fun newInstance(cinema: Int, day: Int): ScheduleDayFragment {
+        fun newInstance(cinema: Int, day: Int, playingRooms: Boolean = false): ScheduleDayFragment {
             return ScheduleDayFragment().apply {
                 arguments = Bundle().apply {
                     putInt(CINEMA_ID, cinema)
                     putInt(DAY_POSITION, day)
+                    putBoolean(PLAYING_ROOMS, playingRooms)
                 }
             }
         }
@@ -48,11 +51,13 @@ class ScheduleDayFragment : DaggerFragment() {
 
         val recyclerView = root.findViewById<RecyclerView>(R.id.recyclerView)
         recyclerView.run {
-            adapter = SessionsAdapter().also {
+            val playingRooms = args.getBoolean(PLAYING_ROOMS)
+            adapter = SessionsAdapter(playingRooms).also {
                 sessionsAdapter = it
             }
             setHasFixedSize(true)
         }
+
         viewModel.apply {
 
             val cinemaId = args.getInt(CINEMA_ID)
