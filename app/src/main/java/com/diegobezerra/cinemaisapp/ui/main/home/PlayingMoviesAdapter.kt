@@ -14,6 +14,7 @@ import com.diegobezerra.cinemaisapp.GlideOptions
 import com.diegobezerra.cinemaisapp.GlideOptions.bitmapTransform
 import com.diegobezerra.cinemaisapp.R
 import com.diegobezerra.cinemaisapp.util.ImageUtils
+import com.diegobezerra.cinemaisapp.util.NetworkUtils
 import com.diegobezerra.core.cinemais.domain.model.Movie
 
 class PlayingMoviesAdapter(
@@ -22,9 +23,11 @@ class PlayingMoviesAdapter(
 
     var list: List<Movie> = emptyList()
 
+
     private val crossFade = BitmapTransitionOptions.withCrossFade()
     private var placeholder: Drawable? = null
     private var posterOptions: GlideOptions? = null
+    private var isWifiConnection: Boolean = false
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -37,6 +40,7 @@ class PlayingMoviesAdapter(
             posterOptions =
                 bitmapTransform(ImageUtils.posterTransformation(parent.context.applicationContext))
         }
+        isWifiConnection = NetworkUtils.isWifiConnection(parent.context)
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_home_playing_movie, parent, false)
         return PlayingMovieViewHolder(view)
@@ -48,21 +52,21 @@ class PlayingMoviesAdapter(
     ) {
 
         holder.apply {
-            val item = list[position]
-            if (!item.posters.medium.isNullOrEmpty()) {
-
+            val movie = list[position]
+            movie.posters.best(isWifiConnection)?.let {
                 GlideApp.with(itemView)
                     .asBitmap()
-                    .load(item.posters.medium)
+                    .load(it)
                     .placeholder(placeholder)
                     .apply(posterOptions!!)
                     .transition(crossFade)
                     .into(poster)
             }
-            title.text = item.title
+
+            title.text = movie.title
 
             itemView.setOnClickListener {
-                homeViewModel.onMovieClicked(item.id)
+                homeViewModel.onMovieClicked(movie.id)
             }
         }
     }

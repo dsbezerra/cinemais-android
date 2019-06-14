@@ -151,6 +151,7 @@ class CinemaFragment : MainFragment() {
                 sessionsLayout.isGone = false
             })
 
+            setDateString()
             setCinemaId(cinemaId)
         }
 

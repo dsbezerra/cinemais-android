@@ -11,6 +11,9 @@ class HomeRepository @Inject constructor(
 
     private var cachedHomeData: HomeData? = null
 
+    /**
+     * Retrieves index page data.
+     */
     fun getHome(): Single<HomeData> {
         return if (cachedHomeData != null) {
             Single.just(cachedHomeData)

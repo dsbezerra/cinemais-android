@@ -2,6 +2,7 @@ package com.diegobezerra.cinemaisapp.ui.movie
 
 import android.animation.ArgbEvaluator
 import android.animation.ValueAnimator
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -23,9 +24,9 @@ import com.diegobezerra.cinemaisapp.GlideApp
 import com.diegobezerra.cinemaisapp.GlideOptions.bitmapTransform
 import com.diegobezerra.cinemaisapp.R
 import com.diegobezerra.cinemaisapp.ui.movie.playingcinemas.PlayingCinemasFragment
+import com.diegobezerra.cinemaisapp.util.NetworkUtils
 import com.diegobezerra.cinemaisapp.util.setupToolbarAsActionBar
 import com.diegobezerra.core.cinemais.domain.model.Movie
-import com.diegobezerra.core.cinemais.domain.model.Posters
 import com.diegobezerra.core.util.DateUtils.Companion.BRAZIL
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED
@@ -118,13 +119,13 @@ class MovieFragment : DaggerFragment() {
             setDisplayHomeAsUpEnabled(true)
         }
         viewModel.apply {
-            loading.observe(this@MovieFragment, Observer {
-                val firstLoad = viewModel.movie.value == null
-                if (!firstLoad) {
-                    swipeRefreshLayout.isRefreshing = it
-                } else {
-                    progressBar.isGone = !it
-                }
+
+            loading1.observe(this@MovieFragment, Observer {
+                progressBar.isGone = !it
+            })
+
+            loading2.observe(this@MovieFragment, Observer {
+                swipeRefreshLayout.isRefreshing = it
             })
 
             movie.observe(this@MovieFragment, Observer {
@@ -159,26 +160,29 @@ class MovieFragment : DaggerFragment() {
     }
 
     private fun initMovie(movie: Movie) {
-        requireContext().run {
+
+        // Setup images
+        requireActivity().run {
+            val bestPoster = movie.posters.best(NetworkUtils.isWifiConnection(this))
             val weekday = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)
-            val image = movie.images.getBackdrop(weekday) ?: movie.images.getPoster(weekday)
-            ?: movie.posters.large
-            GlideApp.with(this)
-                .asBitmap()
-                .load(image)
-                .transition(withCrossFade())
-                .into(backdrop)
+            val bestBackdrop =
+                movie.images.getBackdrop(weekday) ?: bestPoster
+            bestBackdrop?.let {
+                GlideApp.with(this)
+                    .asBitmap()
+                    .load(it)
+                    .transition(withCrossFade())
+                    .into(backdrop)
+            }
+            bestPoster?.let {
+                GlideApp.with(this)
+                    .asBitmap()
+                    .load(it)
+                    .apply(bitmapTransform(RoundedCorners(resources.getDimension(R.dimen.spacing_small).toInt())))
+                    .transition(withCrossFade())
+                    .into(poster)
+            }
         }
-        initPoster(movie.posters)
-        initInfo(movie)
-        initRating(movie.rating)
-        initGenres(movie.genres)
-        initSynopsis(movie.synopsis)
-        initCast(movie.cast)
-        initScreenplay(movie.screenplay)
-        initProduction(movie.production)
-        initExecutiveProduction(movie.executiveProduction)
-        initDirection(movie.direction)
 
         movie.trailer?.let {
             if (!it.isYoutube()) {
@@ -197,9 +201,19 @@ class MovieFragment : DaggerFragment() {
             }
         }
 
-        cinemais_border.scaleX = 0f
-        cinemais_border.visibility = View.VISIBLE
+        initInfo(movie)
 
+        synopsis.apply {
+            text = movie.synopsis
+            isGone = movie.synopsis.isEmpty()
+        }
+
+        genres.setContentOrHideIfEmpty(movie.genres)
+        cast.setContentOrHideIfEmpty(movie.cast)
+        screenplay.setContentOrHideIfEmpty(movie.screenplay)
+        production.setContentOrHideIfEmpty(movie.production)
+        executiveProduction.setContentOrHideIfEmpty(movie.executiveProduction)
+        direction.setContentOrHideIfEmpty(movie.direction)
         if (movie.isPlaying()) {
             peekRunnable = Runnable {
                 playingCinemasFragment.peek(movie.id)
@@ -208,18 +222,10 @@ class MovieFragment : DaggerFragment() {
         } else {
             playingCinemasSheet.isGone = true
         }
-    }
 
-    private fun initPoster(posters: Posters) {
-        if (!posters.medium.isNullOrEmpty()) {
-            requireContext().run {
-                GlideApp.with(this)
-                    .asBitmap()
-                    .load(posters.medium)
-                    .apply(bitmapTransform(RoundedCorners(resources.getDimension(R.dimen.spacing_small).toInt())))
-                    .transition(withCrossFade())
-                    .into(poster)
-            }
+        cinemais_border?.let {
+            it.scaleX = 0f
+            it.visibility = View.VISIBLE
         }
     }
 
@@ -241,8 +247,22 @@ class MovieFragment : DaggerFragment() {
             )
         } else if (movie.releaseDate != null) {
             releaseRuntime.text = FORMAT.format(movie.releaseDate)
-        } else if (movie.rating > 0) {
+        } else if (movie.runtime > 0) {
             releaseRuntime.text = getString(R.string.runtime_only, movie.runtime)
+        }
+
+        if (movie.rating != 0) {
+            var ratingResId = 0
+            when (movie.rating) {
+                -1 -> ratingResId = R.drawable.ic_rating_l
+                10 -> ratingResId = R.drawable.ic_rating_10
+                12 -> ratingResId = R.drawable.ic_rating_12
+                14 -> ratingResId = R.drawable.ic_rating_14
+                16 -> ratingResId = R.drawable.ic_rating_16
+                18 -> ratingResId = R.drawable.ic_rating_18
+                else -> Unit
+            }
+            ratingImage.setImageResource(ratingResId)
         }
 
         var toolbarAnimator: ValueAnimator? = null
@@ -255,7 +275,13 @@ class MovieFragment : DaggerFragment() {
                 toolbarAnimator = ValueAnimator.ofFloat(1f, 0f).apply {
                     addUpdateListener {
                         val value = animatedValue as Float
-                        appbar.setBackgroundColor(argbEvaluator.evaluate(value, toolbarColors[0], toolbarColors[1]) as Int)
+                        appbar.setBackgroundColor(
+                            argbEvaluator.evaluate(
+                                value,
+                                toolbarColors[0],
+                                toolbarColors[1]
+                            ) as Int
+                        )
                         cinemais_border.scaleX = value
                     }
                     start()
@@ -267,7 +293,13 @@ class MovieFragment : DaggerFragment() {
                 toolbarAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
                     addUpdateListener {
                         val value = animatedValue as Float
-                        appbar.setBackgroundColor(argbEvaluator.evaluate(value, toolbarColors[0], toolbarColors[1]) as Int)
+                        appbar.setBackgroundColor(
+                            argbEvaluator.evaluate(
+                                value,
+                                toolbarColors[0],
+                                toolbarColors[1]
+                            ) as Int
+                        )
                         cinemais_border.scaleX = value
                     }
                     start()
@@ -280,56 +312,6 @@ class MovieFragment : DaggerFragment() {
         }
     }
 
-    private fun initRating(rating: Int) {
-        if (rating != 0) {
-            var resId = 0
-            when (rating) {
-                -1 -> resId = R.drawable.ic_rating_l
-                10 -> resId = R.drawable.ic_rating_10
-                12 -> resId = R.drawable.ic_rating_12
-                14 -> resId = R.drawable.ic_rating_14
-                16 -> resId = R.drawable.ic_rating_16
-                18 -> resId = R.drawable.ic_rating_18
-            }
-            ratingImage.setImageResource(resId)
-        }
-    }
-
-    private fun initGenres(list: List<String>) {
-        genres.content = list.joinToString(", ")
-        genres.isGone = list.isEmpty()
-    }
-
-    private fun initSynopsis(text: String) {
-        synopsis.isGone = text == ""
-        synopsis.text = text
-    }
-
-    private fun initCast(list: List<String>) {
-        cast.content = list.joinToString(", ")
-        cast.isGone = list.isEmpty()
-    }
-
-    private fun initScreenplay(list: List<String>) {
-        screenplay.content = list.joinToString(", ")
-        screenplay.isGone = list.isEmpty()
-    }
-
-    private fun initProduction(list: List<String>) {
-        production.content = list.joinToString(", ")
-        production.isGone = list.isEmpty()
-    }
-
-    private fun initExecutiveProduction(list: List<String>) {
-        executiveProduction.content = list.joinToString(", ")
-        executiveProduction.isGone = list.isEmpty()
-    }
-
-    private fun initDirection(list: List<String>) {
-        direction.content = list.joinToString(", ")
-        direction.isGone = list.isEmpty()
-    }
-
     fun onBackPressed(): Boolean {
         return if (bottomSheetBehavior.state == STATE_EXPANDED) {
             bottomSheetBehavior.state = STATE_COLLAPSED
@@ -339,6 +321,7 @@ class MovieFragment : DaggerFragment() {
         }
     }
 
+    @SuppressLint("ResourceType")
     private fun getToolbarColors(): IntArray {
         val attrs = requireContext().obtainStyledAttributes(
             intArrayOf(

@@ -14,7 +14,6 @@ import androidx.core.view.isGone
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import androidx.transition.TransitionManager
 import com.diegobezerra.cinemaisapp.R
 import com.diegobezerra.cinemaisapp.ui.cinema.CinemaFragment.Companion.CINEMA_ID
 import dagger.android.support.DaggerFragment
@@ -56,6 +55,10 @@ class TicketsFragment : DaggerFragment() {
         val args = requireNotNull(arguments)
         viewModel.apply {
 
+            loading.observe(this@TicketsFragment, Observer {
+                progressBar.isGone = !it
+            })
+
             tickets.observe(this@TicketsFragment, Observer { tickets ->
                 content.text = Html.fromHtml(tickets.content)
                 if (tickets.buyOnlineUrl.isNotEmpty()) {
@@ -66,10 +69,9 @@ class TicketsFragment : DaggerFragment() {
                 } else {
                     buyOnline.isGone = true
                 }
-                progressBar.isGone = true
             })
 
-            viewModel.postCinemaId(args.getInt(CINEMA_ID))
+            viewModel.setCinemaId(args.getInt(CINEMA_ID))
         }
 
         return root

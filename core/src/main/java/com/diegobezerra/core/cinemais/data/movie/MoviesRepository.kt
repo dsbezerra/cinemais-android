@@ -11,31 +11,38 @@ class MoviesRepository @Inject constructor(
 ) {
 
     companion object {
+
         const val NOW_PLAYING = 0
+
         const val UPCOMING = 1
+
     }
 
-    private var playingMovies: List<Movie>? = null
-    private var upcomingMovies: List<Movie>? = null
+    private val cachedLists: Array<List<Movie>?> = arrayOf(null, null)
 
-    // Simple cache to avoid requesting the same movie again and again
     private val cachedMovies: MutableMap<Int, Movie> = hashMapOf()
 
     fun getNowPlaying(): Single<List<Movie>> {
-        return if (playingMovies != null) {
-            Single.just(playingMovies)
+        val cached = cachedLists[NOW_PLAYING]
+        return if (cached != null) {
+            Single.just(cached)
         } else {
             remoteDataSource.getNowPlaying()
-                .doOnSuccess { playingMovies = it }
+                .doOnSuccess {
+                    cachedLists[NOW_PLAYING] = it
+                }
         }
     }
 
     fun getUpcoming(): Single<List<Movie>> {
-        return if (upcomingMovies != null) {
-            Single.just(upcomingMovies)
+        val cached = cachedLists[UPCOMING]
+        return if (cached != null) {
+            Single.just(cached)
         } else {
             remoteDataSource.getUpcoming()
-                .doOnSuccess { upcomingMovies = it }
+                .doOnSuccess {
+                    cachedLists[UPCOMING] = it
+                }
         }
     }
 
@@ -45,29 +52,26 @@ class MoviesRepository @Inject constructor(
             Single.just(cached)
         } else {
             remoteDataSource.getMovie(id)
-                .doOnSuccess { cachedMovies[id] = it }
+                .doOnSuccess {
+                    cachedMovies[id] = it
+                }
         }
     }
 
-    fun getPlayingCinemas(movieId: Int): Single<List<Cinema>>
-        = getMovie(movieId).map { it.playingCinemas }
-
-    private fun clearPlayingMovies() {
-        playingMovies = null
+    fun getPlayingCinemas(movieId: Int): Single<List<Cinema>> {
+        return getMovie(movieId)
+            .map {
+                it.playingCinemas
+            }
     }
 
-    private fun clearUpcomingMovies() {
-        upcomingMovies = null
+    fun clearMovieWithId(movieId: Int) {
+        cachedMovies.remove(movieId)
     }
 
-    fun clearMovieWithId(id: Int) {
-        cachedMovies.remove(id)
-    }
-
-    fun clearMovies(type: Int) {
-        when (type) {
-            NOW_PLAYING -> clearPlayingMovies()
-            else -> clearUpcomingMovies()
+    fun clearMovies(index: Int) {
+        if (index >= 0 && index < cachedLists.size) {
+            cachedLists[index] = null
         }
     }
 }

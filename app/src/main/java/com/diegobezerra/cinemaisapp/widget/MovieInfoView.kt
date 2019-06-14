@@ -10,6 +10,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.view.isGone
 import com.diegobezerra.cinemaisapp.R
 
 class MovieInfoView @JvmOverloads constructor(
@@ -74,5 +75,12 @@ class MovieInfoView @JvmOverloads constructor(
             )
         }
         contentView.text = string
+    }
+
+    fun setContentOrHideIfEmpty(newContent: String) {
+        if (content != newContent) {
+            content = newContent
+        }
+        isGone = newContent.isEmpty()
     }
 }

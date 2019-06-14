@@ -17,7 +17,6 @@ import java.util.Calendar.WEEK_OF_MONTH
 import java.util.Calendar.YEAR
 import java.util.Calendar.getInstance
 import java.util.Date
-import java.util.GregorianCalendar
 import java.util.Locale
 
 class DateUtils {
@@ -25,6 +24,10 @@ class DateUtils {
     companion object {
 
         val BRAZIL = Locale("pt", "BR")
+
+        fun dateAsString(date: Calendar = getInstance()): String {
+            return "${date[YEAR]}-${date[MONTH]}-${date[DATE]}"
+        }
 
         fun playingRange(date: Date? = null): DateRange {
             val start = calendarAtStartOfDay(date)

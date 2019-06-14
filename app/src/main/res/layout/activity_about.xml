@@ -28,7 +28,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/spacing_large"
                 android:contentDescription="@null"
-                android:src="@drawable/logo"
+                android:src="@drawable/splash_logo"
                 />
 
             <TextView

@@ -64,18 +64,15 @@ class ScheduleDayFragment : DaggerFragment() {
             val dayPosition = args.getInt(DAY_POSITION)
 
             schedule.observe(this@ScheduleDayFragment, Observer {
-                getScheduleForDay(dayPosition)?.observe(
-                    this@ScheduleDayFragment,
-                    Observer {
-                        sessionsAdapter.data = it.sessions
-                        sessionsAdapter.notifyDataSetChanged()
-                    })
+                getScheduleForDay(dayPosition)?.observe(this@ScheduleDayFragment, Observer {
+                    sessionsAdapter.data = it.sessions
+                    sessionsAdapter.notifyDataSetChanged()
+                })
             })
 
-            setCinema(cinemaId)
+            setCinemaId(cinemaId)
         }
 
         return root
     }
-
 }

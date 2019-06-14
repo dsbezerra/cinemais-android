@@ -1,6 +1,6 @@
 package com.diegobezerra.core.cinemais.domain.model
 
-import java.util.*
+import java.util.Date
 
 data class Movie(
     val id: Int = 0,
@@ -9,17 +9,17 @@ data class Movie(
     val posters: Posters,
     val htmlUrl: String = "",
     val synopsis: String = "",
-    val cast: List<String> = listOf(),
-    val screenplay: List<String> = listOf(),
-    val executiveProduction: List<String> = listOf(),
-    val production: List<String> = listOf(),
-    val direction: List<String> = listOf(),
+    val cast: String = "",
+    val screenplay: String = "",
+    val executiveProduction: String = "",
+    val production: String = "",
+    val direction: String = "",
     val distributor: String? = "",
     val rating: Int = 0,
     val runtime: Int = 0,
     val releaseDate: Date? = null,
-    val countries: List<String> = listOf(),
-    val genres: List<String> = listOf(),
+    val countries: String = "",
+    val genres: String = "",
     var images: Images = Images(),
     var trailer: Trailer? = null,
     val playingCinemas: List<Cinema> = listOf()

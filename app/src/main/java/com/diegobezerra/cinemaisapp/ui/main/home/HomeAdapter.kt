@@ -25,6 +25,7 @@ import com.diegobezerra.cinemaisapp.ui.main.home.HomeViewHolder.PlayingMoviesVie
 import com.diegobezerra.cinemaisapp.ui.main.home.HomeViewHolder.UpcomingAllViewHolder
 import com.diegobezerra.cinemaisapp.ui.main.home.HomeViewHolder.UpcomingMovieViewHolder
 import com.diegobezerra.cinemaisapp.util.ImageUtils
+import com.diegobezerra.cinemaisapp.util.NetworkUtils
 import com.diegobezerra.cinemaisapp.widget.AutoSlideViewPager
 import com.diegobezerra.core.cinemais.domain.model.Banner
 import com.diegobezerra.core.cinemais.domain.model.Banner.Action.MOVIE
@@ -52,10 +53,13 @@ class HomeAdapter(
 
     private var list: List<Any> = emptyList()
 
-    private val playingMoviesAdapter by lazy { PlayingMoviesAdapter(homeViewModel) }
+    private val playingMoviesAdapter by lazy {
+        PlayingMoviesAdapter(homeViewModel)
+    }
     private val crossFade = BitmapTransitionOptions.withCrossFade()
     private var placeholder: Drawable? = null
     private var posterOptions: GlideOptions? = null
+    private var isWifiConnection: Boolean = false
     private val viewPool = RecyclerView.RecycledViewPool()
 
     var currentBannerIndex = 0
@@ -90,6 +94,7 @@ class HomeAdapter(
             posterOptions =
                 bitmapTransform(ImageUtils.posterTransformation(parent.context.applicationContext))
         }
+        isWifiConnection = NetworkUtils.isWifiConnection(parent.context)
         val inflater = LayoutInflater.from(context)
         return when (viewType) {
             VIEW_TYPE_BANNERS -> BannersViewHolder(
@@ -145,6 +150,7 @@ class HomeAdapter(
                     }
                 }
             }
+
             is PlayingMoviesViewHolder -> holder.apply {
                 recyclerView.run {
                     adapter = playingMoviesAdapter
@@ -168,31 +174,34 @@ class HomeAdapter(
                     }
                 }
             }
+
             is UpcomingMovieViewHolder -> holder.apply {
-                val item = list[position] as Movie
-                title.text = item.title
-                synopsis.text = item.synopsis
+                val movie = list[position] as Movie
+                title.text = movie.title
+                synopsis.text = movie.synopsis
 
                 with(itemView.context) {
-                    if (!item.posters.medium.isNullOrEmpty()) {
+                    movie.posters.best(isWifiConnection)?.let {
                         GlideApp.with(this)
                             .asBitmap()
-                            .load(item.posters.medium)
+                            .load(it)
                             .placeholder(placeholder)
                             .apply(posterOptions!!)
                             .transition(crossFade)
                             .into(poster)
                     }
                     itemView.setOnClickListener {
-                        homeViewModel.onMovieClicked(item.id)
+                        homeViewModel.onMovieClicked(movie.id)
                     }
                 }
             }
+
             is UpcomingAllViewHolder -> holder.apply {
                 itemView.setOnClickListener {
                     homeViewModel.onShowAllUpcomingClicked()
                 }
             }
+
             is HeaderViewHolder -> Unit
         }
     }

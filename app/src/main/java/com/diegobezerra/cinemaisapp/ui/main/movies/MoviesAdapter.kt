@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit
 class MoviesAdapter(
     private val moviesViewModel: TabMoviesViewModel,
     private val type: Int,
-    var isWifiConnection: Boolean = false
+    private var isWifiConnection: Boolean = false
 ) : RecyclerView.Adapter<MovieViewHolder>() {
 
     companion object {

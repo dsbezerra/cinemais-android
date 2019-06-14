@@ -45,11 +45,11 @@ object CinemaisMovieConverter : Converter<ResponseBody, Movie> {
             .text().replace("^\\(|,\\s\\d{4}\\)\$".toRegex(), "")
 
         var synopsis = ""
-        var cast = listOf<String>()
-        var screenplay = listOf<String>()
-        var executiveProduction = listOf<String>()
-        var production = listOf<String>()
-        var direction = listOf<String>()
+        var cast = ""
+        var screenplay = ""
+        var executiveProduction = ""
+        var production = ""
+        var direction = ""
         element.select("#filmesContainer")
             .first()
             .children()
@@ -66,19 +66,19 @@ object CinemaisMovieConverter : Converter<ResponseBody, Movie> {
                             if (castText.contains("Vozes de:")) {
                                 castText = castText.replace("Vozes de:", "").trim()
                             }
-                            cast = castText.split(", ")
+                            cast = castText
                         }
                         SCREENPLAY -> {
-                            screenplay = content.split(", ")
+                            screenplay = content
                         }
                         EXECUTIVE_PRODUCTION -> {
-                            executiveProduction = content.split(", ")
+                            executiveProduction = content
                         }
                         PRODUCTION -> {
-                            production = content.split(", ")
+                            production = content
                         }
                         DIRECTION -> {
-                            direction = content.split(", ")
+                            direction = content
                         }
                     }
                 }
@@ -87,8 +87,8 @@ object CinemaisMovieConverter : Converter<ResponseBody, Movie> {
         var runtime = 0
         var releaseDate: Date? = null
         var distributor: String? = null
-        var countries = listOf<String>()
-        var genres = listOf<String>()
+        var countries = ""
+        var genres = ""
 
         val rows = element.select("#filmes_conteudo tr")
         try {
@@ -97,10 +97,10 @@ object CinemaisMovieConverter : Converter<ResponseBody, Movie> {
             headers.forEachIndexed { index, it ->
                 val header = it.select("strong")
                 if (header.isNotEmpty() && index > 0) {
-                    val contentText = contents[index - 1].text()
+                    val contentText = contents[index - 1].text().trim()
                     when (it.text().toLowerCase()) {
-                        COUNTRY -> countries = contentText.split(", ")
-                        GENRES -> genres = contentText.split(", ")
+                        COUNTRY -> countries = contentText
+                        GENRES -> genres = contentText
                         RUNTIME -> runtime = contentText.replace("\\D+".toRegex(), "")
                             .toInt()
                         RELEASE -> {
@@ -126,7 +126,8 @@ object CinemaisMovieConverter : Converter<ResponseBody, Movie> {
             .first()?.attr("href") ?: ""
         val trailerId =
             "ct=(\\d+)\$".toRegex().find(trailersUrl)?.groupValues?.get(1) ?: ""
-        val playingCinemas = parsePlayingCinemas(element.select("#filmeContainer > div.salaExibicao > ul li"))
+        val playingCinemas =
+            parsePlayingCinemas(element.select("#filmeContainer > div.salaExibicao > ul li"))
         return Movie(
             id = id,
             title = title,
