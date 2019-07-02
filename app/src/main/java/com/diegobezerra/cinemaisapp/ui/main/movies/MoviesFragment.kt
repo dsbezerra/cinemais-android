@@ -17,10 +17,14 @@ import com.diegobezerra.cinemaisapp.widget.CinemaisTabLayout
 class MoviesFragment : MainFragment() {
 
     companion object {
+
+        const val TAG = "fragment.MOVIES"
+
         const val NOW_PLAYING = 0
         const val UPCOMING = 1
 
         private const val COUNT = 2
+
     }
 
     override fun onCreateView(

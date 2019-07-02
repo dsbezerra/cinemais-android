@@ -1,25 +1,32 @@
 package com.diegobezerra.core.cinemais.data.home
 
 import com.diegobezerra.core.cinemais.data.home.remote.HomeRemoteDataSource
-import com.diegobezerra.core.cinemais.domain.model.HomeData
-import io.reactivex.Single
+import com.diegobezerra.core.cinemais.domain.model.Home
+import com.diegobezerra.core.result.Result
 import javax.inject.Inject
 
 class HomeRepository @Inject constructor(
     private val remoteDataSource: HomeRemoteDataSource
 ) {
 
-    private var cachedHomeData: HomeData? = null
+    private var cachedHome: Home? = null
 
     /**
-     * Retrieves index page data.
+     * Retrieves home page data.
      */
-    fun getHome(): Single<HomeData> {
-        return if (cachedHomeData != null) {
-            Single.just(cachedHomeData)
+    suspend fun getHome(): Result<Home> {
+        return if (cachedHome != null) {
+            Result.Success(cachedHome!!)
         } else {
-            remoteDataSource.getHome()
-                .doOnSuccess { cachedHomeData = it }
+            getRemoteAndCacheHome()
+        }
+    }
+
+    private suspend fun getRemoteAndCacheHome(): Result<Home> {
+        return remoteDataSource.getHome().also {
+            if (it is Result.Success) {
+                cachedHome = it.data
+            }
         }
     }
 }

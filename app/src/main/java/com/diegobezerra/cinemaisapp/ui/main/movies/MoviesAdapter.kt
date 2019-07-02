@@ -1,30 +1,23 @@
 package com.diegobezerra.cinemaisapp.ui.main.movies
 
-import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.core.view.isGone
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions
-import com.bumptech.glide.signature.ObjectKey
+import com.bumptech.glide.Priority
 import com.diegobezerra.cinemaisapp.GlideApp
-import com.diegobezerra.cinemaisapp.GlideOptions
-import com.diegobezerra.cinemaisapp.GlideOptions.bitmapTransform
 import com.diegobezerra.cinemaisapp.R
 import com.diegobezerra.cinemaisapp.ui.main.movies.MoviesAdapter.MovieViewHolder
 import com.diegobezerra.cinemaisapp.ui.main.movies.MoviesFragment.Companion.UPCOMING
 import com.diegobezerra.cinemaisapp.util.ImageUtils
 import com.diegobezerra.core.cinemais.domain.model.Movie
-import com.diegobezerra.core.util.DateUtils
 import com.diegobezerra.core.util.DateUtils.Companion.BRAZIL
 import java.text.SimpleDateFormat
 import java.util.Date
-import java.util.concurrent.TimeUnit
 
 class MoviesAdapter(
     private val moviesViewModel: TabMoviesViewModel,
@@ -33,63 +26,39 @@ class MoviesAdapter(
 ) : RecyclerView.Adapter<MovieViewHolder>() {
 
     companion object {
-        private val FORMAT = SimpleDateFormat("d MMM yyyy", BRAZIL)
-        private val NO_YEAR_FORMAT = SimpleDateFormat("d MMM", BRAZIL)
+        private val FORMAT = SimpleDateFormat("d 'de' MMMM 'de' yyyy", BRAZIL)
+        private val NO_YEAR_FORMAT = SimpleDateFormat("d 'de' MMMM", BRAZIL)
     }
 
     var list: List<Movie> = emptyList()
 
     private val currentYear = Date(System.currentTimeMillis()).year
-    private val crossFade = BitmapTransitionOptions.withCrossFade()
-    private var placeholder: Drawable? = null
-    private var posterOptions: GlideOptions? = null
 
-    // This will ensure cache invalidation at least one time per week.
-    // Necessary because images here can change and URLs will still be the same.
-    //
-    // Alternatively we could implement our own custom fetcher to detect modifications
-    // and ask Glide to use it, but this will serve.
-    private val signature: ObjectKey by lazy {
-        val current = DateUtils.calendarAtStartOfDay().timeInMillis
-        val expiration = TimeUnit.DAYS.toMillis(7).toDouble()
-        ObjectKey(Math.round(current / expiration).toString())
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
-        if (placeholder == null) {
-            placeholder = ContextCompat.getDrawable(parent.context, R.drawable.poster_placeholder)
-        }
-        if (posterOptions == null) {
-            posterOptions =
-                bitmapTransform(ImageUtils.posterTransformation(parent.context.applicationContext))
-        }
-        return MovieViewHolder(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
+        MovieViewHolder(
             LayoutInflater.from(parent.context).inflate(
                 R.layout.item_grid_movie,
                 parent,
                 false
             )
         )
-    }
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
 
         holder.apply {
             val movie = list[position]
-            val context = itemView.context
             movie.posters.best(isWifiConnection)?.let {
-                if (posterOptions == null) {
-                    posterOptions =
-                        bitmapTransform(ImageUtils.posterTransformation(context.applicationContext))
+                ImageUtils.loadPoster(it, poster)
+                // NOTE(diego): isWifiConnection makes sure we load the best image here, but in
+                // the next time the user starts the app without a network connection he will never
+                // see the cached large poster.
+                // To avoid this we will also download the medium poster (temporary).
+                if (isWifiConnection) {
+                    GlideApp.with(itemView.context)
+                        .load(movie.posters.medium)
+                        .priority(Priority.LOW)
+                        .preload()
                 }
-                GlideApp.with(context)
-                    .asBitmap()
-                    .load(it)
-                    .placeholder(placeholder)
-                    .apply(posterOptions!!)
-                    .transition(crossFade)
-                    .signature(signature)
-                    .into(poster)
             }
 
             title.text = movie.title

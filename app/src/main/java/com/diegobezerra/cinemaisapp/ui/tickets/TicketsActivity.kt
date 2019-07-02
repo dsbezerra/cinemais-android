@@ -6,12 +6,12 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewAnimationUtils
 import android.view.WindowManager
-import android.view.animation.AccelerateInterpolator
 import androidx.core.animation.doOnEnd
 import androidx.core.content.ContextCompat
 import com.diegobezerra.cinemaisapp.R
 import com.diegobezerra.cinemaisapp.util.setupActionBar
 import dagger.android.support.DaggerAppCompatActivity
+import kotlin.math.hypot
 
 class TicketsActivity : DaggerAppCompatActivity() {
 
@@ -90,18 +90,17 @@ class TicketsActivity : DaggerAppCompatActivity() {
             .toFloat()
         if (centerX != 0 && centerY != 0) {
             val endRadius =
-                Math.hypot(view.width.toDouble(), view.height.toDouble()).toFloat()
+                hypot(view.width.toDouble(), view.height.toDouble()).toFloat()
             ViewAnimationUtils.createCircularReveal(
                 view,
                 centerX,
                 centerY,
                 startRadius,
                 endRadius
-            )
-                .apply {
-                    view.visibility = View.VISIBLE
-                    start()
-                }
+            ).apply {
+                view.visibility = View.VISIBLE
+                start()
+            }
         }
     }
 
@@ -113,21 +112,20 @@ class TicketsActivity : DaggerAppCompatActivity() {
             .toFloat()
         if (centerX != 0 && centerY != 0) {
             val endRadius =
-                Math.hypot(view.width.toDouble(), view.height.toDouble()).toFloat()
+                hypot(view.width.toDouble(), view.height.toDouble()).toFloat()
             ViewAnimationUtils.createCircularReveal(
                 view,
                 centerX,
                 centerY,
                 endRadius,
                 startRadius
-            )
-                .apply {
-                    doOnEnd {
-                        view.visibility = View.INVISIBLE
-                        finishAfterTransition()
-                    }
-                    start()
+            ).apply {
+                doOnEnd {
+                    view.visibility = View.INVISIBLE
+                    finishAfterTransition()
                 }
+                start()
+            }
         }
     }
 

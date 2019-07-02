@@ -16,11 +16,12 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.TransitionManager
 import androidx.viewpager.widget.ViewPager
 import com.diegobezerra.cinemaisapp.R
-import com.diegobezerra.cinemaisapp.ui.movie.playingcinemas.PlayingCinemasViewModel.Companion.LOADING_NONE
+import com.diegobezerra.cinemaisapp.databinding.FragmentPlayingCinemasBinding
 import com.diegobezerra.cinemaisapp.ui.movie.playingcinemas.PlayingCinemasViewModel.Companion.STATE_SCHEDULE
 import com.diegobezerra.cinemaisapp.ui.schedule.ScheduleAdapter
 import com.diegobezerra.cinemaisapp.widget.CinemaisTabLayout
 import com.diegobezerra.core.cinemais.domain.model.Schedule
+import com.diegobezerra.core.event.EventObserver
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
@@ -29,20 +30,18 @@ import javax.inject.Inject
 
 class PlayingCinemasFragment : DaggerFragment() {
 
-    companion object {
-        val TITLES = listOf(R.string.today, R.string.tomorrow)
-    }
-
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private val viewModel by lazy {
+    private val playingCinemasViewModel by lazy {
         ViewModelProviders.of(this, viewModelFactory)
             .get(PlayingCinemasViewModel::class.java)
     }
 
-    private val playingCinemasAdapter by lazy { PlayingCinemasAdapter(viewModel) }
+    private val playingCinemasAdapter by lazy { PlayingCinemasAdapter(playingCinemasViewModel) }
 
+    // TODO: Create custom view for this sheet
+    private lateinit var scheduleContainer: ViewGroup
     private lateinit var sheet: ViewGroup
     private lateinit var sheetHeader: TextView
     private lateinit var sheetDescription: TextView
@@ -51,8 +50,6 @@ class PlayingCinemasFragment : DaggerFragment() {
     private lateinit var tabs: CinemaisTabLayout
     private lateinit var viewPager: ViewPager
     private lateinit var recyclerView: RecyclerView
-
-    private lateinit var progressBar: View
 
     private var behavior: BottomSheetBehavior<*>? = null
 
@@ -65,49 +62,58 @@ class PlayingCinemasFragment : DaggerFragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        val root = inflater.inflate(R.layout.fragment_playing_cinemas, container, false)
-        initViews(root)
-
-        viewModel.apply {
-
-            loading.observe(this@PlayingCinemasFragment, Observer {
-                progressBar.isGone = it == LOADING_NONE
-            })
-
-            currentCinema.observe(this@PlayingCinemasFragment, Observer {
-                sheetDescription.text = if (it != null) {
-                    getString(R.string.label_cinema, it.name, it.fu)
-                } else {
-                    null
-                }
-            })
-
-            cinemas.observe(this@PlayingCinemasFragment, Observer {
-                playingCinemasAdapter.data = it
-                playingCinemasAdapter.notifyDataSetChanged()
-            })
-
-            schedule.observe(this@PlayingCinemasFragment, Observer { schedule ->
-                if (schedule != prevSchedule) {
-                    val titleList = TITLES.map { requireContext().getString(it) }
-                    viewPager.adapter =
-                        ScheduleAdapter(titleList, schedule, childFragmentManager).apply {
-                            playingRooms = true
-                        }
-                    prevSchedule = schedule
-                }
-            })
-
-            state.observe(this@PlayingCinemasFragment, Observer {
-                // Make sure our views are visible just in case the last onSlide
-                // set them to invisible.
-                interpolateChildViews(1f)
-                updateViews(it)
-            })
-
+        val binding = FragmentPlayingCinemasBinding.inflate(inflater, container, false).apply {
+            lifecycleOwner = this@PlayingCinemasFragment
+            viewModel = playingCinemasViewModel
         }
 
-        return root
+        scheduleContainer = binding.scheduleContainer
+        sheet = binding.playingCinemasSheet
+        sheetDescription = binding.sheetDescription
+        sheetHeader = binding.sheetHeader
+        resetArrow = binding.resetArrow
+        expandCollapseArrow = binding.expandOrCollapseArrow
+        recyclerView = binding.recyclerView
+        viewPager = binding.viewpager
+        tabs = binding.tabs
+        tabs.setupWithViewPager(viewPager)
+
+        recyclerView.run {
+            adapter = playingCinemasAdapter
+            setHasFixedSize(true)
+        }
+
+        val progressBar = binding.root.findViewById<View>(R.id.progress_bar)
+
+        playingCinemasViewModel.loading.observe(this, Observer { loading ->
+            setVisible(progressBar, loading)
+        })
+
+        playingCinemasViewModel.cinemas.observe(this, Observer {
+            playingCinemasAdapter.data = it
+            playingCinemasAdapter.notifyDataSetChanged()
+        })
+
+        playingCinemasViewModel.schedule.observe(this, Observer { schedule ->
+            if (schedule != prevSchedule) {
+                viewPager.adapter =
+                    ScheduleAdapter(childFragmentManager, requireActivity(), schedule, true)
+                prevSchedule = schedule
+            }
+        })
+
+        playingCinemasViewModel.state.observe(this, Observer {
+            // Make sure our views are visible just in case the last onSlide
+            // set them to invisible.
+            interpolateChildViews(1f)
+            updateViews(it)
+        })
+
+        playingCinemasViewModel.toggleSheetAction.observe(this, EventObserver {
+            toggleSheet()
+        })
+
+        return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -123,29 +129,6 @@ class PlayingCinemasFragment : DaggerFragment() {
                 }
             }
         )
-
-        expandCollapseArrow.setOnClickListener {
-            toggle()
-        }
-    }
-
-    private fun initViews(root: View) {
-        sheet = root.findViewById(R.id.playing_cinemas_sheet)
-        resetArrow = root.findViewById(R.id.reset_arrow)
-        expandCollapseArrow = root.findViewById(R.id.expand_or_collapse_arrow)
-        sheetHeader = root.findViewById(R.id.sheet_header)
-        sheetDescription = root.findViewById(R.id.sheet_description)
-        recyclerView = root.findViewById(R.id.recyclerView)
-        recyclerView.run {
-            adapter = playingCinemasAdapter
-            setHasFixedSize(true)
-        }
-
-        viewPager = root.findViewById(R.id.viewpager)
-        tabs = root.findViewById(R.id.tabs)
-        tabs.setupWithViewPager(viewPager)
-
-        progressBar = root.findViewById(R.id.progress_bar)
     }
 
     fun peek(movieId: Int) {
@@ -157,18 +140,18 @@ class PlayingCinemasFragment : DaggerFragment() {
                     duration = 1000
                     startDelay = 400
                     interpolator = FastOutSlowInInterpolator()
-                    addUpdateListener { valueAnimator ->
-                        it.peekHeight = valueAnimator.animatedValue as Int
+                    addUpdateListener { animator ->
+                        it.peekHeight = animator.animatedValue as Int
                     }
                     doOnEnd {
-                        viewModel.onReady(movieId)
+                        playingCinemasViewModel.onReady(movieId)
                     }
                 }
                 .start()
         }
     }
 
-    private fun toggle() {
+    private fun toggleSheet() {
         behavior?.let {
             when (it.state) {
                 STATE_EXPANDED -> it.state = STATE_COLLAPSED
@@ -180,11 +163,8 @@ class PlayingCinemasFragment : DaggerFragment() {
 
     private fun interpolateChildViews(offset: Float) {
         expandCollapseArrow.rotation = offset * 180f
-        if (!viewPager.isGone) {
-            viewPager.alpha = offset
-        }
-        if (!tabs.isGone) {
-            tabs.alpha = offset
+        if (!scheduleContainer.isGone) {
+            scheduleContainer.alpha = offset
         }
         if (!recyclerView.isGone) {
             recyclerView.alpha = offset
@@ -197,21 +177,11 @@ class PlayingCinemasFragment : DaggerFragment() {
         setVisible(recyclerView, !isSessionsVisible)
         setVisible(sheetDescription, isSessionsVisible)
         setVisible(resetArrow, isSessionsVisible)
-        setVisible(viewPager, isSessionsVisible)
-        setVisible(tabs, isSessionsVisible)
+        setVisible(scheduleContainer, isSessionsVisible)
         tabs.scaleX = if (isSessionsVisible) {
             1f
         } else {
             0f
-        }
-
-        if (state == STATE_SCHEDULE) {
-            sheetHeader.text = getString(R.string.header_sessions)
-            resetArrow.setOnClickListener {
-                viewModel.onBackClicked()
-            }
-        } else {
-            sheetHeader.text = getString(R.string.header_playing_rooms)
         }
     }
 

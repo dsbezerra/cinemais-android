@@ -5,7 +5,7 @@ import com.diegobezerra.core.cinemais.domain.model.Banner.Action.NEWS
 import com.diegobezerra.core.cinemais.domain.model.Banner.Action.NONE
 import com.diegobezerra.core.cinemais.domain.model.Banner.Action.PROMO
 
-data class HomeData(
+data class Home(
     val backdrop: String,
     val banners: List<Banner>,
     val playingMovies: List<Movie>,

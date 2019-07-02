@@ -5,21 +5,26 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isGone
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import com.diegobezerra.cinemaisapp.R
+import com.diegobezerra.cinemaisapp.ui.cinema.CinemaFragment
 import com.diegobezerra.cinemaisapp.ui.main.MainActivity
 import com.diegobezerra.cinemaisapp.ui.main.MainFragment
 import com.diegobezerra.cinemaisapp.util.setupToolbarAsActionBar
 import com.diegobezerra.core.event.EventObserver
-import com.google.android.material.appbar.AppBarLayout
-import timber.log.Timber
 import javax.inject.Inject
 
 class CinemasFragment : MainFragment() {
+
+    companion object {
+
+        const val TAG = "fragment.CINEMAS"
+
+    }
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -57,9 +62,9 @@ class CinemasFragment : MainFragment() {
                 cinemasAdapter.notifyDataSetChanged()
             })
 
-            switchToCinemaDetail.observe(this@CinemasFragment, EventObserver { cinemaId ->
+            switchToCinemaDetail.observe(this@CinemasFragment, EventObserver {
                 (requireActivity() as MainActivity).run {
-                    switchToCinemaFragment(cinemaId)
+                    showCinemaFragment(it)
                 }
             })
         }
@@ -69,4 +74,11 @@ class CinemasFragment : MainFragment() {
 
     override fun title() = getString(R.string.title_theaters)
 
+    override fun transition(ft: FragmentTransaction, to: String) {
+        if (to == CinemaFragment.TAG) {
+            ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left)
+        } else {
+            super.transition(ft, to)
+        }
+    }
 }

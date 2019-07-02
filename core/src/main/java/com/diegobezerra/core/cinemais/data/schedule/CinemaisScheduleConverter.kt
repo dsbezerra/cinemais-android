@@ -2,6 +2,7 @@ package com.diegobezerra.core.cinemais.data.schedule
 
 import com.diegobezerra.core.cinemais.data.asJsoup
 import com.diegobezerra.core.cinemais.domain.model.Cinema
+import com.diegobezerra.core.cinemais.domain.model.DateRange
 import com.diegobezerra.core.cinemais.domain.model.Disclaimer
 import com.diegobezerra.core.cinemais.domain.model.DisclaimerEntry
 import com.diegobezerra.core.cinemais.domain.model.DisclaimerEntry.Type.EXCEPT
@@ -21,12 +22,15 @@ import org.jsoup.nodes.Element
 import org.jsoup.nodes.TextNode
 import org.jsoup.select.Elements
 import retrofit2.Converter
+import timber.log.Timber
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Date
 
 object CinemaisScheduleConverter : Converter<ResponseBody, Schedule> {
 
-    private val DAY_FORMAT by lazy { SimpleDateFormat("dd/MM", BRAZIL) }
+    private val DATE_FORMAT by lazy { SimpleDateFormat("dd/MM", BRAZIL) }
+    private val DATE_FORMAT_WITH_YEAR by lazy { SimpleDateFormat("dd/MM/yyyy", BRAZIL) }
 
     override fun convert(value: ResponseBody): Schedule {
         return parseSchedule(
@@ -48,11 +52,11 @@ object CinemaisScheduleConverter : Converter<ResponseBody, Schedule> {
                     val nextNode = childNodes[index + 1]
                     if (nextNode is TextNode) {
                         val content = nextNode.text().trimStart(' ', '-') // Remove " - "
-                        if (!content.isEmpty()) {
+                        if (content.isNotEmpty()) {
                             val days = mutableListOf<Date>().also {
                                 dayRegex.findAll(content).map { it.groupValues[1] }.distinct()
                                     .forEach { s ->
-                                        it.add(DAY_FORMAT.parse(s)) // We don't care about the year
+                                        it.add(DATE_FORMAT.parse(s)) // We don't care about the year
                                     }
                             }
                             // This is unexpected. No-op for now
@@ -102,7 +106,7 @@ object CinemaisScheduleConverter : Converter<ResponseBody, Schedule> {
                     val movieTitle = movieBlock.text()
                     val movieRating = parseRating(columns[2].select("img").first())
 
-                    // Getting cinema id from print cinemaSchedule button
+                    // Getting cinema id from print schedule button
 
                     val is3D = movieBlock.select("img[title='Em 3D']").size == 1
                     val isMagicD = movieBlock.select("img[title='Magic D']").size == 1
@@ -113,17 +117,21 @@ object CinemaisScheduleConverter : Converter<ResponseBody, Schedule> {
                     val sessionsBlock = columns[3].text()
                     var startingTimesBlock: String? = null
                     val parts = sessionsBlock.split(" - ")
-                    if (parts.size == 2) { // Dubbed or subtitled movie
-                        startingTimesBlock = parts[1]
-                        when (parts[0].trim()) {
-                            "Dub." -> version = VersionDubbed
-                            "Leg." -> version = VersionSubtitled
+                    when {
+                        parts.size == 2 -> { // Dubbed or subtitled movie
+                            startingTimesBlock = parts[1]
+                            when (parts[0].trim()) {
+                                "Dub." -> version = VersionDubbed
+                                "Leg." -> version = VersionSubtitled
+                            }
                         }
-                    } else if (parts.size == 1) { // National
-                        version = VersionNational
-                        startingTimesBlock = parts[0]
-                    } else {
-                        // TODO: Diagnostic
+                        parts.size == 1 -> { // National
+                            version = VersionNational
+                            startingTimesBlock = parts[0]
+                        }
+                        else -> {
+                            // TODO: Diagnostic
+                        }
                     }
                     startingTimesBlock?.let { block ->
                         block.split(",").forEach {
@@ -247,14 +255,56 @@ object CinemaisScheduleConverter : Converter<ResponseBody, Schedule> {
      */
     private fun parseSchedule(elements: Elements): Schedule {
         val scheduleBlock = elements.first()
+        val week = parseWeek(scheduleBlock.select("small").first())
         val cinema = parseCinema(scheduleBlock, elements[3])
         val disclaimer = parseDisclaimer(scheduleBlock.select("div.disclaimer").first())
         val sessions = parseSessions(scheduleBlock, cinema, disclaimer)
         return Schedule(
             cinema = cinema,
+            week = week,
             sessions = sessions,
             disclaimer = disclaimer
         )
+    }
+
+    private fun parseWeek(select: Element): DateRange {
+        val text = select.text().trim()
+        val parts = text.split(" a ")
+        val weekRange = DateUtils.playingRange(null)
+        return when (parts.size) {
+            2 -> {
+                try {
+                    val start = DATE_FORMAT.parse(parts[0])
+                    val end = DATE_FORMAT_WITH_YEAR.parse(parts[1])
+                    // NOTE: It was observed that the year of end date is incorrect
+                    // when the range is within New Year's Eve.
+                    //
+                    // Year: 2018
+                    // Observed text: 27/12 a 02/01/2018, it should be: 27/12 a 02/01/2019
+                    if (start.month == Calendar.DECEMBER && end.month == Calendar.JANUARY) {
+                        // Use generated range above which uses current device time.
+                        // Not safe but *THIS* is a temporary solution until we have a web service.
+                        weekRange
+                    } else {
+                        // Otherwise, we use the end date, since is the only one with year information.
+                        val endCalendar = DateUtils.calendarAtStartOfDay(end).apply {
+                            // playingRange functions calculates range relative to the given date
+                            // weekdays.
+                            //
+                            // End date should be a Wednesday.
+                            if (get(Calendar.DAY_OF_WEEK) == Calendar.THURSDAY) {
+                                add(Calendar.DATE, -1)
+                            }
+                        }
+                        DateUtils.playingRange(endCalendar.time)
+                    }
+                } catch (e: Exception) {
+                    Timber.e(e)
+                    weekRange
+                }
+            }
+            else -> weekRange
+        }
     }
 
     private fun parseRating(element: Element): Int {

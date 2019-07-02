@@ -10,10 +10,16 @@
     <attr name="divider_color" format="reference" />
     <attr name="placeholder_color" format="reference" />
     <attr name="session_label_background_color" format="reference" />
-    <attr name="session_movie_title" format="reference" />
 
     <declare-styleable name="AutoSlideViewPager">
         <attr format="integer" name="slideInterval"/>
+    </declare-styleable>
+
+    <declare-styleable name="ErrorView">
+        <attr format="reference" name="errorIcon"/>
+        <attr format="reference" name="errorIconTint"/>
+        <attr format="string" name="errorTitle"/>
+        <attr format="string" name="errorMessage"/>
     </declare-styleable>
 
     <declare-styleable name="MovieInfoView">

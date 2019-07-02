@@ -1,48 +1,38 @@
 package com.diegobezerra.cinemaisapp.ui.schedule
 
-import androidx.fragment.app.Fragment
+import android.content.Context
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
+import com.diegobezerra.cinemaisapp.R
 import com.diegobezerra.core.cinemais.domain.model.Schedule
 import com.diegobezerra.core.util.DateUtils
 import com.diegobezerra.core.util.DateUtils.Companion.BRAZIL
 import java.text.SimpleDateFormat
 
-private val DATE_TITLE_FORMAT = SimpleDateFormat("E', 'd MMM", BRAZIL)
+private val DATE_TITLE_NO_WEEKDAY = SimpleDateFormat("d 'de' MMM", BRAZIL)
+private val DATE_TITLE_WEEKDAY = SimpleDateFormat("E', 'd 'de' MMM", BRAZIL)
 
 class ScheduleAdapter(
-    private val titles: List<String>,
+    fm: FragmentManager,
+    val context: Context,
     var schedule: Schedule,
-    fm: FragmentManager
+    val playingRooms: Boolean = false
 ) : FragmentStatePagerAdapter(fm) {
 
-    companion object {
-
-        const val POSITION_TODAY = 0
-        const val POSITION_TOMORROW = 1
-
-    }
-
-    var playingRooms: Boolean = false
-
-    init {
-        if (titles.size < 2) {
-            throw IllegalStateException("schedule adapter requires title list")
-        }
-    }
-
-    override fun getItem(position: Int): Fragment {
-        return ScheduleDayFragment.newInstance(schedule.cinema.id, position, playingRooms)
-    }
+    override fun getItem(position: Int) =
+        ScheduleDayFragment.newInstance(schedule.cinema.id, position, playingRooms)
 
     override fun getPageTitle(position: Int): CharSequence? {
         val day = schedule.days[position].day
-        if (DateUtils.isToday(day.time)) {
-            return titles[POSITION_TODAY]
-        } else if (DateUtils.isTomorrow(day.time)) {
-            return titles[POSITION_TOMORROW]
+        return when {
+            DateUtils.isToday(day.time) -> {
+                context.getString(R.string.today_with_date, DATE_TITLE_NO_WEEKDAY.format(day))
+            }
+            DateUtils.isTomorrow(day.time) -> {
+                context.getString(R.string.tomorrow_with_date, DATE_TITLE_NO_WEEKDAY.format(day))
+            }
+            else -> DATE_TITLE_WEEKDAY.format(day.time)
         }
-        return DATE_TITLE_FORMAT.format(day.time)
     }
 
     override fun getCount() = schedule.days.size

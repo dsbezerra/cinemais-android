@@ -25,6 +25,14 @@
     <string name="release_with_runtime">%1$s  •  %2$d min</string>
     <string name="runtime_only">%d min</string>
     <string name="unavailable_synopsis">Indisponível</string>
+    <string name="watch_trailer">Trailer</string>
+
+    <string name="label_direction">Direção</string>
+    <string name="label_production">Produção</string>
+    <string name="label_executive_production">Produção executiva</string>
+    <string name="label_screenplay">Roteiro</string>
+    <string name="label_cast">Elenco</string>
+    <string name="label_genres">Gêneros</string>
 
     <!-- Cinema Strings -->
     <string name="all">Todos</string>
@@ -40,6 +48,10 @@
     <string name="text_buy_tickets">Comprar ingressos on-line</string>
 
     <!-- Session Strings -->
+    <string name="today">Hoje</string>
+    <string name="today_with_date">Hoje, %s</string>
+    <string name="tomorrow">Amanhã</string>
+    <string name="tomorrow_with_date">Amanhã, %s</string>
     <string name="magic">MAGIC D</string>
     <string name="vip">VIP</string>
     <string name="_3d">3D</string>
@@ -50,7 +62,7 @@
 
     <!-- About Strings -->
     <string name="about_app_0">Este aplicativo foi desenvolvido para servir como uma alternativa ao site mobile do Cinemais.</string>
-    <string name="about_app_1">Todos os dados são retirados diretamente das páginas oficiais e, como não possui vínculo algum com a rede de cinemas Cinemais, o aplicativo não deve ser visto como oficial.</string>
+    <string name="about_app_1">Todos os dados são retirados diretamente das páginas oficiais.</string>
     <string name="about_app_2"><![CDATA[
     Desenvolvido por <a href="https://github.com/dsbezerra">Diego Bezerra</a>
     ]]></string>
@@ -61,19 +73,21 @@
 
     <!-- Transition Strings -->
     <string name="transition_cinema_to_schedule" translatable="false">transition_cinema_to_schedule</string>
-    <string name="today">Hoje</string>
-    <string name="tomorrow">Amanhã</string>
-    <string name="label_direction">Direção</string>
-    <string name="label_production">Produção</string>
-    <string name="label_executive_production">Produção executiva</string>
-    <string name="label_screenplay">Roteiro</string>
-    <string name="label_cast">Elenco</string>
-    <string name="label_genres">Gêneros</string>
-    <string name="watch_trailer">Assistir Trailer</string>
 
     <!-- Preference Titles -->
     <string name="appearance_header">Aparência</string>
 
     <!-- Appearance Preferences -->
     <string name="pref_dark_theme">Tema escuro</string>
+
+    <!-- Error Strings -->
+    <string name="error_title_no_connection">Sem conexão</string>
+    <string name="error_message_no_connection">Não foi possível processar a requisição. Verifique se sua rede tem acesso à Internet e tente novamente.</string>
+    <string name="error_title_network">Erro de rede</string>
+    <string name="error_message_network">Não foi possível processar a requisição. Por favor tente novamente mais tarde.</string>
+    <string name="error_title_unknown">Oops…</string>
+    <string name="error_message_unknown">Ocorreu um erro inesperado durante a requisição.\nPor favor tente novamente mais tarde.</string>
+    <string name="error_title_timeout">Tempo de requisição esgotado</string>
+    <string name="error_message_timeout">Por favor verifique se sua rede possui conexão com à Internet ou tente novamente mais tarde.</string>
+    <string name="text_see_schedule_in_website">Ver programação no site</string>
 </resources>

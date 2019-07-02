@@ -29,6 +29,16 @@ class DateUtilsTest {
         )
         actualRange = DateUtils.playingRange(GregorianCalendar(2018, 11, 30).time)
         assertEquals(expectedRange, actualRange)
+
+        // Date 19/03/2019 should return range
+        // start:  13/03/2019 - Thursday
+        // end:    20/03/2019 - Wednesday
+        expectedRange = DateRange(
+            start = GregorianCalendar(2019, 2, 14).time,
+            end = GregorianCalendar(2019, 2, 20).time
+        )
+        actualRange = DateUtils.playingRange(GregorianCalendar(2019, 2, 19).time)
+        assertEquals(expectedRange, actualRange)
     }
 
     @Test

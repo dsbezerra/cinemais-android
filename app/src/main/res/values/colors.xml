@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primary">#ffffffff</color>
+    <color name="primary">#ffffff</color>
     <color name="primary_dark">#cccccc</color>
     <color name="accent">@color/cinemais_blue</color>
 
@@ -12,22 +12,20 @@
     <color name="secondary_text">#767676</color>
     <color name="divider">#eeeeee</color>
     <color name="placeholder">#eeeeee</color>
-    <color name="session_movie_title">#555555</color>
     <color name="session_label_background_color">#777777</color>
 
     <!-- Dark theme -->
-    <color name="dark_primary">#ff212121</color>
-    <color name="dark_primary_dark">#ff101010</color>
+    <color name="dark_primary">#121212</color>
+    <color name="dark_primary_dark">#101010</color>
 
-    <color name="dark_background">#ff212121</color>
-    <color name="dark_background_semi_transparent">#cc212121</color>
-    <color name="dark_background_transparent">#00212121</color>
+    <color name="dark_background">#121212</color>
+    <color name="dark_background_semi_transparent">#cc121212</color>
+    <color name="dark_background_transparent">#00121212</color>
 
-    <color name="dark_primary_text">@color/gray_50</color>
-    <color name="dark_secondary_text">#9e9e9e</color>
-    <color name="dark_divider">#333333</color>
-    <color name="dark_placeholder">#424242</color>
-    <color name="dark_session_movie_title">#999999</color>
+    <color name="dark_primary_text">#deffffff</color>
+    <color name="dark_secondary_text">#99ffffff</color>
+    <color name="dark_divider">#1Affffff</color>
+    <color name="dark_placeholder">#61ffffff</color>
     <color name="dark_session_label_background_color">#555555</color>
 
     <!-- Others -->

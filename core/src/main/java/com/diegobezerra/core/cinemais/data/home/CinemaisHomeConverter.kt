@@ -4,27 +4,27 @@ import com.diegobezerra.core.cinemais.data.asJsoup
 import com.diegobezerra.core.cinemais.data.cinemas.CinemaisCinemasConverter.parseCinemas
 import com.diegobezerra.core.cinemais.data.movie.CinemaisMovieConverter
 import com.diegobezerra.core.cinemais.domain.model.Banner
-import com.diegobezerra.core.cinemais.domain.model.HomeData
+import com.diegobezerra.core.cinemais.domain.model.Home
 import com.diegobezerra.core.cinemais.domain.model.Movie
 import com.diegobezerra.core.cinemais.domain.model.Posters
 import okhttp3.ResponseBody
 import org.jsoup.nodes.Element
 import retrofit2.Converter
 
-object CinemaisHomeConverter : Converter<ResponseBody, HomeData> {
+object CinemaisHomeConverter : Converter<ResponseBody, Home> {
 
-    override fun convert(value: ResponseBody): HomeData {
+    override fun convert(value: ResponseBody): Home {
         return parseHomeData(value.asJsoup())
     }
 
-    private fun parseHomeData(element: Element): HomeData {
+    private fun parseHomeData(element: Element): Home {
         val backdrop = "(https?://w*\\.cinemais.com.br/fotos/wallpaper/\\d+\\.jpg)"
             .toRegex().find(element.select("style").first().data())?.groupValues?.get(1)
         val banners = parseBanners(element.select("div > div.bannerIndex > ul.bannerContainer").first())
         val playingMovies = parsePlayingMovies(element.select("#carousel_ul").first())
         val upcomingMovies = parseUpcomingMovies(element.select("#proxul").first())
         val cinemas = parseCinemas(element.select("#teste li"))
-        return HomeData(
+        return Home(
             backdrop = backdrop ?: "",
             banners = banners,
             playingMovies = playingMovies,

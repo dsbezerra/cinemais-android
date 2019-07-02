@@ -5,8 +5,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.viewpager.widget.PagerAdapter
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions
 import com.diegobezerra.cinemaisapp.GlideApp
 import com.diegobezerra.cinemaisapp.R
 import com.diegobezerra.cinemaisapp.util.ImageUtils
@@ -30,11 +28,8 @@ class BannersAdapter(
         val b = banners[position]
         if (b.imageUrl.isNotEmpty()) {
             GlideApp.with(container.context)
-                .asBitmap()
                 .load(b.imageUrl)
-                .placeholder(ImageUtils.placeholder(container.context))
-                .diskCacheStrategy(DiskCacheStrategy.DATA)
-                .transition(BitmapTransitionOptions.withCrossFade())
+                .placeholder(ImageUtils.getPlaceholder(container.context))
                 .into(banner)
         }
 

@@ -21,7 +21,6 @@
         <item name="subhead_text_color">@color/gray_900</item>
         <item name="divider_color">@color/divider</item>
         <item name="placeholder_color">@color/placeholder</item>
-        <item name="session_movie_title">@color/session_movie_title</item>
         <item name="session_label_background_color">@color/session_label_background_color</item>
 
         <!-- Windows -->
@@ -49,7 +48,6 @@
         <item name="subhead_text_color">@color/gray_50</item>
         <item name="divider_color">@color/dark_divider</item>
         <item name="placeholder_color">@color/dark_placeholder</item>
-        <item name="session_movie_title">@color/dark_session_movie_title</item>
         <item name="session_label_background_color">@color/dark_session_label_background_color</item>
 
         <item name="toolbarStyle">@style/Widget.Cinemais.Toolbar</item>

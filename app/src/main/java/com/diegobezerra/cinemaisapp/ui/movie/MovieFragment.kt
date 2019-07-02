@@ -18,12 +18,12 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.bumptech.glide.Priority
 import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions.withCrossFade
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.diegobezerra.cinemaisapp.GlideApp
-import com.diegobezerra.cinemaisapp.GlideOptions.bitmapTransform
 import com.diegobezerra.cinemaisapp.R
 import com.diegobezerra.cinemaisapp.ui.movie.playingcinemas.PlayingCinemasFragment
+import com.diegobezerra.cinemaisapp.util.ImageUtils
 import com.diegobezerra.cinemaisapp.util.NetworkUtils
 import com.diegobezerra.cinemaisapp.util.setupToolbarAsActionBar
 import com.diegobezerra.core.cinemais.domain.model.Movie
@@ -32,7 +32,6 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
 import dagger.android.support.DaggerFragment
-import fr.castorflex.android.circularprogressbar.CircularProgressBar
 import kotlinx.android.synthetic.main.fragment_movie.backdrop
 import kotlinx.android.synthetic.main.fragment_movie.cast
 import kotlinx.android.synthetic.main.fragment_movie.direction
@@ -54,7 +53,7 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import javax.inject.Inject
 
-private val FORMAT = SimpleDateFormat("dd MMMM", BRAZIL)
+private val FORMAT = SimpleDateFormat("d 'de' MMMM", BRAZIL)
 
 class MovieFragment : DaggerFragment() {
 
@@ -103,7 +102,6 @@ class MovieFragment : DaggerFragment() {
         savedInstanceState: Bundle?
     ): View? {
         val root = inflater.inflate(R.layout.fragment_movie, container, false)
-        val progressBar = root.findViewById<CircularProgressBar>(R.id.progress_bar)
         val swipeRefreshLayout = root.findViewById<SwipeRefreshLayout>(R.id.swipe_refresh)
         playingCinemasSheet = root.findViewById(R.id.playing_cinemas_sheet)
         bottomSheetBehavior = BottomSheetBehavior.from(playingCinemasSheet)
@@ -120,11 +118,7 @@ class MovieFragment : DaggerFragment() {
         }
         viewModel.apply {
 
-            loading1.observe(this@MovieFragment, Observer {
-                progressBar.isGone = !it
-            })
-
-            loading2.observe(this@MovieFragment, Observer {
+            loading.observe(this@MovieFragment, Observer {
                 swipeRefreshLayout.isRefreshing = it
             })
 
@@ -160,10 +154,10 @@ class MovieFragment : DaggerFragment() {
     }
 
     private fun initMovie(movie: Movie) {
-
         // Setup images
         requireActivity().run {
-            val bestPoster = movie.posters.best(NetworkUtils.isWifiConnection(this))
+            val isWifiConnection = NetworkUtils.isWifiConnection(this)
+            val bestPoster = movie.posters.best(isWifiConnection)
             val weekday = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)
             val bestBackdrop =
                 movie.images.getBackdrop(weekday) ?: bestPoster
@@ -175,12 +169,17 @@ class MovieFragment : DaggerFragment() {
                     .into(backdrop)
             }
             bestPoster?.let {
-                GlideApp.with(this)
-                    .asBitmap()
-                    .load(it)
-                    .apply(bitmapTransform(RoundedCorners(resources.getDimension(R.dimen.spacing_small).toInt())))
-                    .transition(withCrossFade())
-                    .into(poster)
+                ImageUtils.loadPoster(it, poster)
+                // NOTE(diego): isWifiConnection makes sure we load the best image here, but in
+                // the next time the user starts the app without a network connection he will never
+                // see the cached large poster.
+                // To avoid this we will also download the medium poster (temporary).
+                if (isWifiConnection) {
+                    GlideApp.with(this)
+                        .load(movie.posters.medium)
+                        .priority(Priority.LOW)
+                        .preload()
+                }
             }
         }
 

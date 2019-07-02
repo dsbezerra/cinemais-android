@@ -2,16 +2,23 @@ package com.diegobezerra.core.cinemais.data.cinemas.remote
 
 import com.diegobezerra.core.cinemais.data.CinemaisService
 import com.diegobezerra.core.cinemais.data.cinemas.CinemasDataSource
+import com.diegobezerra.core.util.safeRequest
 import javax.inject.Inject
 
 class CinemasRemoteDataSource @Inject constructor(
     private val service: CinemaisService
 ) : CinemasDataSource {
 
-    override fun getLocation(id: Int) = service.cinemaLocation(id)
+    override suspend fun getSchedule(id: Int) = safeRequest(
+        call = { service.schedule(id) }
+    )
 
-    override fun getSchedule(id: Int) = service.cinemaSchedule(id)
+    override suspend fun getTickets(id: Int) = safeRequest(
+        call = { service.tickets(id) }
+    )
 
-    override fun getTickets(id: Int) = service.cinemaTickets(id)
+    override suspend fun getLocation(id: Int) = safeRequest(
+        call = { service.location(id) }
+    )
 
 }

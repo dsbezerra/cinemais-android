@@ -1,21 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.cinema.CinemaFragment"
+    xmlns:tools="http://schemas.android.com/tools"
     >
 
-    <include layout="@layout/include_cinema_appbar" />
+    <data>
 
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/viewpager"
+        <variable
+            name="viewModel"
+            type="com.diegobezerra.cinemaisapp.ui.cinema.CinemaViewModel"
+            />
+
+    </data>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        />
+        tools:context=".ui.cinema.CinemaFragment"
+        >
 
-    <include layout="@layout/include_progress_bar" />
+        <include
+            layout="@layout/include_cinema_appbar"
+            app:viewModel="@{viewModel}"
+            />
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            />
+
+        <include layout="@layout/include_progress_bar"/>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>

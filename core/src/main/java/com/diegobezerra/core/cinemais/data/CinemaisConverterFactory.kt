@@ -11,7 +11,7 @@ import com.diegobezerra.core.cinemais.data.movie.trailer.CinemaisTrailerConverte
 import com.diegobezerra.core.cinemais.data.nowplaying.CinemaisNowPlayingConverter
 import com.diegobezerra.core.cinemais.data.schedule.CinemaisScheduleConverter
 import com.diegobezerra.core.cinemais.data.upcoming.CinemaisUpcomingConverter
-import com.diegobezerra.core.cinemais.domain.model.HomeData
+import com.diegobezerra.core.cinemais.domain.model.Home
 import com.diegobezerra.core.cinemais.domain.model.Images
 import com.diegobezerra.core.cinemais.domain.model.Location
 import com.diegobezerra.core.cinemais.domain.model.Movie
@@ -37,7 +37,7 @@ class CinemaisConverterFactory : Converter.Factory() {
             annotations.any { it is CinemaisUpcoming } -> CinemaisUpcomingConverter
             annotations.any { it is CinemaisCinemas } -> CinemaisCinemasConverter
             else -> when (type) {
-                HomeData::class.java -> CinemaisHomeConverter
+                Home::class.java -> CinemaisHomeConverter
                 Movie::class.java -> CinemaisMovieConverter
                 Images::class.java -> CinemaisImagesConverter
                 Trailer::class.java -> CinemaisTrailerConverter

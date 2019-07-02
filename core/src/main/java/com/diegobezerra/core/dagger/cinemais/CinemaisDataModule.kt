@@ -3,13 +3,12 @@ package com.diegobezerra.core.dagger.cinemais
 import android.content.Context
 import com.diegobezerra.core.cinemais.data.CinemaisConverterFactory
 import com.diegobezerra.core.cinemais.data.CinemaisService
-import com.diegobezerra.core.util.NetworkUtils
+import com.diegobezerra.core.util.isNetworkConnected
 import dagger.Module
 import dagger.Provides
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 
 @Module
 class CinemaisDataModule {
@@ -32,7 +31,7 @@ class CinemaisDataModule {
             .cache(Cache(context.cacheDir, cacheSize))
             .addInterceptor { chain ->
                 val request = chain.request().newBuilder().run {
-                    if (NetworkUtils.isConnected(context)!!) {
+                    if (isNetworkConnected(context)!!) {
                         header("Cache-Control", "public, max-age=$maxAge").build()
                     } else {
                         header(
@@ -47,7 +46,6 @@ class CinemaisDataModule {
         return Retrofit.Builder()
             .baseUrl(CinemaisService.ENDPOINT)
             .addConverterFactory(converterFactory)
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .client(client)
             .build()
             .create(CinemaisService::class.java)

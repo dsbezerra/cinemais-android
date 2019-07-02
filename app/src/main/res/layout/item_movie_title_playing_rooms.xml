@@ -19,7 +19,7 @@
         android:layout_margin="@dimen/spacing_medium"
         android:background="?selectableItemBackground"
         android:textColor="@color/primary"
-        android:textSize="16sp"
+        style="@style/TextAppearance.Cinemais.Subhead"
         tools:text="Captain Marvel"
         />
 

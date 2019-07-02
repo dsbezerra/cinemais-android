@@ -3,30 +3,26 @@ package com.diegobezerra.cinemaisapp.ui.tickets
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import com.diegobezerra.cinemaisapp.base.BaseViewModel
 import com.diegobezerra.cinemaisapp.util.setValueIfNew
-import com.diegobezerra.core.cinemais.data.cinemas.CinemasRepository
+import com.diegobezerra.core.cinemais.data.cinemas.CinemaRepository
 import com.diegobezerra.core.cinemais.domain.model.Tickets
-import com.diegobezerra.core.util.RxUtils
-import io.reactivex.disposables.CompositeDisposable
-import timber.log.Timber
+import com.diegobezerra.core.event.Event
 import javax.inject.Inject
 
 class TicketsViewModel @Inject constructor(
-    private val cinemasRepository: CinemasRepository
-) : ViewModel() {
-
-    private val _loading = MediatorLiveData<Boolean>()
-    val loading: LiveData<Boolean>
-        get() = _loading
+    private val cinemaRepository: CinemaRepository
+) : BaseViewModel() {
 
     private val _tickets = MediatorLiveData<Tickets>()
     val tickets: LiveData<Tickets>
         get() = _tickets
 
-    private val cinemaId = MutableLiveData<Int>()
+    private val _navigateToBuyWebsiteAction = MediatorLiveData<Event<String>>()
+    val navigateToBuyWebsiteAction: LiveData<Event<String>>
+        get() = _navigateToBuyWebsiteAction
 
-    private val disposables = CompositeDisposable()
+    private val cinemaId = MutableLiveData<Int>()
 
     init {
         // Refresh tickets every time cinemaId's value is changed.
@@ -35,34 +31,24 @@ class TicketsViewModel @Inject constructor(
         }
     }
 
-    override fun onCleared() {
-        disposables.clear()
-    }
-
     /**
      * Refresh tickets data for current cinema ID.
      */
     private fun refreshTickets() {
-        getCinemaId()?.let {
-            disposables.add(
-                RxUtils.getSingle(cinemasRepository.getTickets(it))
-                    .doOnSubscribe {
-                        _loading.value = true
-                    }
-                    .doOnSuccess {
-                        _loading.value = false
-                    }
-                    .doOnError { throwable ->
-                        _loading.value = false
-                        // TODO: Implement error handling
-                        Timber.d("throwable=$throwable")
-                    }
-                    .subscribe({ tickets ->
-                        _tickets.value = tickets
-                    }, { throwable ->
-                        Timber.d("throwable=$throwable")
-                    })
-            )
+        getCinemaId()?.let { cinemaId ->
+            execute({ cinemaRepository.getTickets(cinemaId) },
+                onSuccess = {
+                    _tickets.value = it
+                },
+                onError = {
+
+                })
+        }
+    }
+
+    fun onBuyOnlineClicked() {
+        getTicketsBuyUrl()?.let {
+            _navigateToBuyWebsiteAction.value = Event(it)
         }
     }
 
@@ -77,5 +63,15 @@ class TicketsViewModel @Inject constructor(
      * Returns the current cinema ID or null if not available.
      */
     private fun getCinemaId(): Int? = cinemaId.value
+
+    /**
+     * Returns the current tickets or null if not available.
+     */
+    private fun getTickets(): Tickets? = tickets.value
+
+    /**
+     * Returns the current tickets buy url or null if not available.
+     */
+    private fun getTicketsBuyUrl(): String? = getTickets()?.buyOnlineUrl
 
 }

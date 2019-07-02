@@ -7,8 +7,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.RecyclerView
-import com.diegobezerra.cinemaisapp.R
+import com.diegobezerra.cinemaisapp.databinding.FragmentScheduleDayBinding
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
 
@@ -35,7 +34,7 @@ class ScheduleDayFragment : DaggerFragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private val viewModel by lazy {
+    private val scheduleViewModel by lazy {
         ViewModelProviders.of(parentFragment!!, viewModelFactory)
             .get(ScheduleViewModel::class.java)
     }
@@ -46,11 +45,15 @@ class ScheduleDayFragment : DaggerFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val args = requireNotNull(arguments)
-        val root = inflater.inflate(R.layout.fragment_schedule_day, container, false)
 
-        val recyclerView = root.findViewById<RecyclerView>(R.id.recyclerView)
-        recyclerView.run {
+        val binding = FragmentScheduleDayBinding.inflate(inflater, container, false).apply {
+            lifecycleOwner = this@ScheduleDayFragment
+            viewModel = scheduleViewModel
+        }
+
+        val args = requireNotNull(arguments)
+
+        binding.recyclerView.run {
             val playingRooms = args.getBoolean(PLAYING_ROOMS)
             adapter = SessionsAdapter(playingRooms).also {
                 sessionsAdapter = it
@@ -58,21 +61,21 @@ class ScheduleDayFragment : DaggerFragment() {
             setHasFixedSize(true)
         }
 
-        viewModel.apply {
-
-            val cinemaId = args.getInt(CINEMA_ID)
+        scheduleViewModel.apply {
             val dayPosition = args.getInt(DAY_POSITION)
-
             schedule.observe(this@ScheduleDayFragment, Observer {
-                getScheduleForDay(dayPosition)?.observe(this@ScheduleDayFragment, Observer {
-                    sessionsAdapter.data = it.sessions
+                it.getDay(dayPosition)?.let { day ->
+                    sessionsAdapter.data = day.sessions
                     sessionsAdapter.notifyDataSetChanged()
-                })
+                }
             })
-
-            setCinemaId(cinemaId)
         }
 
-        return root
+        return binding.root
+    }
+
+    override fun onStart() {
+        super.onStart()
+        scheduleViewModel.setCinemaId(requireNotNull(arguments).getInt(CINEMA_ID))
     }
 }

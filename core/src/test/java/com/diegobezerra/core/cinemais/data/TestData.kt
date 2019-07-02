@@ -20,18 +20,16 @@ val movie = Movie(
         "personagens mais poderosas do universo. Enquanto uma guerra galáctica entre duas raças" +
         " alienígenas chega à Terra, Danvers se vê junto a um pequeno grupo de aliados bem no " +
         "meio da ação.",
-    cast = listOf(
-        "Brie Larson", "Gemma Chan", "Mckenna Grace", "Lee Pace", "Ben Mendelsohn",
-        "Samuel L. Jackson", "Jude Law", "Djimon Hounsou"
-    ),
-    screenplay = listOf("Anna Boden", "Ryan Fleck", "Geneva Robertson-Dworet"),
-    executiveProduction = listOf("Victoria Alonso", "Louis D´Esposito", "Stan Lee",
-        "Jonathan Schwartz", "Patricia Whitcher"),
-    production = listOf("Kevin Feige"),
-    direction = listOf("Anna Boden", "Ryan Fleck"),
+    cast = "Brie Larson, Gemma Chan, Mckenna Grace, Lee Pace, Ben Mendelsohn, " +
+        "Samuel L. Jackson, Jude Law, Djimon Hounsou",
+    screenplay = "Anna Boden, Ryan Fleck, Geneva Robertson-Dworet",
+    executiveProduction = "Victoria Alonso, Louis D´Esposito, Stan Lee, Jonathan Schwartz, " +
+        "Patricia Whitcher",
+    production = "Kevin Feige",
+    direction = "Anna Boden, Ryan Fleck",
     rating = 12,
-    countries = listOf("EUA"),
-    genres = listOf("Ação", "Aventura", "Ficção-científica"),
+    countries = "EUA",
+    genres = "Ação, Aventura, Ficção-científica",
     runtime = 124,
     releaseDate = SimpleDateFormat("dd/MM/yyyy").parse("07/03/2019"),
     distributor = "Walt Disney Studios"

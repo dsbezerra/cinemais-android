@@ -6,6 +6,7 @@ import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 
 fun Fragment.setupToolbarAsActionBar(
     rootView: View, @IdRes toolbarId: Int,
@@ -19,4 +20,26 @@ fun Fragment.setupToolbarAsActionBar(
         }
     }
     return toolbar
+}
+
+fun FragmentTransaction.switchToAdded(
+    tag: String,
+    fragments: List<Fragment>
+): Fragment? {
+    var target: Fragment? = null
+
+    for (f in fragments) {
+        if (f.tag == tag) {
+            if (f.isHidden) {
+                target = f
+                show(f)
+            }
+        } else {
+            if (f.isAdded) {
+                hide(f)
+            }
+        }
+    }
+
+    return target
 }

@@ -1,6 +1,8 @@
 package com.diegobezerra.cinemaisapp.ui.main
 
 import android.os.Bundle
+import androidx.fragment.app.FragmentTransaction
+import androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE
 import dagger.android.support.DaggerFragment
 
 abstract class MainFragment : DaggerFragment() {
@@ -13,7 +15,12 @@ abstract class MainFragment : DaggerFragment() {
         }
     }
 
+    open fun transition(ft: FragmentTransaction, to: String) {
+        ft.setTransition(TRANSIT_FRAGMENT_FADE)
+    }
+
     open fun id(): Int = 0
+
     open fun title(): String? = null
 
 }

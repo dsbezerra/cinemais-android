@@ -3,38 +3,31 @@ package com.diegobezerra.cinemaisapp.ui.movie.playingcinemas
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.diegobezerra.cinemaisapp.util.postValueIfNew
+import com.diegobezerra.cinemaisapp.R
+import com.diegobezerra.cinemaisapp.base.BaseViewModel
 import com.diegobezerra.cinemaisapp.util.setValueIfNew
-import com.diegobezerra.core.cinemais.data.cinemas.CinemasRepository
-import com.diegobezerra.core.cinemais.data.movie.MoviesRepository
+import com.diegobezerra.core.cinemais.data.cinemas.CinemaRepository
+import com.diegobezerra.core.cinemais.data.movie.MovieRepository
 import com.diegobezerra.core.cinemais.domain.model.Cinema
 import com.diegobezerra.core.cinemais.domain.model.Schedule
-import com.diegobezerra.core.util.DateUtils
-import com.diegobezerra.core.util.RxUtils
-import io.reactivex.disposables.CompositeDisposable
-import timber.log.Timber
+import com.diegobezerra.core.event.Event
 import javax.inject.Inject
 
 class PlayingCinemasViewModel @Inject constructor(
-    private val cinemasRepository: CinemasRepository,
-    private val moviesRepository: MoviesRepository
-) : ViewModel(), PlayingCinemasEventListener {
+    private val cinemaRepository: CinemaRepository,
+    private val movieRepository: MovieRepository
+) : BaseViewModel(), PlayingCinemasEventListener {
 
     companion object {
 
         const val STATE_PLAYING_ROOMS = 0
         const val STATE_SCHEDULE = 1
 
-        const val LOADING_NONE = -1
-        const val LOADING_PLAYING_ROOMS = 0
-        const val LOADING_SCHEDULE = 1
     }
 
-
-    private var _loading = MutableLiveData<Int>()
-    val loading: LiveData<Int>
-        get() = _loading
+    private val _cinema = MutableLiveData<Cinema?>()
+    val cinema: LiveData<Cinema?>
+        get() = _cinema
 
     private val _cinemas = MediatorLiveData<List<Cinema>>()
     val cinemas: LiveData<List<Cinema>>
@@ -44,102 +37,57 @@ class PlayingCinemasViewModel @Inject constructor(
     val schedule: LiveData<Schedule>
         get() = _schedule
 
-    private var _currentCinema = MutableLiveData<Cinema?>()
-    val currentCinema: LiveData<Cinema?>
-        get() = _currentCinema
-
-    private val _state = MediatorLiveData<Int>().apply {
-        value = STATE_PLAYING_ROOMS
-    }
+    private val _state = MutableLiveData(STATE_PLAYING_ROOMS)
     val state: LiveData<Int>
         get() = _state
+
+    private val _toggleSheetAction = MutableLiveData<Event<Unit>>()
+    val toggleSheetAction: LiveData<Event<Unit>>
+        get() = _toggleSheetAction
 
     private var movieId = MutableLiveData<Int>()
 
     private var cinemaId = MutableLiveData<Int>()
 
-    private val dateString = MutableLiveData<String>(DateUtils.dateAsString())
-
-    private var firstInitialization: Boolean = true
-
-    private val disposables = CompositeDisposable()
-
     init {
-
         _cinemas.addSource(movieId) {
             refreshPlayingCinemas()
         }
         _schedule.addSource(cinemaId) {
             refreshSchedule()
         }
-
-        // This takes care of refreshing schedule/playing rooms in case the date changes.
-        _cinemas.addSource(dateString) {
-            if (!firstInitialization) {
-                refreshPlayingCinemas(true)
-            }
-            firstInitialization = false
-        }
-        _schedule.addSource(dateString) {
-            if (!firstInitialization) {
-                refreshSchedule(true)
-            }
-            firstInitialization = false
-        }
-
     }
 
-    override fun onCleared() {
-        disposables.clear()
-    }
-
-    private fun refreshPlayingCinemas(remote: Boolean = false) {
-        getMovieId()?.let {
-            if (remote) {
-                moviesRepository.clearMovieWithId(it)
+    private fun refreshPlayingCinemas(ignoreCache: Boolean = false) {
+        getMovieId()?.let { cinemaId ->
+            if (ignoreCache) {
+                movieRepository.clearMovieWithId(cinemaId)
             }
-            disposables.add(
-                RxUtils.getSingle(moviesRepository.getPlayingCinemas(it))
-                    .doOnSubscribe {
-                        _loading.value = LOADING_PLAYING_ROOMS
-                    }
-                    .doOnSuccess {
-                        _loading.value = LOADING_NONE
-                    }
-                    .doOnError { throwable ->
-                        _loading.value = LOADING_NONE
-                        // TODO: Implement error handling
-                        Timber.d("throwable=$throwable")
-                    }
-                    .subscribe { cinemas ->
-                        _cinemas.value = cinemas
-                    })
+            execute({ movieRepository.getPlayingCinemas(cinemaId) },
+                onSuccess = {
+                    _cinemas.value = it
+                    _state.setValueIfNew(STATE_PLAYING_ROOMS)
+                },
+                onError = {
+                    // No-op
+                })
         }
     }
 
-    private fun refreshSchedule(remote: Boolean = false) {
-        getCinemaId()?.let {
-            if (remote) {
-                cinemasRepository.clearSchedule(it)
+    private fun refreshSchedule(ignoreCache: Boolean = false) {
+        getCinemaId()?.let { cinemaId ->
+            if (ignoreCache) {
+                cinemaRepository.clearSchedule(cinemaId)
             }
-            disposables.add(
-                RxUtils.getSingle(cinemasRepository.getSchedule(it))
-                    .doOnSubscribe {
-                        _loading.value = LOADING_SCHEDULE
-                    }
-                    .doOnSuccess {
-                        _loading.value = LOADING_NONE
-                    }
-                    .doOnError { throwable ->
-                        _loading.value = LOADING_NONE
-                        // TODO: Implement error handling
-                        Timber.d("throwable=$throwable")
-                    }
-                    .subscribe { schedule ->
-                        _schedule.value = schedule
-                        _currentCinema.value = schedule.cinema
-                    }
-            )
+            execute({ cinemaRepository.getSchedule(cinemaId) },
+                onSuccess = { schedule ->
+                    _schedule.value = schedule
+                    _cinema.value = schedule.cinema
+                    _state.setValueIfNew(STATE_SCHEDULE)
+                },
+                onError = {
+                    // No-op
+                })
         }
     }
 
@@ -156,17 +104,25 @@ class PlayingCinemasViewModel @Inject constructor(
     }
 
     override fun onCinemaClicked(cinema: Int) {
-        cinemaId.setValueIfNew(cinema)
-        _state.postValueIfNew(STATE_SCHEDULE)
+        cinemaId.value = cinema
         _schedule.value?.let {
-            _currentCinema.setValueIfNew(it.cinema)
+            _cinema.setValueIfNew(it.cinema)
         }
-
     }
 
     override fun onBackClicked() {
-        _state.postValueIfNew(STATE_PLAYING_ROOMS)
-        _currentCinema.postValueIfNew(null)
+        _state.setValueIfNew(STATE_PLAYING_ROOMS)
+    }
+
+    override fun onExpandOrCollapseClicked() {
+        _toggleSheetAction.value = Event(Unit)
+    }
+
+    fun getHeaderText(state: Int): Int {
+        return when (state) {
+            STATE_SCHEDULE -> R.string.header_sessions
+            else -> R.string.header_playing_rooms
+        }
     }
 }
 
@@ -174,8 +130,10 @@ interface PlayingCinemasEventListener {
 
     fun onReady(movie: Int)
 
+    fun onCinemaClicked(cinema: Int)
+
     fun onBackClicked()
 
-    fun onCinemaClicked(cinema: Int)
+    fun onExpandOrCollapseClicked()
 
 }

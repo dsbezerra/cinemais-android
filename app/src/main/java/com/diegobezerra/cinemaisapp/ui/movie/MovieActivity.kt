@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import com.diegobezerra.cinemaisapp.R
-import com.diegobezerra.cinemaisapp.ui.BaseActivity
+import com.diegobezerra.cinemaisapp.base.BaseActivity
 
 class MovieActivity : BaseActivity() {
 

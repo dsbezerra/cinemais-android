@@ -3,26 +3,20 @@ package com.diegobezerra.cinemaisapp.ui.main.movies
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.diegobezerra.core.cinemais.data.movie.MoviesRepository
+import com.diegobezerra.cinemaisapp.base.BaseViewModel
+import com.diegobezerra.cinemaisapp.util.setValueIfNew
+import com.diegobezerra.core.cinemais.data.movie.MovieRepository
+import com.diegobezerra.core.cinemais.data.movie.MovieRepository.Companion.NOW_PLAYING
 import com.diegobezerra.core.cinemais.domain.model.Movie
 import com.diegobezerra.core.event.Event
-import com.diegobezerra.core.util.RxUtils
-import io.reactivex.disposables.CompositeDisposable
-import timber.log.Timber
+import com.diegobezerra.core.result.Result
 import javax.inject.Inject
 
 class TabMoviesViewModel @Inject constructor(
-    private val moviesRepository: MoviesRepository
-) : ViewModel(), MoviesEventListener {
-
-    private val disposables = CompositeDisposable()
+    private val movieRepository: MovieRepository
+) : BaseViewModel(), MoviesEventListener {
 
     private var _type = MutableLiveData<Int>()
-
-    private val _loading = MutableLiveData<Boolean>()
-    val loading: LiveData<Boolean>
-        get() = _loading
 
     private val _movies = MediatorLiveData<List<Movie>>()
     val movies: LiveData<List<Movie>>
@@ -38,51 +32,43 @@ class TabMoviesViewModel @Inject constructor(
         }
     }
 
-    override fun onCleared() {
-        disposables.clear()
-    }
-
     fun refresh() {
         loadMovies(true)
     }
 
-    private fun loadMovies(forceRemote: Boolean) {
-        val type = _type.value!!
-        if (forceRemote) {
-            moviesRepository.clearMovies(type)
-        }
-
-        val single = if (type == MoviesRepository.NOW_PLAYING) {
-            moviesRepository.getNowPlaying()
-        } else {
-            moviesRepository.getUpcoming()
-        }
-        disposables.add(RxUtils.getSingle(single)
-            .doOnSubscribe {
-                _loading.postValue(true)
+    private fun loadMovies(ignoreCache: Boolean = false) {
+        getType()?.let { type ->
+            if (ignoreCache) {
+                movieRepository.clearMovies(type)
             }
-            .doOnError {
-                _loading.postValue(false)
-            }
-            .subscribe(
-                {
-                    _loading.value = false
+            execute({ getCallForType(type) },
+                onSuccess = {
                     _movies.value = it
                 },
-                {
-                    Timber.e(it.message)
-                }
-            ))
-    }
-
-    fun setType(type: Int) {
-        if (_type.value != type) {
-            _type.value = type
+                onError = {
+                    // No-op.
+                })
         }
     }
 
     override fun onMovieClicked(movieId: Int) {
         _navigateToMovieDetail.postValue(Event(movieId))
+    }
+
+    private fun getType(): Int? {
+        return _type.value
+    }
+
+    fun setType(type: Int) {
+        _type.setValueIfNew(type)
+    }
+
+    private suspend fun getCallForType(type: Int): Result<List<Movie>> {
+        return if (type == NOW_PLAYING) {
+            movieRepository.getNowPlaying()
+        } else {
+            movieRepository.getUpcoming()
+        }
     }
 }
 

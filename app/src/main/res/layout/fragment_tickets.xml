@@ -1,43 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:animateLayoutChanges="true"
-    tools:context=".ui.tickets.TicketsFragment"
     >
 
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingBottom="?actionBarSize"
-        android:paddingTop="58dp"
-        android:scrollbars="vertical"
-        android:requiresFadingEdge="vertical"
-        >
+    <data>
 
-        <TextView
-            android:id="@+id/content"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/spacing_medium"
-            android:textColor="@android:color/white"
-            android:textAppearance="@style/TextAppearance.Cinemais.Body"
+        <variable
+            name="viewModel"
+            type="com.diegobezerra.cinemaisapp.ui.tickets.TicketsViewModel"
             />
 
-    </androidx.core.widget.NestedScrollView>
+    </data>
 
-    <include layout="@layout/include_normal_progress_bar" />
-
-    <Button
-        android:id="@+id/buy_online"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:visibility="gone"
-        android:layout_marginStart="@dimen/spacing_medium"
-        android:layout_marginEnd="@dimen/spacing_medium"
-        android:layout_marginBottom="@dimen/spacing_small"
-        style="@style/Widget.Cinemais.BuyTickets"
-        />
+        android:layout_height="match_parent"
+        android:animateLayoutChanges="true"
+        tools:context=".ui.tickets.TicketsFragment"
+        >
 
-</FrameLayout>
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="?actionBarSize"
+            android:paddingTop="58dp"
+            android:requiresFadingEdge="vertical"
+            android:scrollbars="vertical"
+            >
+
+            <TextView
+                android:id="@+id/content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/spacing_medium"
+                android:textAppearance="@style/TextAppearance.Cinemais.Body"
+                android:textColor="@android:color/white"
+                app:fromHtml="@{viewModel.tickets.content}"
+                />
+
+        </androidx.core.widget.NestedScrollView>
+
+        <include layout="@layout/include_normal_progress_bar"/>
+
+        <Button
+            android:id="@+id/buy_online"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginBottom="@dimen/spacing_small"
+            android:layout_marginEnd="@dimen/spacing_medium"
+            android:layout_marginStart="@dimen/spacing_medium"
+            android:onClick="@{() -> viewModel.onBuyOnlineClicked()}"
+            style="@style/Widget.Cinemais.BuyTickets"
+            />
+
+    </FrameLayout>
+</layout>

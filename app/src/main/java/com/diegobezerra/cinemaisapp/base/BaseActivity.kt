@@ -1,4 +1,4 @@
-package com.diegobezerra.cinemaisapp.ui
+package com.diegobezerra.cinemaisapp.base
 
 import android.os.Bundle
 import com.diegobezerra.cinemaisapp.util.setupTheme

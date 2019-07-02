@@ -1,40 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?selectableItemBackground"
-    android:foreground="?selectableItemBackground"
+    android:orientation="vertical"
     >
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:padding="@dimen/spacing_tiny"
+        >
 
-        <ImageView
-            android:id="@+id/poster"
+        <FrameLayout
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:contentDescription="@null"
-            android:scaleType="centerCrop"
-            android:padding="@dimen/spacing_tiny"
+            android:foreground="@drawable/poster_selector"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="0.68:1"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            />
+            >
+
+            <ImageView
+                android:id="@+id/poster"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@null"
+                android:scaleType="centerCrop"
+                />
+
+        </FrameLayout>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
         android:id="@+id/text_container"
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="@dimen/grid_movie_text_min_height"
+        android:orientation="vertical"
         android:padding="@dimen/spacing_small"
         >
 
@@ -46,7 +54,7 @@
             android:ellipsize="end"
             android:maxLines="2"
             android:textColor="#ec008c"
-            android:textSize="16sp"
+            android:textSize="14sp"
             tools:text="Movie Title"
             />
 
@@ -54,8 +62,8 @@
             android:id="@+id/release"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="12sp"
             android:textAppearance="@style/TextAppearance.Cinemais.Body"
+            android:textSize="12sp"
             tools:text="12 março 2019"
             />
 

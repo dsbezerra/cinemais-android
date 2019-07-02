@@ -11,11 +11,16 @@
     <dimen name="spacing_xxlarge">64dp</dimen>
 
     <dimen name="size_compound_rating">16dp</dimen>
-    <dimen name="sessions_max_elevation">12dp</dimen>
+
+    <dimen name="error_icon_width">120dp</dimen>
+    <dimen name="error_icon_height">120dp</dimen>
+
+    <dimen name="sessions_header_margin_start">42dp</dimen>
 
     <dimen name="banner_height">103dp</dimen>
     <dimen name="banner_height_land">206dp</dimen>
 
+    <dimen name="movie_poster_radius">8dp</dimen>
     <dimen name="movie_poster_width">90dp</dimen>
     <dimen name="movie_poster_height">135dp</dimen>
     <dimen name="movie_poster_width_detail">108dp</dimen>

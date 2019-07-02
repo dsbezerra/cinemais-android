@@ -4,13 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.core.view.isGone
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.RecyclerView
 import com.diegobezerra.cinemaisapp.R
+import com.diegobezerra.cinemaisapp.databinding.FragmentHomeBinding
 import com.diegobezerra.cinemaisapp.ui.main.MainFragment
 import com.diegobezerra.cinemaisapp.ui.movie.MovieActivity
 import com.diegobezerra.cinemaisapp.ui.upcoming.UpcomingMoviesActivity
@@ -21,27 +20,38 @@ import javax.inject.Inject
 
 class HomeFragment : MainFragment() {
 
+    companion object {
+
+        const val TAG = "fragment.HOME"
+
+    }
+
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private val viewModel by lazy {
+    private val homeViewModel by lazy {
         ViewModelProviders.of(this, viewModelFactory)
             .get(HomeViewModel::class.java)
     }
 
-    private val homeAdapter by lazy { HomeAdapter(viewModel) }
+    private val homeAdapter by lazy { HomeAdapter(homeViewModel) }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val root = inflater.inflate(R.layout.fragment_home, container, false)
-        val recyclerView = root.findViewById<RecyclerView>(R.id.recyclerView)
+
+        val binding = FragmentHomeBinding.inflate(inflater, container, false).apply {
+            lifecycleOwner = this@HomeFragment
+            viewModel = homeViewModel
+        }
+
+        val root = binding.root
         val progressBar = root.findViewById<CircularProgressBar>(R.id.progress_bar)
 
         homeAdapter.restore(savedInstanceState)
-        recyclerView.run {
+        binding.recyclerView.run {
             adapter = homeAdapter
             setHasFixedSize(true)
         }
@@ -50,24 +60,22 @@ class HomeFragment : MainFragment() {
             title = title()
         }
 
-        viewModel.apply {
-            loading.observe(this@HomeFragment, Observer {
-                progressBar.isGone = !it
-            })
+        homeViewModel.loading.observe(this@HomeFragment, Observer {
+            progressBar.isGone = !it
+        })
 
-            home.observe(this@HomeFragment, Observer {
-                homeAdapter.data = it
-                homeAdapter.notifyDataSetChanged()
-            })
+        homeViewModel.home.observe(this@HomeFragment, Observer {
+            homeAdapter.data = it
+            homeAdapter.notifyDataSetChanged()
+        })
 
-            navigateToMovieDetail.observe(this@HomeFragment, EventObserver { movieId ->
-                startActivity(MovieActivity.getStartIntent(requireActivity(), movieId))
-            })
+        homeViewModel.navigateToMovieDetail.observe(this@HomeFragment, EventObserver { movieId ->
+            startActivity(MovieActivity.getStartIntent(requireActivity(), movieId))
+        })
 
-            navigateToAllUpcomingMovies.observe(this@HomeFragment, EventObserver {
-                startActivity(UpcomingMoviesActivity.getStartIntent(requireActivity()))
-            })
-        }
+        homeViewModel.navigateToAllUpcomingMovies.observe(this@HomeFragment, EventObserver {
+            startActivity(UpcomingMoviesActivity.getStartIntent(requireActivity()))
+        })
 
         return root
     }

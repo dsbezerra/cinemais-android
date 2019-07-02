@@ -19,9 +19,9 @@
             android:id="@+id/scroll"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingTop="@dimen/spacing_medium"
-            android:paddingBottom="@dimen/spacing_medium"
             android:clipToPadding="false"
+            android:paddingBottom="@dimen/spacing_medium"
+            android:paddingTop="@dimen/spacing_medium"
             >
 
             <FrameLayout
@@ -95,9 +95,11 @@
                                 android:id="@+id/title"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:ellipsize="end"
                                 android:textSize="24sp"
                                 android:textStyle="normal"
-                                style="@style/TextAppearance.Cinemais.Subhead"
+                                android:maxLines="2"
+                                android:textColor="?attr/subhead_text_color"
                                 tools:text="Movie Title"
                                 />
 
@@ -127,9 +129,9 @@
                                 android:id="@+id/ratingImage"
                                 android:layout_width="16dp"
                                 android:layout_height="16dp"
+                                android:layout_below="@+id/releaseRuntime"
                                 android:layout_marginTop="@dimen/spacing_small"
                                 android:contentDescription="@null"
-                                android:layout_below="@+id/releaseRuntime"
                                 tools:background="@drawable/ic_rating_l"
                                 />
 
@@ -141,10 +143,10 @@
                         android:id="@+id/synopsis"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:lineSpacingExtra="@dimen/spacing_tiny"
                         android:padding="@dimen/spacing_medium"
                         android:textColor="?attr/secondary_text_color"
                         android:textIsSelectable="true"
-                        android:lineSpacingExtra="@dimen/spacing_tiny"
                         android:textSize="14sp"
                         />
 
@@ -204,17 +206,15 @@
 
     </com.diegobezerra.cinemaisapp.widget.CinemaisSwipeRefreshLayout>
 
-    <include layout="@layout/include_progress_bar"/>
-
-    <include layout="@layout/include_movie_appbar" />
+    <include layout="@layout/include_movie_appbar"/>
 
     <fragment
         android:id="@+id/playing_cinemas_sheet"
         android:name="com.diegobezerra.cinemaisapp.ui.movie.playingcinemas.PlayingCinemasFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="4dp"
         android:layout_gravity="bottom"
+        android:layout_marginBottom="4dp"
         app:behavior_peekHeight="0dp"
         app:layout_behavior="@string/bottom_sheet_behavior"
         tools:layout="@layout/fragment_playing_cinemas"

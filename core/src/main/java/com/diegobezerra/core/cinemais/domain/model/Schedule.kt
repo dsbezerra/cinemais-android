@@ -10,6 +10,7 @@ typealias Disclaimer = Map<Char, DisclaimerEntry>
 data class Schedule(
     val cinema: Cinema,
     val disclaimer: Disclaimer,
+    val week: DateRange,
     var sessions: List<Session>
 ) {
 
@@ -19,7 +20,7 @@ data class Schedule(
     private var generatedTimestamp: Long = 0L
 
     init {
-        days = createDays()
+        createDays()
     }
 
     fun recreateDays(): Schedule {
@@ -30,10 +31,15 @@ data class Schedule(
         return this
     }
 
-    private fun createDays(): List<ScheduleDay> {
+    private fun createDays() {
+        val today = DateUtils.calendarAtStartOfDay(null).timeInMillis
+        if (week.end.time < today) {
+            // Better display nothing than a wrong schedule.
+            return
+        }
+
         val map = linkedMapOf<String, ScheduleDay>()
         if (sessions.isNotEmpty()) {
-            val today = DateUtils.calendarAtStartOfDay(null).timeInMillis
             val dateFormat = SimpleDateFormat("yyyy-MM-dd", BRAZIL)
             for (session in sessions) {
                 // Ignore all sessions before the current day
@@ -49,9 +55,7 @@ data class Schedule(
                                 sessions = mutableListOf(session)
                             )
                         } else {
-                            map[key]?.let { day ->
-                                day.sessions += session
-                            }
+                            map[key]?.let { it.sessions += session }
                         }
                     }
                 } catch (e: Exception) {
@@ -60,7 +64,16 @@ data class Schedule(
             }
             generatedTimestamp = today
         }
-        return map.toSortedMap().values.toList()
+
+        days = map.toSortedMap().values.toList()
+    }
+
+    fun getDay(day: Int): ScheduleDay? {
+        return if (day >= 0 && day < days.size) {
+            days[day]
+        } else {
+            null
+        }
     }
 }
 

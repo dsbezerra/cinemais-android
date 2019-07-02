@@ -3,87 +3,94 @@ package com.diegobezerra.cinemaisapp.ui.cinema
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import com.diegobezerra.cinemaisapp.base.BaseViewModel
 import com.diegobezerra.cinemaisapp.util.setValueIfNew
-import com.diegobezerra.core.cinemais.data.cinemas.CinemasRepository
+import com.diegobezerra.core.cinemais.data.cinemas.CinemaRepository
+import com.diegobezerra.core.cinemais.domain.model.Cinema
+import com.diegobezerra.core.cinemais.domain.model.Location
 import com.diegobezerra.core.cinemais.domain.model.Schedule
-import com.diegobezerra.core.util.DateUtils
-import com.diegobezerra.core.util.RxUtils
-import io.reactivex.disposables.CompositeDisposable
-import timber.log.Timber
+import com.diegobezerra.core.event.Event
 import javax.inject.Inject
 
 class CinemaViewModel @Inject constructor(
-    private val cinemasRepository: CinemasRepository
-) : ViewModel() {
+    private val cinemaRepository: CinemaRepository
+) : BaseViewModel() {
 
-    private val _loading = MutableLiveData<Boolean>()
-    val loading: LiveData<Boolean>
-        get() = _loading
+    private val _cinema = MediatorLiveData<Cinema>()
+    val cinema: LiveData<Cinema>
+        get() = _cinema
 
     private val _schedule = MediatorLiveData<Schedule>()
     val schedule: LiveData<Schedule>
         get() = _schedule
 
-    private val dateString = MutableLiveData<String>(DateUtils.dateAsString())
+    private val _navigateToSchedulePageAction = MutableLiveData<Event<Int>>()
+    val navigateToSchedulePageAction: LiveData<Event<Int>>
+        get() = _navigateToSchedulePageAction
+
+    private val _navigateToTicketsAction = MutableLiveData<Event<Int>>()
+    val navigateToTicketsAction: LiveData<Event<Int>>
+        get() = _navigateToTicketsAction
+
+    private val _navigateToLocationAction = MutableLiveData<Event<Location>>()
+    val navigateToLocationAction: LiveData<Event<Location>>
+        get() = _navigateToLocationAction
+
+    private val _navigateToInfoAction = MutableLiveData<Event<Unit>>()
+    val navigateToInfoAction: LiveData<Event<Unit>>
+        get() = _navigateToInfoAction
 
     private val cinemaId = MutableLiveData<Int>()
 
-    private val disposables = CompositeDisposable()
-
-    private var firstInitialization: Boolean = true
-
     init {
-
         _schedule.addSource(cinemaId) {
             refreshSchedule()
         }
-
-        // This takes care of refreshing schedule in case the date changes.
-        _schedule.addSource(dateString) {
-            if (!firstInitialization) {
-                refreshSchedule(true)
-            }
-            firstInitialization = false
-        }
-
     }
 
-    override fun onCleared() {
-        disposables.clear()
-    }
-
-    private fun refreshSchedule(forceRemote: Boolean = false) {
+    private fun refreshSchedule(ignoreCache: Boolean = false) {
         getCinemaId()?.let {
-            if (forceRemote) {
-                cinemasRepository.clearSchedule(it)
+            if (ignoreCache) {
+                cinemaRepository.clearSchedule(it)
             }
-            disposables.add(RxUtils.getSingle(cinemasRepository.getScheduleWithLocation(it))
-                .doOnSubscribe {
-                    _loading.value = true
-                }
-                .doOnSuccess {
-                    _loading.value = false
-                }
-                .doOnError { throwable ->
-                    _loading.value = false
-                    // TODO: Implement error handling
-                    Timber.d("throwable=$throwable")
-                }
-                .subscribe { schedule, _ ->
+            execute(
+                { cinemaRepository.getScheduleWithLocation(it) },
+                onSuccess = { schedule ->
+                    _cinema.value = schedule.cinema
                     _schedule.value = schedule
+                },
+                onError = {
+                    // No-op
                 })
         }
     }
 
-    fun setDateString() {
-        dateString.setValueIfNew(DateUtils.dateAsString())
+    fun onSeeScheduleInWebsite() {
+        getCinemaId()?.let {
+            _navigateToSchedulePageAction.value = Event(it)
+        }
+    }
+
+    fun onTicketsClicked() {
+        getCinemaId()?.let {
+            _navigateToTicketsAction.value = Event(it)
+        }
+    }
+
+    fun onLocationClicked() {
+        getCinemaLocation()?.let {
+            _navigateToLocationAction.value = Event(it)
+        }
+    }
+
+    fun onInfoClicked() {
+        _navigateToInfoAction.value = Event(Unit)
     }
 
     /**
      * Sets the current cinema ID only if it's new.
      */
-    fun setCinemaId(newCinemaId: Int) {
+    fun setCinemaId(newCinemaId: Int?) {
         cinemaId.setValueIfNew(newCinemaId)
     }
 
@@ -91,5 +98,12 @@ class CinemaViewModel @Inject constructor(
      * Returns the current cinema ID or null if not available.
      */
     private fun getCinemaId(): Int? = cinemaId.value
+
+    /**
+     * Returns the current cinema's location or null if not available.
+     */
+    private fun getCinemaLocation(): Location? {
+        return cinema.value?.location
+    }
 
 }

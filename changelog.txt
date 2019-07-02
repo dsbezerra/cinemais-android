@@ -2,13 +2,38 @@ Changelog
 
 VersionName (VersionCode)
 
+0.0.28-beta (15)
+- Dark theme is now more darker
+- Ripple effect when touching movie grid items are now applied only to poster
+- Fragments now keep their state
+- Add Crashlytics
+- Add default fade transition to fragments
+- Add 'View schedule in website' button to CinemaFragment
+- Playing cinemas sheet are now displayed only if the movie is released
+- Dates now use a new format
+- Schedule ViewPager now doesn't hide abruptly while going back to CinemasFragment from CinemaFragment
+- Add initial error handling (unfinished)
+- Better abstraction of network calls and more consistency in ViewModel code
+- Now using DataBinding in some views
+- Minor design changes
+- Minor code changes
+
+Bug fixes:
+- Fix Glide cache being ignored for movie posters (temp fix)
+
+
 0.0.27-beta (14)
+- Schedule is refreshed if the day changes during navigation (It still needs work!)
+- Fix status bar color of default theme in API 21-22
+- Fix divider color in default theme
+- Fix crashing in some screens due to unhandled exceptions
+- Fix splash logo size
+
+0.0.26-beta (13)
 - Add Dark theme
 - Some colors corrections
 - Add simple settings view
 - Add splash screen
-
-0.0.26-beta (13)
 - Add simple offline mode by adding cache configuration to OkHttpClient
 
 0.0.25-beta (12)

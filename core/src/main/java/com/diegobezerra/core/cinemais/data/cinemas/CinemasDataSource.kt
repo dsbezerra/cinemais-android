@@ -3,14 +3,26 @@ package com.diegobezerra.core.cinemais.data.cinemas
 import com.diegobezerra.core.cinemais.domain.model.Location
 import com.diegobezerra.core.cinemais.domain.model.Schedule
 import com.diegobezerra.core.cinemais.domain.model.Tickets
-import io.reactivex.Single
+import com.diegobezerra.core.result.Result
 
 interface CinemasDataSource {
 
-    fun getLocation(id: Int): Single<Location>
+    /**
+     * Returns the schedule of the cinema with the given ID
+     * @param id Cinema ID
+     */
+    suspend fun getSchedule(id: Int): Result<Schedule>
 
-    fun getSchedule(id: Int): Single<Schedule>
+    /**
+     * Returns the tickets of the cinema with the given ID
+     * @param id Cinema ID
+     */
+    suspend fun getTickets(id: Int): Result<Tickets>
 
-    fun getTickets(id: Int): Single<Tickets>
+    /**
+     * Returns the location of the cinema with the given ID
+     * @param id Cinema ID
+     */
+    suspend fun getLocation(id: Int): Result<Location>
 
 }

@@ -5,10 +5,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import com.diegobezerra.cinemaisapp.R
-import com.diegobezerra.cinemaisapp.ui.BaseActivity
+import com.diegobezerra.cinemaisapp.base.BaseActivity
 import com.diegobezerra.cinemaisapp.ui.main.movies.TabMoviesFragment
 import com.diegobezerra.cinemaisapp.util.setupActionBar
-import com.diegobezerra.core.cinemais.data.movie.MoviesRepository.Companion.UPCOMING
+import com.diegobezerra.core.cinemais.data.movie.MovieRepository.Companion.UPCOMING
 
 class UpcomingMoviesActivity : BaseActivity() {
 

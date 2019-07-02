@@ -2,17 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="?selectableItemBackground"
     android:orientation="vertical"
     android:padding="@dimen/spacing_small"
     >
 
-    <ImageView
-        android:id="@+id/poster"
-        android:layout_width="@dimen/movie_poster_width"
-        android:layout_height="@dimen/movie_poster_height"
-        android:contentDescription="@null"
-        />
+    <include layout="@layout/include_poster"/>
 
     <TextView
         android:id="@+id/title"
@@ -20,9 +14,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_small"
         android:ellipsize="end"
+        android:gravity="center"
         android:maxLines="2"
         android:textAlignment="center"
-        android:gravity="center"
         android:textColor="?attr/secondary_text_color"
         android:textSize="12sp"
         />

@@ -1,7 +1,6 @@
 package com.diegobezerra.cinemaisapp.ui.main.home
 
 import android.content.Intent
-import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,15 +8,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_IDLE
 import androidx.viewpager.widget.ViewPager.SimpleOnPageChangeListener
-import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions
+import com.bumptech.glide.Priority
 import com.diegobezerra.cinemaisapp.GlideApp
-import com.diegobezerra.cinemaisapp.GlideOptions
-import com.diegobezerra.cinemaisapp.GlideOptions.bitmapTransform
 import com.diegobezerra.cinemaisapp.R
 import com.diegobezerra.cinemaisapp.ui.main.home.HomeViewHolder.BannersViewHolder
 import com.diegobezerra.cinemaisapp.ui.main.home.HomeViewHolder.HeaderViewHolder
@@ -30,7 +26,7 @@ import com.diegobezerra.cinemaisapp.widget.AutoSlideViewPager
 import com.diegobezerra.core.cinemais.domain.model.Banner
 import com.diegobezerra.core.cinemais.domain.model.Banner.Action.MOVIE
 import com.diegobezerra.core.cinemais.domain.model.Cinemas
-import com.diegobezerra.core.cinemais.domain.model.HomeData
+import com.diegobezerra.core.cinemais.domain.model.Home
 import com.diegobezerra.core.cinemais.domain.model.Movie
 
 class HomeAdapter(
@@ -56,9 +52,6 @@ class HomeAdapter(
     private val playingMoviesAdapter by lazy {
         PlayingMoviesAdapter(homeViewModel)
     }
-    private val crossFade = BitmapTransitionOptions.withCrossFade()
-    private var placeholder: Drawable? = null
-    private var posterOptions: GlideOptions? = null
     private var isWifiConnection: Boolean = false
     private val viewPool = RecyclerView.RecycledViewPool()
 
@@ -70,7 +63,7 @@ class HomeAdapter(
     }
 
     var playingMoviesScroll = 0
-    var data: HomeData = HomeData(
+    var data: Home = Home(
         backdrop = "",
         banners = emptyList(),
         playingMovies = emptyList(),
@@ -87,13 +80,6 @@ class HomeAdapter(
         viewType: Int
     ): HomeViewHolder {
         val context = parent.context
-        if (placeholder == null) {
-            placeholder = ContextCompat.getDrawable(context, R.drawable.poster_placeholder)
-        }
-        if (posterOptions == null) {
-            posterOptions =
-                bitmapTransform(ImageUtils.posterTransformation(parent.context.applicationContext))
-        }
         isWifiConnection = NetworkUtils.isWifiConnection(parent.context)
         val inflater = LayoutInflater.from(context)
         return when (viewType) {
@@ -133,7 +119,7 @@ class HomeAdapter(
                 pager.addOnPageChangeListener(bannerPageChangeListener)
                 indicator.viewPager = pager
                 adapter.setListener {
-                    // NOTE: Movie is the only currently action the app supports.
+                    // NOTE: Movie is currently the only action the app supports.
                     // Anything else will ask user to choose a browser-like app.
                     when (it.action) {
                         MOVIE -> homeViewModel.onMovieClicked(it.resourceId)
@@ -180,19 +166,22 @@ class HomeAdapter(
                 title.text = movie.title
                 synopsis.text = movie.synopsis
 
-                with(itemView.context) {
-                    movie.posters.best(isWifiConnection)?.let {
-                        GlideApp.with(this)
-                            .asBitmap()
-                            .load(it)
-                            .placeholder(placeholder)
-                            .apply(posterOptions!!)
-                            .transition(crossFade)
-                            .into(poster)
+                movie.posters.best(isWifiConnection)?.let {
+                    ImageUtils.loadPoster(it, poster)
+                    // NOTE(diego): isWifiConnection makes sure we load the best image here, but in
+                    // the next time the user starts the app without a network connection he will never
+                    // see the cached large poster.
+                    // To avoid this we will also download the medium poster (temporary).
+                    if (isWifiConnection) {
+                        GlideApp.with(itemView.context)
+                            .load(movie.posters.medium)
+                            .priority(Priority.LOW)
+                            .preload()
                     }
-                    itemView.setOnClickListener {
-                        homeViewModel.onMovieClicked(movie.id)
-                    }
+                }
+
+                itemView.setOnClickListener {
+                    homeViewModel.onMovieClicked(movie.id)
                 }
             }
 
@@ -275,34 +264,22 @@ object UpcomingMoviesAll
 
 sealed class HomeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-    class HeaderViewHolder(
-        itemView: View
-    ) : HomeViewHolder(itemView)
+    class HeaderViewHolder(itemView: View) : HomeViewHolder(itemView)
 
-    class BannersViewHolder(
-        itemView: View
-    ) : HomeViewHolder(itemView) {
+    class BannersViewHolder(itemView: View) : HomeViewHolder(itemView) {
         val pager: AutoSlideViewPager = itemView.findViewById(R.id.viewpager)
         val indicator: BannersIndicatorView = itemView.findViewById(R.id.indicator)
     }
 
-    class PlayingMoviesViewHolder(
-        itemView: View
-    ) : HomeViewHolder(itemView) {
-
+    class PlayingMoviesViewHolder(itemView: View) : HomeViewHolder(itemView) {
         val recyclerView: RecyclerView = itemView.findViewById(R.id.recyclerView)
     }
 
-    class UpcomingMovieViewHolder(
-        itemView: View
-    ) : HomeViewHolder(itemView) {
+    class UpcomingMovieViewHolder(itemView: View) : HomeViewHolder(itemView) {
         val title: TextView = itemView.findViewById(R.id.title)
         val poster: ImageView = itemView.findViewById(R.id.poster)
         val synopsis: TextView = itemView.findViewById(R.id.synopsis)
-
     }
 
-    class UpcomingAllViewHolder(
-        itemView: View
-    ) : HomeViewHolder(itemView)
+    class UpcomingAllViewHolder(itemView: View) : HomeViewHolder(itemView)
 }

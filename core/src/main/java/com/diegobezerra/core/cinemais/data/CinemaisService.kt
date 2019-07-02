@@ -1,14 +1,13 @@
 package com.diegobezerra.core.cinemais.data
 
 import com.diegobezerra.core.cinemais.domain.model.Cinema
-import com.diegobezerra.core.cinemais.domain.model.HomeData
+import com.diegobezerra.core.cinemais.domain.model.Home
 import com.diegobezerra.core.cinemais.domain.model.Images
 import com.diegobezerra.core.cinemais.domain.model.Location
 import com.diegobezerra.core.cinemais.domain.model.Movie
 import com.diegobezerra.core.cinemais.domain.model.Schedule
 import com.diegobezerra.core.cinemais.domain.model.Tickets
 import com.diegobezerra.core.cinemais.domain.model.Trailer
-import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -44,48 +43,48 @@ interface CinemaisService {
     }
 
     @GET("/")
-    fun home(): Single<HomeData>
+    suspend fun home(): Home
 
     @CinemaisNowPlaying
     @GET("programacao")
-    fun playing(): Single<List<Movie>>
+    suspend fun playing(): List<Movie>
 
     @CinemaisUpcoming
     @GET("proximos_lancamentos")
-    fun upcoming(): Single<List<Movie>>
+    suspend fun upcoming(): List<Movie>
 
     @CinemaisCinemas
     @GET("/")
-    fun cinemas(): Single<List<Cinema>>
+    suspend fun cinemas(): List<Cinema>
 
     @GET("programacao/cinema.php")
-    fun cinemaSchedule(
+    suspend fun schedule(
         @Query("cc") id: Int
-    ): Single<Schedule>
+    ): Schedule
 
     @GET("programacao/mapa.php")
-    fun cinemaLocation(
+    suspend fun location(
         @Query("cc") id: Int
-    ): Single<Location>
+    ): Location
 
     @GET("programacao/ingresso_velox.php")
-    fun cinemaTickets(
+    suspend fun tickets(
         @Query("cc") id: Int
-    ): Single<Tickets>
+    ): Tickets
 
     @GET("filmes/filme.php")
-    fun movie(
+    suspend fun movie(
         @Query("cf") id: Int
-    ): Single<Movie>
+    ): Movie
 
     @GET("filmes/trailer.php")
-    fun trailer(
+    suspend fun trailer(
         @Query("ct") id: String,
         @Query("tam") tam: Int = 2 // Defaults to 2
-    ): Single<Trailer>
+    ): Trailer
 
     @GET("filmes/fotos.php")
-    fun images(
+    suspend fun images(
         @Query("cf") movieId: Int
-    ): Single<Images>
+    ): Images
 }

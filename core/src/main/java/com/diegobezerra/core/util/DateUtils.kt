@@ -25,10 +25,6 @@ class DateUtils {
 
         val BRAZIL = Locale("pt", "BR")
 
-        fun dateAsString(date: Calendar = getInstance()): String {
-            return "${date[YEAR]}-${date[MONTH]}-${date[DATE]}"
-        }
-
         fun playingRange(date: Date? = null): DateRange {
             val start = calendarAtStartOfDay(date)
             val end = calendarAtStartOfDay(date)

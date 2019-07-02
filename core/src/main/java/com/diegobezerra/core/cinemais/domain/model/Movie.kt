@@ -1,5 +1,6 @@
 package com.diegobezerra.core.cinemais.domain.model
 
+import java.util.Calendar
 import java.util.Date
 
 data class Movie(
@@ -76,7 +77,13 @@ data class Movie(
         releaseDate = releaseDate
     )
 
-    fun isPlaying() = playingCinemas.isNotEmpty()
-
-    fun isTrailerPresent() = trailer != null && trailer!!.isValid() && trailer!!.isCinemais()
+    fun isPlaying(): Boolean {
+        val notEmpty = playingCinemas.isNotEmpty()
+        return if (releaseDate != null) {
+            val nowInMillis = Calendar.getInstance().timeInMillis
+            return notEmpty && releaseDate.time <= nowInMillis
+        } else {
+            notEmpty
+        }
+    }
 }
