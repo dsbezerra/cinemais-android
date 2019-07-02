@@ -56,8 +56,8 @@
                     android:gravity="center"
                     android:text="@{viewModel.getHeaderText(viewModel.state)}"
                     android:textAlignment="center"
+                    style="@style/TextAppearance.Cinemais.Subhead"
                     android:textColor="@android:color/white"
-                    android:textStyle="bold"
                     />
 
                 <TextView
