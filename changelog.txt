@@ -2,6 +2,9 @@ Changelog
 
 VersionName (VersionCode)
 
+0.0.29-beta (16)
+- Fix sheet header color
+
 0.0.28-beta (15)
 - Dark theme is now more darker
 - Ripple effect when touching movie grid items are now applied only to poster
