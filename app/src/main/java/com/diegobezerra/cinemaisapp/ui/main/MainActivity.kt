@@ -130,7 +130,7 @@ class MainActivity : BaseActivity() {
         }
 
         // TODO: Add check for ads enabled or disabled
-//        setupAds(navContainer)
+        setupAds(navContainer)
     }
 
     private fun handleTheatersAction() {

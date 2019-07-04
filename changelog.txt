@@ -1,8 +1,10 @@
 Changelog
 
 VersionName (VersionCode)
+0.0.31-beta (18)
+- Re-enable ads
 
-0.0.30-beta (16)
+0.0.30-beta (17)
 - Actually fix sheet header color (test before rolling out man...)
 
 0.0.29-beta (16)
