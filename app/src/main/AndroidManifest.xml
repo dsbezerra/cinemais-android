@@ -69,6 +69,13 @@
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-8142728452724363~3961172725"/>
+
+        <provider
+            android:name="androidx.work.impl.WorkManagerInitializer"
+            android:authorities="com.diegobezerra.cinemaisapp.workmanager-init"
+            android:exported="false"
+            tools:node="remove"/>
+
     </application>
 
 </manifest>

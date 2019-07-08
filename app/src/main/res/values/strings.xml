@@ -25,7 +25,7 @@
     <string name="release_with_runtime">%1$s  •  %2$d min</string>
     <string name="runtime_only">%d min</string>
     <string name="unavailable_synopsis">Indisponível</string>
-    <string name="watch_trailer">Trailer</string>
+    <string name="trailer">Trailer</string>
 
     <string name="label_direction">Direção</string>
     <string name="label_production">Produção</string>
@@ -43,6 +43,7 @@
     <string name="label_cinema_location">Localização</string>
     <string name="label_cinema_tickets">Ingressos</string>
     <string name="label_cinema_change">Alterar cinema</string>
+    <string name="view_schedule_on_website">Ver programação no site</string>
 
     <!-- Tickets Strings -->
     <string name="text_buy_tickets">Comprar ingressos on-line</string>
@@ -70,6 +71,14 @@
     O código-fonte pode ser encontrado no <a href="https://github.com/dsbezerra/cinemais-android">GitHub</a>
     ]]></string>
 
+    <!-- Notification Strings -->
+    <string name="notification_channel_premiere">Estreias da semana</string>
+    <string name="notification_action_movie_details">Detalhes</string>
+    <string name="cinemais_prefixed_name">Cinemais %s</string>
+    <plurals name="notification_title_premieres">
+        <item quantity="one">Estreia da semana</item>
+        <item quantity="other">Estreias da semana</item>
+    </plurals>
 
     <!-- Transition Strings -->
     <string name="transition_cinema_to_schedule" translatable="false">transition_cinema_to_schedule</string>
@@ -89,5 +98,4 @@
     <string name="error_message_unknown">Ocorreu um erro inesperado durante a requisição.\nPor favor tente novamente mais tarde.</string>
     <string name="error_title_timeout">Tempo de requisição esgotado</string>
     <string name="error_message_timeout">Por favor verifique se sua rede possui conexão com à Internet ou tente novamente mais tarde.</string>
-    <string name="text_see_schedule_in_website">Ver programação no site</string>
 </resources>

@@ -15,7 +15,8 @@ import javax.inject.Singleton
         ActivityBindingModule::class,
         FragmentBindingModule::class,
         ChildFragmentBindingModule::class,
-        ViewModelModule::class
+        ViewModelModule::class,
+        WorkerModule::class
     ]
 )
 interface AppComponent : AndroidInjector<CinemaisApplication> {

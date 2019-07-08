@@ -28,4 +28,18 @@ data class Images(
     }
 
     fun get(index: Int): String? = getBackdrop(index) ?: getPoster(index)
+
+    fun getRandom(): String? = getRandomBackdrop() ?: getRandomPoster()
+
+    fun getRandomBackdrop(): String? = rand(backdrops)
+
+    fun getRandomPoster(): String? = rand(posters)
+
+    private fun rand(src: List<String>): String? {
+        return try {
+            src.random()
+        } catch (e: NoSuchElementException) {
+            null
+        }
+    }
 }

@@ -84,7 +84,7 @@
                     android:onClick="@{() -> viewModel.onSeeScheduleInWebsite()}"
                     android:paddingEnd="@dimen/spacing_small"
                     android:paddingStart="@dimen/spacing_small"
-                    android:text="@string/text_see_schedule_in_website"
+                    android:text="@string/view_schedule_on_website"
                     android:textAlignment="center"
                     android:textAppearance="@style/TextAppearance.Cinemais.Body"
                     android:textStyle="bold"

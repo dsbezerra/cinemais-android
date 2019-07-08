@@ -9,6 +9,7 @@ import com.diegobezerra.cinemaisapp.BuildConfig
 import com.diegobezerra.cinemaisapp.R
 import com.diegobezerra.cinemaisapp.base.BaseActivity
 import com.diegobezerra.cinemaisapp.data.local.PreferencesHelper
+import com.diegobezerra.cinemaisapp.tasks.CheckPremieresWorker
 import com.diegobezerra.cinemaisapp.ui.about.AboutActivity
 import com.diegobezerra.cinemaisapp.ui.cinema.CinemaFragment
 import com.diegobezerra.cinemaisapp.ui.main.cinemas.CinemasFragment
@@ -47,7 +48,7 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setupViews()
-
+        setupWorkers()
         if (savedInstanceState == null) {
             showFragment(HomeFragment.TAG)
         } else {
@@ -70,7 +71,6 @@ class MainActivity : BaseActivity() {
                 interstitialAd?.show()
             }
         }
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -131,6 +131,13 @@ class MainActivity : BaseActivity() {
 
         // TODO: Add check for ads enabled or disabled
         setupAds(navContainer)
+    }
+
+    private fun setupWorkers() {
+        if (!preferencesHelper.isCheckPremieresScheduled()) {
+            CheckPremieresWorker.scheduleToNextThursday(this)
+            preferencesHelper.setCheckPremieresScheduled(true)
+        }
     }
 
     private fun handleTheatersAction() {

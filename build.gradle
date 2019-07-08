@@ -25,17 +25,19 @@ buildscript {
         'material'              : '1.1.0-alpha05',
         'mockito'               : '2.23.0',
         'mockitoKotlin'         : '2.0.0-RC3',
+        'notify'                : '1.2.1',
         'retrofit'              : '2.6.0',
         'smoothCircular'        : '1.3.0',
         'smoothHorizontal'      : '1.1.0',
+        'testCore'              : '1.2.1-alpha01',
+        'testRunner'            : '1.1.0',
         'timber'                : '4.5.1',
+        'work'                  : '2.1.0-rc01',
     ]
     repositories {
         google()
         jcenter()
-        maven {
-            url 'https://maven.fabric.io/public'
-        }
+        maven { url 'https://maven.fabric.io/public' }
     }
     dependencies {
         classpath "com.android.tools.build:gradle:${versions.buildTools}"
@@ -51,6 +53,7 @@ allprojects {
     repositories {
         google()
         jcenter()
+        maven { url 'https://jitpack.io' }
     }
 }
 

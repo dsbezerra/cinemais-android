@@ -1,6 +1,9 @@
 Changelog
 
 VersionName (VersionCode)
+0.0.32-beta (19)
+- Initial notifications implementation (BETA)
+
 0.0.31-beta (18)
 - Re-enable ads
 

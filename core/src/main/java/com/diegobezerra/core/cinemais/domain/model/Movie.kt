@@ -6,8 +6,8 @@ import java.util.Date
 data class Movie(
     val id: Int = 0,
     val title: String = "",
-    val originalTitle: String,
-    val posters: Posters,
+    val originalTitle: String = "",
+    val posters: Posters = Posters(),
     val htmlUrl: String = "",
     val synopsis: String = "",
     val cast: String = "",
