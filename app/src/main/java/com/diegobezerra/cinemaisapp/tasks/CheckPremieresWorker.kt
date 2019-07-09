@@ -4,9 +4,11 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import androidx.work.Constraints
 import androidx.work.CoroutineWorker
 import androidx.work.ExistingWorkPolicy
 import androidx.work.ListenableWorker
+import androidx.work.NetworkType.UNMETERED
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
@@ -24,6 +26,8 @@ import com.diegobezerra.core.cinemais.domain.model.Schedule
 import com.diegobezerra.core.util.DateUtils
 import io.karn.notify.Notify
 import io.karn.notify.internal.utils.Action
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.util.Calendar
 import java.util.concurrent.TimeUnit
@@ -42,7 +46,7 @@ class CheckPremieresWorker constructor(
         private const val ONE_PREMIERE_REQUEST_CODE = 4000
 
         private const val START_HOUR = 7
-        private val TRY_AGAIN_DELAY = TimeUnit.HOURS.toMillis(3)
+        private const val MAX_ATTEMPTS = 3
 
         @JvmStatic
         fun scheduleToNextThursday(context: Context) {
@@ -60,47 +64,61 @@ class CheckPremieresWorker constructor(
 
         @JvmStatic
         fun scheduleWithDelay(context: Context, delay: Long) {
+            val constraints = Constraints.Builder()
+                // TODO: Add settings to choose between Wi-Fi or Mobile
+                .setRequiredNetworkType(UNMETERED)
+                .setRequiresBatteryNotLow(true)
+                .build()
             WorkManager.getInstance(context).enqueueUniqueWork(
                 NAME, ExistingWorkPolicy.REPLACE,
                 OneTimeWorkRequestBuilder<CheckPremieresWorker>()
                     .setInitialDelay(delay, TimeUnit.MILLISECONDS)
+                    .setConstraints(constraints)
                     .build()
             )
         }
     }
 
-    override suspend fun doWork(): Result {
+    override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
         val now = Calendar.getInstance().time
         Timber.d("Checking premieres... %d:%d", now.hours, now.minutes)
-
-        // Get favorite cinema and notify premieres
-        preferencesHelper.getSelectedCinemaId()?.let { cinemaId ->
-            getCinemaAndMovies(cinemaId,
-                onSuccess = { cinema, movies ->
-                    notifyPremieres(cinema, movies)
-                    scheduleToNextThursday(context)
-                },
-                onError = { scheduleWithDelay(context, TRY_AGAIN_DELAY) })
+        var retry = false
+        try {
+            if (runAttemptCount > MAX_ATTEMPTS) {
+                Result.failure()
+            } else {
+                // Get favorite cinema and notify premieres
+                val cinemaId = preferencesHelper.getSelectedCinemaId()
+                if (cinemaId == null) {
+                    // We don't have a selected cinema let's schedule to next
+                    // thursday and hope we will have one
+                    Result.failure()
+                } else {
+                    getCinemaAndMovies(cinemaId).let {
+                        notifyPremieres(it.first, it.second)
+                        Result.success()
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            // Ops... something wrong happened. Try again later.
+            retry = true
+            Timber.e(e)
+            Result.retry()
+        } finally {
+            if (!retry) {
+                scheduleToNextThursday(context)
+            }
         }
-        return Result.success()
     }
 
-    private suspend fun getCinemaAndMovies(
-        id: Int,
-        onSuccess: (cinema: Cinema, movies: List<Movie>) -> Unit,
-        onError: () -> Unit
-    ) {
-        return try {
-            // Get cinema and movies from schedule
-            val schedule = getSchedule(id)
-            val movies = schedule.sessions.distinctBy { it.movieId }
-                .map { getMovieInfo(it.movieId) }
-                .filter { it.releaseDate != null && DateUtils.isToday(it.releaseDate!!.time) }
-            onSuccess(schedule.cinema, movies)
-        } catch (e: Exception) {
-            Timber.e(e)
-            onError()
-        }
+    private suspend fun getCinemaAndMovies(id: Int): Pair<Cinema, List<Movie>> {
+        // Get cinema and movies from schedule
+        val schedule = getSchedule(id)
+        val movies = schedule.sessions.distinctBy { it.movieId }
+            .map { getMovieInfo(it.movieId) }
+            .filter { it.releaseDate != null && DateUtils.isToday(it.releaseDate!!.time) }
+        return Pair(schedule.cinema, movies)
     }
 
     private suspend fun getSchedule(id: Int): Schedule {

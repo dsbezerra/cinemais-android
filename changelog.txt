@@ -1,6 +1,9 @@
 Changelog
 
 VersionName (VersionCode)
+0.0.33-beta (20)
+- CouroutineWorker usage is now correct
+
 0.0.32-beta (19)
 - Initial notifications implementation (BETA)
 
