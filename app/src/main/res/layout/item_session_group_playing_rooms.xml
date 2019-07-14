@@ -67,7 +67,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_small"
         android:textAppearance="@style/TextAppearance.Cinemais.Body"
-        android:textColor="@color/primary"
+        android:textColor="@android:color/white"
         android:textSize="16sp"
         android:textStyle="bold"
         tools:text="Temporary time"

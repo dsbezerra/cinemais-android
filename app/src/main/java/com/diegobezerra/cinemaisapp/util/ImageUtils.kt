@@ -78,10 +78,7 @@ class ImageUtils {
         }
 
         private fun buildPlaceholder(context: Context): ColorDrawable {
-            val a = context.obtainStyledAttributes(intArrayOf(R.attr.placeholder_color))
-            val color = a.getColor(0, ContextCompat.getColor(context, R.color.placeholder))
-            a.recycle()
-            return ColorDrawable(color)
+            return ColorDrawable(ContextCompat.getColor(context, R.color.placeholder))
         }
 
         private fun buildPosterOptions(context: Context) =

@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <attr name="background_color" format="reference" />
-    <attr name="background_color_transparent" format="reference" />
-    <attr name="background_color_semi_transparent" format="reference" />
-    <attr name="subhead_text_color" format="reference" />
-    <attr name="primary_text_color" format="reference" />
-    <attr name="secondary_text_color" format="reference" />
-    <attr name="divider_color" format="reference" />
-    <attr name="placeholder_color" format="reference" />
-    <attr name="session_label_background_color" format="reference" />
-
     <declare-styleable name="AutoSlideViewPager">
         <attr format="integer" name="slideInterval"/>
     </declare-styleable>

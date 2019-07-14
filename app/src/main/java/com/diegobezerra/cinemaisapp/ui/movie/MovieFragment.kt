@@ -12,6 +12,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.core.view.isGone
 import androidx.core.widget.NestedScrollView
 import androidx.lifecycle.Observer
@@ -322,15 +323,11 @@ class MovieFragment : DaggerFragment() {
 
     @SuppressLint("ResourceType")
     private fun getToolbarColors(): IntArray {
-        val attrs = requireContext().obtainStyledAttributes(
+        return requireContext().run {
             intArrayOf(
-                R.attr.background_color_transparent,
-                R.attr.background_color
+                ContextCompat.getColor(this, R.color.background_transparent),
+                ContextCompat.getColor(this, R.color.background)
             )
-        )
-        val startColor = attrs.getColor(0, 0)
-        val endColor = attrs.getColor(1, 1)
-        attrs.recycle()
-        return intArrayOf(startColor, endColor)
+        }
     }
 }

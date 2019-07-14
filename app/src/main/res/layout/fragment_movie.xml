@@ -99,7 +99,7 @@
                                 android:textSize="24sp"
                                 android:textStyle="normal"
                                 android:maxLines="2"
-                                android:textColor="?attr/subhead_text_color"
+                                android:textColor="@color/subhead_text"
                                 tools:text="Movie Title"
                                 />
 
@@ -109,7 +109,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_below="@+id/title"
                                 android:layout_marginTop="@dimen/spacing_tiny"
-                                android:textColor="?attr/secondary_text_color"
+                                android:textColor="@color/secondary_text"
                                 android:textSize="14sp"
                                 tools:text="Movie Original Title (original title)"
                                 />
@@ -120,7 +120,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_below="@+id/originalTitle"
                                 android:layout_marginTop="@dimen/spacing_small"
-                                android:textColor="?attr/secondary_text_color"
+                                android:textColor="@color/secondary_text"
                                 android:textSize="12sp"
                                 tools:text="9 de março  •  114 min"
                                 />
@@ -145,7 +145,7 @@
                         android:layout_height="wrap_content"
                         android:lineSpacingExtra="@dimen/spacing_tiny"
                         android:padding="@dimen/spacing_medium"
-                        android:textColor="?attr/secondary_text_color"
+                        android:textColor="@color/secondary_text"
                         android:textIsSelectable="true"
                         android:textSize="14sp"
                         />

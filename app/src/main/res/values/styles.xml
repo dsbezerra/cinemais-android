@@ -1,66 +1,22 @@
 <resources>
 
-    <style name="Theme" />
-
-    <style name="Theme.BaseCinemais" parent="Theme.MaterialComponents.Light.NoActionBar">
+    <style name="Cinemais" parent="Theme.AppCompat.DayNight.NoActionBar">
         <item name="windowActionBar">false</item>
 
         <item name="colorPrimary">@color/primary</item>
-        <item name="colorPrimaryDark">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/accent</item>
 
         <item name="toolbarStyle">@style/Widget.Cinemais.Toolbar</item>
 
-        <!-- Colors -->
-        <item name="primary_text_color">@color/primary_text</item>
-        <item name="background_color">@color/background</item>
-        <item name="background_color_transparent">@color/background_transparent</item>
-        <item name="background_color_semi_transparent">@color/background_semi_transparent</item>
-
-        <item name="secondary_text_color">@color/secondary_text</item>
-        <item name="subhead_text_color">@color/gray_900</item>
-        <item name="divider_color">@color/divider</item>
-        <item name="placeholder_color">@color/placeholder</item>
-        <item name="session_label_background_color">@color/session_label_background_color</item>
-
         <!-- Windows -->
+        <item name="android:statusBarColor">@color/primary</item>
         <item name="android:colorBackground">@color/background</item>
         <item name="android:windowBackground">@color/background</item>
         <item name="windowActionModeOverlay">true</item>
     </style>
 
-    <style name="Theme.Cinemais" parent="Theme.BaseCinemais" />
-
-    <style name="Theme.BaseCinemais.Dark" parent="Theme.MaterialComponents.NoActionBar">
-        <item name="windowActionBar">false</item>
-
-        <item name="colorPrimary">@color/dark_primary</item>
-        <item name="colorPrimaryDark">@color/dark_primary</item>
-        <item name="colorAccent">@color/accent</item>
-
-        <!-- Colors -->
-        <item name="background_color">@color/dark_background</item>
-        <item name="background_color_transparent">@color/dark_background_transparent</item>
-        <item name="background_color_semi_transparent">@color/dark_background_semi_transparent</item>
-
-        <item name="primary_text_color">@color/dark_primary_text</item>
-        <item name="secondary_text_color">@color/dark_secondary_text</item>
-        <item name="subhead_text_color">@color/gray_50</item>
-        <item name="divider_color">@color/dark_divider</item>
-        <item name="placeholder_color">@color/dark_placeholder</item>
-        <item name="session_label_background_color">@color/dark_session_label_background_color</item>
-
-        <item name="toolbarStyle">@style/Widget.Cinemais.Toolbar</item>
-
-        <!-- Windows -->
-        <item name="android:colorBackground">@color/dark_background</item>
-        <item name="android:windowBackground">@color/dark_background</item>
-        <item name="windowActionModeOverlay">true</item>
-    </style>
-
-    <style name="Theme.Cinemais.Dark" parent="Theme.BaseCinemais.Dark" />
-
-    <style name="Theme.Cinemais.Transparent">
+    <style name="Cinemais.Transparent">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
@@ -68,16 +24,14 @@
         <item name="android:windowTranslucentStatus">true</item>
     </style>
 
-    <style name="Theme.Splash" parent="Theme.BaseCinemais">
+    <style name="Cinemais.Splash">
         <item name="android:windowBackground">@drawable/bg_splash</item>
     </style>
 
-    <style name="Cinemais" />
-
     <!-- Widgets -->
-    <style name="Widget" />
+    <style name="Widget"/>
 
-    <style name="Widget.Cinemais" />
+    <style name="Widget.Cinemais"/>
 
     <style name="Widget.Cinemais.Toolbar" parent="Widget.AppCompat.Toolbar">
         <item name="titleTextAppearance">@style/TextAppearance.Cinemais.ToolbarTitle</item>
@@ -115,8 +69,8 @@
     <style name="Widget.Cinemais.TabLayout" parent="Widget.Design.TabLayout">
         <item name="tabIndicatorFullWidth">true</item>
         <item name="tabIndicatorHeight">3dp</item>
-        <item name="tabSelectedTextColor">?attr/primary_text_color</item>
-        <item name="tabTextColor">?attr/secondary_text_color</item>
+        <item name="tabSelectedTextColor">@color/primary_text</item>
+        <item name="tabTextColor">@color/secondary_text</item>
         <item name="tabTextAppearance">@style/TabTextAppearance</item>
     </style>
 
@@ -124,9 +78,9 @@
         <item name="tabMode">scrollable</item>
         <item name="tabIndicatorHeight">3dp</item>
         <item name="tabTextAppearance">@style/TabTextAppearance.Schedule</item>
-        <item name="tabSelectedTextColor">?attr/primary_text_color</item>
+        <item name="tabSelectedTextColor">@color/primary_text</item>
         <item name="tabRippleColor">?attr/colorControlHighlight</item>
-        <item name="tabTextColor">?attr/secondary_text_color</item>
+        <item name="tabTextColor">@color/secondary_text</item>
     </style>
 
     <style name="Widget.Cinemais.TabLayout.Schedule.PlayingRooms">
@@ -166,16 +120,16 @@
 
     <style name="TextAppearance.Cinemais.Body" parent="@style/TextAppearance.AppCompat.Body1">
         <item name="android:lineSpacingMultiplier">1.2</item>
-        <item name="android:textColor">?attr/secondary_text_color</item>
+        <item name="android:textColor">@color/secondary_text</item>
     </style>
 
     <style name="TextAppearance.Cinemais.Subhead" parent="@style/TextAppearance.AppCompat.Subhead">
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">?attr/subhead_text_color</item>
+        <item name="android:textColor">@color/subhead_text</item>
     </style>
 
     <style name="TextAppearance.Cinemais.MovieInfoBody" parent="@style/TextAppearance.Cinemais.Body">
-        <item name="android:textColor">?attr/secondary_text_color</item>
+        <item name="android:textColor">@color/secondary_text</item>
     </style>
 
     <style name="TextAppearance.Cinemais.SessionLabel" parent="@style/TextAppearance.Cinemais.Body">

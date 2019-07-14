@@ -1,7 +1,11 @@
 package com.diegobezerra.cinemaisapp
 
+import android.content.Context
+import androidx.appcompat.app.AppCompatDelegate
 import com.diegobezerra.cinemaisapp.dagger.DaggerAppComponent
 import com.diegobezerra.cinemaisapp.dagger.DaggerWorkerFactory
+import com.diegobezerra.cinemaisapp.data.local.PreferencesHelper
+import com.diegobezerra.cinemaisapp.data.local.PreferencesHelper.Companion
 import com.google.android.gms.ads.MobileAds
 import com.squareup.leakcanary.LeakCanary
 import dagger.android.AndroidInjector
@@ -36,6 +40,17 @@ class CinemaisApplication : DaggerApplication() {
         MobileAds.initialize(this, BuildConfig.ADMOB_APP_ID)
         WorkerHelper.initialize(this, workerFactory)
         NotificationHelper.createChannels(this)
+
+        // Apply night mode
+        getSharedPreferences(PreferencesHelper.PREFS_NAME, Context.MODE_PRIVATE).apply {
+            val isNightMode = getBoolean(PreferencesHelper.PREF_DARK_THEME, false)
+            AppCompatDelegate.setDefaultNightMode(
+                if (isNightMode)
+                    AppCompatDelegate.MODE_NIGHT_YES
+                else
+                    AppCompatDelegate.MODE_NIGHT_NO
+            )
+        }
     }
 
 }

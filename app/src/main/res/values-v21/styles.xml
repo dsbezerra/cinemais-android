@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.Cinemais" parent="Theme.BaseCinemais">
-        <item name="colorPrimaryDark">@color/primary_dark</item>
-    </style>
-
-    <style name="Theme.Splash" parent="Theme.Cinemais">
+    <style name="Cinemais.Splash">
         <item name="android:windowBackground">@drawable/bg_splash</item>
     </style>
 

@@ -7,7 +7,6 @@ import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import com.diegobezerra.cinemaisapp.BuildConfig
 import com.diegobezerra.cinemaisapp.R
-import com.diegobezerra.cinemaisapp.base.BaseActivity
 import com.diegobezerra.cinemaisapp.data.local.PreferencesHelper
 import com.diegobezerra.cinemaisapp.tasks.CheckPremieresWorker
 import com.diegobezerra.cinemaisapp.ui.about.AboutActivity
@@ -16,6 +15,7 @@ import com.diegobezerra.cinemaisapp.ui.main.cinemas.CinemasFragment
 import com.diegobezerra.cinemaisapp.ui.main.home.HomeFragment
 import com.diegobezerra.cinemaisapp.ui.main.movies.MoviesFragment
 import com.diegobezerra.cinemaisapp.ui.settings.SettingsActivity
+import com.diegobezerra.cinemaisapp.util.setupTheme
 import com.diegobezerra.cinemaisapp.util.switchToAdded
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest.Builder
@@ -23,10 +23,11 @@ import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.InterstitialAd
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import dagger.android.support.DaggerAppCompatActivity
 import timber.log.Timber
 import javax.inject.Inject
 
-class MainActivity : BaseActivity() {
+class MainActivity : DaggerAppCompatActivity() {
 
     companion object {
 
@@ -45,6 +46,7 @@ class MainActivity : BaseActivity() {
     private var interstitialAd: InterstitialAd? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+//        setupTheme()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setupViews()

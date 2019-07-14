@@ -19,7 +19,7 @@
         android:layout_height="24dp"
         android:contentDescription="@null"
         app:srcCompat="@drawable/ic_play_arrow"
-        app:tint="?attr/primary_text_color"
+        app:tint="@color/primary_text"
         />
 
     <TextView
@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/spacing_tiny"
         android:text="@string/trailer"
-        android:textColor="?attr/primary_text_color"
+        android:textColor="@color/primary_text"
         android:textSize="14sp"
         />
 

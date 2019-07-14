@@ -1,6 +1,10 @@
 Changelog
 
 VersionName (VersionCode)
+0.0.34-beta (21)
+- Proper night mode
+
+VersionName (VersionCode)
 0.0.33-beta (20)
 - CouroutineWorker usage is now correct
 

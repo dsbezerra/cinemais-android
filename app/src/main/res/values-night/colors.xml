@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">#121212</color>
+    <color name="primary_dark">#101010</color>
+    <color name="accent">@color/cinemais_blue</color>
+
+    <color name="background">#121212</color>
+    <color name="background_semi_transparent">#cc121212</color>
+    <color name="background_transparent">#00121212</color>
+
+    <color name="primary_text">#deffffff</color>
+    <color name="secondary_text">#99ffffff</color>
+    <color name="divider">#1affffff</color>
+    <color name="placeholder">#61ffffff</color>
+    <color name="session_label_background_color">#555555</color>
+
+    <color name="subhead_text">@color/gray_50</color>
+
+    <!-- Alternative colors observed in website -->
+    <color name="alt_pink">@color/cinemais_pink</color>
+</resources>

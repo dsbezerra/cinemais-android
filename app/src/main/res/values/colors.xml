@@ -14,19 +14,7 @@
     <color name="placeholder">#eeeeee</color>
     <color name="session_label_background_color">#777777</color>
 
-    <!-- Dark theme -->
-    <color name="dark_primary">#121212</color>
-    <color name="dark_primary_dark">#101010</color>
-
-    <color name="dark_background">#121212</color>
-    <color name="dark_background_semi_transparent">#cc121212</color>
-    <color name="dark_background_transparent">#00121212</color>
-
-    <color name="dark_primary_text">#deffffff</color>
-    <color name="dark_secondary_text">#99ffffff</color>
-    <color name="dark_divider">#1Affffff</color>
-    <color name="dark_placeholder">#61ffffff</color>
-    <color name="dark_session_label_background_color">#555555</color>
+    <color name="subhead_text">@color/gray_900</color>
 
     <!-- Others -->
     <color name="gray_50">#fafafa</color>

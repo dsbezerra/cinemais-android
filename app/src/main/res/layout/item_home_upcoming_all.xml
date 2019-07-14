@@ -13,7 +13,7 @@
         android:fontFamily="sans-serif-medium"
         android:text="@string/show_all"
         android:textAllCaps="true"
-        android:textColor="?attr/secondary_text_color"
+        android:textColor="@color/secondary_text"
         android:padding="@dimen/spacing_medium"
         />
 

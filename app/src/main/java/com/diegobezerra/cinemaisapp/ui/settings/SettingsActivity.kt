@@ -6,12 +6,10 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.TaskStackBuilder
 import androidx.preference.PreferenceFragmentCompat
 import com.diegobezerra.cinemaisapp.R
 import com.diegobezerra.cinemaisapp.data.local.PreferencesHelper.Companion.PREFS_NAME
 import com.diegobezerra.cinemaisapp.data.local.PreferencesHelper.Companion.PREF_DARK_THEME
-import com.diegobezerra.cinemaisapp.ui.main.MainActivity
 import com.diegobezerra.cinemaisapp.util.setupActionBar
 import com.diegobezerra.cinemaisapp.util.setupTheme
 
@@ -27,7 +25,6 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        setupTheme()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
@@ -79,10 +76,7 @@ class SettingsActivity : AppCompatActivity() {
             when (key) {
                 PREF_DARK_THEME -> {
                     requireActivity().run {
-                        TaskStackBuilder.create(this)
-                            .addNextIntent(Intent(activity, MainActivity::class.java))
-                            .addNextIntent(Intent(activity, SettingsActivity::class.java))
-                            .startActivities()
+                        (this as AppCompatActivity).setupTheme()
                     }
                 }
 

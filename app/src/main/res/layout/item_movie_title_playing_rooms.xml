@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/spacing_medium"
         android:background="?selectableItemBackground"
-        android:textColor="@color/primary"
+        android:textColor="@android:color/white"
         style="@style/TextAppearance.Cinemais.Subhead"
         tools:text="Captain Marvel"
         />

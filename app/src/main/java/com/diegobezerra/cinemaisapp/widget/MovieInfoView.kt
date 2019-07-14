@@ -10,6 +10,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.core.view.isGone
 import com.diegobezerra.cinemaisapp.R
 
@@ -20,12 +21,7 @@ class MovieInfoView @JvmOverloads constructor(
 ) : LinearLayout(context, attrs, defStyleAttr) {
 
     private val labelColor by lazy {
-        var result: Int
-        context.obtainStyledAttributes(intArrayOf(R.attr.primary_text_color)).apply {
-            result = getColor(0, 0)
-            recycle()
-        }
-        result
+        ContextCompat.getColor(context, R.color.primary_text)
     }
 
     var label: String? = null
