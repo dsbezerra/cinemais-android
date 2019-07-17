@@ -45,16 +45,19 @@ class CheckPremieresWorker constructor(
         private const val NAME = "check_premieres_worker"
         private const val ONE_PREMIERE_REQUEST_CODE = 4000
 
-        private const val START_HOUR = 7
+        private const val START_HOUR = 7 // Check start hour is 7h
+        // If the check at 7h retrieves zero premieres, try again at 12h
+        private const val SECOND_START_HOUR = 12
+
         private const val MAX_ATTEMPTS = 3
 
         @JvmStatic
-        fun scheduleToNextThursday(context: Context) {
+        fun scheduleToNextThursday(context: Context, hour: Int = START_HOUR) {
             val currentPlayingRange = DateUtils.playingRange(null)
             val nextThursday = Calendar.getInstance().apply {
                 timeInMillis = currentPlayingRange.end.time
                 add(Calendar.DATE, 1)
-                add(Calendar.HOUR, START_HOUR)
+                add(Calendar.HOUR, hour)
             }
             scheduleWithDelay(
                 context,
@@ -95,7 +98,22 @@ class CheckPremieresWorker constructor(
                     Result.failure()
                 } else {
                     getCinemaAndMovies(cinemaId).let {
-                        notifyPremieres(it.first, it.second)
+                        // NOTE(diego): Sometimes the schedule page will be blank until midday, so
+                        // if the first check returns a blank schedule, reschedule the work to run
+                        // at SECOND_START_HOUR.
+                        //
+                        // TODO(diego): Convert this Pair<Cinema, List<Movie>> to Triple and use the
+                        // third value as an indicator that the returned schedule was empty.
+                        // That would be a better way to tell if we should reschedule to
+                        // SECOND_START_HOUR or not.
+                        if (Calendar.getInstance()[Calendar.HOUR_OF_DAY] < SECOND_START_HOUR && it.second.isEmpty()) {
+                            scheduleToNextThursday(context, SECOND_START_HOUR)
+                            // And to avoid rescheduling to next Thursday (at START_HOUR) inside the
+                            // finally scope we set retry to true
+                            retry = true
+                        } else {
+                            notifyPremieres(it.first, it.second)
+                        }
                         Result.success()
                     }
                 }

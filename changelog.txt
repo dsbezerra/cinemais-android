@@ -1,6 +1,10 @@
 Changelog
 
 VersionName (VersionCode)
+0.0.35-beta (22)
+- We now check for premieres at least 2 times in case the first check retrieves zero elements.
+
+VersionName (VersionCode)
 0.0.34-beta (21)
 - Proper night mode
 
