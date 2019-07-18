@@ -8,7 +8,7 @@ apply from: '../dependencies.gradle'
 
 def versionMajor = 0
 def versionMinor = 0
-def versionPatch = 35
+def versionPatch = 36
 def versionSuffix = "-beta"
 
 android {
@@ -17,7 +17,7 @@ android {
         applicationId "com.diegobezerra.cinemaisapp"
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
-        versionCode 22
+        versionCode 23
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 

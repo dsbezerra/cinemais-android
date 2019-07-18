@@ -1,5 +1,7 @@
 package com.diegobezerra.cinemaisapp.ui.main
 
+import android.app.PendingIntent
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -24,6 +26,7 @@ import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.InterstitialAd
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.android.support.DaggerAppCompatActivity
+import io.karn.notify.Notify
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -46,7 +49,6 @@ class MainActivity : DaggerAppCompatActivity() {
     private var interstitialAd: InterstitialAd? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-//        setupTheme()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setupViews()

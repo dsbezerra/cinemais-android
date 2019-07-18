@@ -102,11 +102,8 @@ class CheckPremieresWorker constructor(
                         // if the first check returns a blank schedule, reschedule the work to run
                         // at SECOND_START_HOUR.
                         //
-                        // TODO(diego): Convert this Pair<Cinema, List<Movie>> to Triple and use the
-                        // third value as an indicator that the returned schedule was empty.
-                        // That would be a better way to tell if we should reschedule to
-                        // SECOND_START_HOUR or not.
-                        if (Calendar.getInstance()[Calendar.HOUR_OF_DAY] < SECOND_START_HOUR && it.second.isEmpty()) {
+                        // Third value means the schedule has zero sessions.
+                        if (it.third) {
                             scheduleToNextThursday(context, SECOND_START_HOUR)
                             // And to avoid rescheduling to next Thursday (at START_HOUR) inside the
                             // finally scope we set retry to true
@@ -130,13 +127,13 @@ class CheckPremieresWorker constructor(
         }
     }
 
-    private suspend fun getCinemaAndMovies(id: Int): Pair<Cinema, List<Movie>> {
+    private suspend fun getCinemaAndMovies(id: Int): Triple<Cinema, List<Movie>, Boolean> {
         // Get cinema and movies from schedule
         val schedule = getSchedule(id)
         val movies = schedule.sessions.distinctBy { it.movieId }
             .map { getMovieInfo(it.movieId) }
             .filter { it.releaseDate != null && DateUtils.isToday(it.releaseDate!!.time) }
-        return Pair(schedule.cinema, movies)
+        return Triple(schedule.cinema, movies, schedule.sessions.isEmpty())
     }
 
     private suspend fun getSchedule(id: Int): Schedule {
@@ -223,7 +220,8 @@ class CheckPremieresWorker constructor(
                     .load(movie.images.getBackdrop(weekday) ?: movie.posters.large)
                     .submit()
                     .get()
-                title = context.getString(R.string.notification_channel_premiere)
+                title =
+                    context.resources.getQuantityString(R.plurals.notification_title_premieres, 1)
                 text = context.getString(R.string.cinemais_prefixed_name, cinema.name)
                 expandedText = movie.title
             }
