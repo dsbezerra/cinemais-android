@@ -15,11 +15,6 @@
         app:layout_scrollFlags="scroll|enterAlways|snap"
         />
 
-    <View
-        android:id="@+id/border"
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="@drawable/gradient_border"
-        />
+    <include layout="@layout/include_cinemais_border" />
 
 </com.google.android.material.appbar.AppBarLayout>

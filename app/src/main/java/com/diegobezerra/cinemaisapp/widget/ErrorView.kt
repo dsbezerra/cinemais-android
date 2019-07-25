@@ -49,14 +49,14 @@ class ErrorView @JvmOverloads constructor(
 
     fun setIconTint(color: Int) {
         if (color == 0) {
-            image_view.setColorFilter(null)
+            image_view.colorFilter = null
         } else {
             image_view.setColorFilter(ContextCompat.getColor(context, color))
         }
     }
 
     /**
-     * Set the empty view data
+     * Set the error view data
      * @param drawable icon of error view
      * @param title title of error view
      * @param message message of error view
@@ -68,7 +68,7 @@ class ErrorView @JvmOverloads constructor(
     }
 
     /**
-     * Clears the empty view data
+     * Clears the error view data
      */
     fun clear() {
         set(null, null, null)

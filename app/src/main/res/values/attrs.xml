@@ -5,6 +5,12 @@
         <attr format="integer" name="slideInterval"/>
     </declare-styleable>
 
+    <declare-styleable name="EmptyView">
+        <attr format="reference" name="emptyIcon"/>
+        <attr format="reference" name="emptyIconTint"/>
+        <attr format="string" name="emptyMessage"/>
+    </declare-styleable>
+
     <declare-styleable name="ErrorView">
         <attr format="reference" name="errorIcon"/>
         <attr format="reference" name="errorIconTint"/>

@@ -29,11 +29,7 @@
         android:orientation="vertical"
         >
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="@drawable/gradient_border"
-            />
+        <include layout="@layout/include_cinemais_border" />
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_nav"

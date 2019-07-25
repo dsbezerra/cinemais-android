@@ -47,8 +47,8 @@ import kotlinx.android.synthetic.main.fragment_movie.screenplay
 import kotlinx.android.synthetic.main.fragment_movie.scroll
 import kotlinx.android.synthetic.main.fragment_movie.synopsis
 import kotlinx.android.synthetic.main.fragment_movie.title
+import kotlinx.android.synthetic.main.include_cinemais_border.cinemais_border
 import kotlinx.android.synthetic.main.include_movie_appbar.appbar
-import kotlinx.android.synthetic.main.include_movie_appbar.cinemais_border
 import kotlinx.android.synthetic.main.include_trailer.trailer
 import java.text.SimpleDateFormat
 import java.util.Calendar

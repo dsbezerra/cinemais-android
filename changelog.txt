@@ -1,6 +1,13 @@
 Changelog
 
 VersionName (VersionCode)
+
+0.0.37-beta (24)
+- Fix buy tickets button colors.
+- Add EmptyView initial implementation.
+   - TabMoviesFragment is using this as a test.
+- Use DiffCalback in some adapters.
+
 0.0.36-beta (23)
 - Fix single premiere notification title.
 - Better way to check if we should retry due to empty schedule.

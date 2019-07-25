@@ -59,7 +59,6 @@ class CinemasFragment : MainFragment() {
 
             cinemas.observe(this@CinemasFragment, Observer {
                 cinemasAdapter.data = it
-                cinemasAdapter.notifyDataSetChanged()
             })
 
             switchToCinemaDetail.observe(this@CinemasFragment, EventObserver {

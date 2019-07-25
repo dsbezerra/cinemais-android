@@ -1,9 +1,12 @@
 package com.diegobezerra.cinemaisapp.ui.main.cinemas
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.diegobezerra.cinemaisapp.R
 import com.diegobezerra.cinemaisapp.ui.main.cinemas.CinemasViewHolder.CinemaViewHolder
@@ -13,19 +16,17 @@ import com.diegobezerra.core.cinemais.domain.model.State
 
 class CinemasAdapter(
     private val cinemasViewModel: CinemasViewModel
-) : RecyclerView.Adapter<CinemasViewHolder>() {
+) : ListAdapter<Any, CinemasViewHolder>(CinemaDiff) {
 
     companion object {
         private const val VIEW_TYPE_STATE = 0
         private const val VIEW_TYPE_CINEMA = 1
     }
 
-    private var list: MutableList<Any> = mutableListOf()
-
     var data: List<Cinema> = emptyList()
         set(value) {
             field = value
-            buildList()
+            submitList(buildList())
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CinemasViewHolder {
@@ -44,14 +45,17 @@ class CinemasAdapter(
     override fun onBindViewHolder(holder: CinemasViewHolder, position: Int) {
         when (holder) {
             is StateViewHolder -> holder.apply {
-                val state = list[position] as State
+                val state = getItem(position) as State
                 name.text = state.name
             }
             is CinemaViewHolder -> holder.apply {
-                val cinema = list[position] as Cinema
-
+                val cinema = getItem(position) as Cinema
                 if (cinema.cityName != cinema.name) {
-                    name.text =  itemView.resources.getString(R.string.label_cinema, cinema.name, cinema.cityName)
+                    name.text = itemView.resources.getString(
+                        R.string.label_cinema,
+                        cinema.name,
+                        cinema.cityName
+                    )
                 } else {
                     name.text = cinema.name
                 }
@@ -64,22 +68,16 @@ class CinemasAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        return when (list[position]) {
+        return when (getItem(position)) {
             is State -> VIEW_TYPE_STATE
             is Cinema -> VIEW_TYPE_CINEMA
             else -> throw IllegalStateException("Unknown view type at position $position")
         }
     }
 
-    override fun getItemCount() = list.size
-
-    private fun buildList() {
-        list.clear()
-
-        if (data.isEmpty()) return
-
-        val set = hashSetOf<String>()
+    private fun buildList(): List<Any> {
         val result = mutableListOf<Any>()
+        val set = hashSetOf<String>()
         data.sortedBy { it.fu }.forEach { cinema ->
             if (set.add(cinema.fu)) {
                 State.buildFromFU(cinema.fu)?.let {
@@ -88,8 +86,7 @@ class CinemasAdapter(
             }
             result += cinema
         }
-
-        list = result
+        return result
     }
 }
 
@@ -109,5 +106,29 @@ sealed class CinemasViewHolder(itemView: View) : RecyclerView.ViewHolder(itemVie
 
         val name: TextView = itemView.findViewById(R.id.name)
 
+    }
+}
+
+object CinemaDiff : DiffUtil.ItemCallback<Any>() {
+    override fun areItemsTheSame(
+        oldItem: Any,
+        newItem: Any
+    ): Boolean {
+        return when {
+            oldItem is State && newItem is State -> oldItem.fu == newItem.fu
+            oldItem is Cinema && newItem is Cinema -> oldItem.id == newItem.id
+            else -> false
+        }
+    }
+
+    @SuppressLint("DiffUtilEquals")
+    override fun areContentsTheSame(oldItem: Any, newItem: Any): Boolean {
+        return when {
+            oldItem is State && newItem is State -> {
+                oldItem.fu == newItem.fu && oldItem.name == newItem.name
+            }
+            oldItem is Cinema && newItem is Cinema -> oldItem == newItem
+            else -> true
+        }
     }
 }

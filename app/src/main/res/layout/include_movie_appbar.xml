@@ -15,11 +15,8 @@
         android:layout_height="?actionBarSize"
         />
 
-    <View
-        android:id="@+id/cinemais_border"
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="@drawable/gradient_border"
+    <include
+        layout="@layout/include_cinemais_border"
         android:visibility="gone"
         />
 

@@ -11,7 +11,14 @@
     android:paddingTop="@dimen/spacing_small"
     >
 
-    <include layout="@layout/include_poster"/>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="@dimen/movie_poster_width"
+        android:layout_height="@dimen/movie_poster_height"
+        >
+
+        <include layout="@layout/include_poster"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

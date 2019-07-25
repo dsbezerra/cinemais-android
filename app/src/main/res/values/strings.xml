@@ -98,4 +98,5 @@
     <string name="error_message_unknown">Ocorreu um erro inesperado durante a requisição.\nPor favor tente novamente mais tarde.</string>
     <string name="error_title_timeout">Tempo de requisição esgotado</string>
     <string name="error_message_timeout">Por favor verifique se sua rede possui conexão com à Internet ou tente novamente mais tarde.</string>
+    <string name="empty_message_movies">Nenhum filme encontrado</string>
 </resources>

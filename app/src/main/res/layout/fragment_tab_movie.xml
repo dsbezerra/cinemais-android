@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
     tools:context=".ui.main.movies.TabMoviesFragment"
     >
 
@@ -15,17 +16,32 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         >
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:padding="@dimen/spacing_tiny"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            app:layoutManager="GridLayoutManager"
-            app:spanCount="2"
-            tools:listitem="@layout/item_grid_movie"
-            />
+            >
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:padding="@dimen/spacing_tiny"
+                app:layoutManager="GridLayoutManager"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                app:spanCount="2"
+                tools:listitem="@layout/item_grid_movie"
+                />
+
+            <com.diegobezerra.cinemaisapp.widget.EmptyView
+                android:id="@+id/emptyView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:emptyMessage="@string/empty_message_movies"
+                android:visibility="gone"
+                />
+
+        </FrameLayout>
 
     </com.diegobezerra.cinemaisapp.widget.CinemaisSwipeRefreshLayout>
 

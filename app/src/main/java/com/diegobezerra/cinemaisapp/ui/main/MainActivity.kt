@@ -134,7 +134,9 @@ class MainActivity : DaggerAppCompatActivity() {
         }
 
         // TODO: Add check for ads enabled or disabled
-        setupAds(navContainer)
+        if (!BuildConfig.DEBUG) {
+            setupAds(navContainer)
+        }
     }
 
     private fun setupWorkers() {

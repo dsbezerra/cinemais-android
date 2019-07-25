@@ -13,6 +13,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.diegobezerra.cinemaisapp.R
 import com.diegobezerra.cinemaisapp.ui.movie.MovieActivity
 import com.diegobezerra.cinemaisapp.util.NetworkUtils
+import com.diegobezerra.cinemaisapp.widget.EmptyView
 import com.diegobezerra.core.event.EventObserver
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
@@ -46,7 +47,7 @@ class TabMoviesFragment : DaggerFragment() {
     ): View? {
         val root = inflater.inflate(R.layout.fragment_tab_movie, container, false)
         val swipeRefreshLayout = root.findViewById<SwipeRefreshLayout>(R.id.swipe_refresh)
-
+        val emptyView = root.findViewById<EmptyView>(R.id.emptyView)
         val type = requireNotNull(arguments).getInt(TYPE)
 
         val moviesAdapter =
@@ -67,8 +68,8 @@ class TabMoviesFragment : DaggerFragment() {
             })
 
             movies.observe(this@TabMoviesFragment, Observer {
-                moviesAdapter.list = it
-                moviesAdapter.notifyDataSetChanged()
+                moviesAdapter.submitList(it)
+                emptyView.isGone = it.isNotEmpty()
             })
 
             navigateToMovieDetail.observe(this@TabMoviesFragment, EventObserver { movieId ->

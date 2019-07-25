@@ -7,6 +7,8 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.view.isGone
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Priority
 import com.diegobezerra.cinemaisapp.GlideApp
@@ -23,14 +25,12 @@ class MoviesAdapter(
     private val moviesViewModel: TabMoviesViewModel,
     private val type: Int,
     private var isWifiConnection: Boolean = false
-) : RecyclerView.Adapter<MovieViewHolder>() {
+) : ListAdapter<Movie, MovieViewHolder>(MovieDiff) {
 
     companion object {
         private val FORMAT = SimpleDateFormat("d 'de' MMMM 'de' yyyy", BRAZIL)
         private val NO_YEAR_FORMAT = SimpleDateFormat("d 'de' MMMM", BRAZIL)
     }
-
-    var list: List<Movie> = emptyList()
 
     private val currentYear = Date(System.currentTimeMillis()).year
 
@@ -46,7 +46,7 @@ class MoviesAdapter(
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
 
         holder.apply {
-            val movie = list[position]
+            val movie = getItem(position)
             movie.posters.best(isWifiConnection)?.let {
                 ImageUtils.loadPoster(it, poster)
                 // NOTE(diego): isWifiConnection makes sure we load the best image here, but in
@@ -76,8 +76,6 @@ class MoviesAdapter(
         }
     }
 
-    override fun getItemCount() = list.size
-
     inner class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         val poster: ImageView = itemView.findViewById(R.id.poster)
@@ -93,5 +91,18 @@ class MoviesAdapter(
                     itemView.resources.getDimension(R.dimen.grid_movie_text_upcoming_height).toInt()
             }
         }
+    }
+}
+
+object MovieDiff : DiffUtil.ItemCallback<Movie>() {
+    override fun areItemsTheSame(
+        oldItem: Movie,
+        newItem: Movie
+    ): Boolean {
+        return oldItem.id == newItem.id
+    }
+
+    override fun areContentsTheSame(oldItem: Movie, newItem: Movie): Boolean {
+        return oldItem == newItem
     }
 }

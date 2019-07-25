@@ -1,5 +1,6 @@
 package com.diegobezerra.cinemaisapp.ui.main.home
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -8,6 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_IDLE
@@ -31,7 +34,7 @@ import com.diegobezerra.core.cinemais.domain.model.Movie
 
 class HomeAdapter(
     private val homeViewModel: HomeViewModel
-) : RecyclerView.Adapter<HomeViewHolder>() {
+) : ListAdapter<Any, HomeViewHolder>(HomeDiff) {
 
     companion object {
         private const val VIEW_TYPE_PLAYING_HEADER = 0
@@ -46,8 +49,6 @@ class HomeAdapter(
         private const val PLAYING_MOVIES_SCROLL = "playing_movies_scroll"
         private const val CURRENT_BANNER_INDEX = "current_banner_index"
     }
-
-    private var list: List<Any> = emptyList()
 
     private val playingMoviesAdapter by lazy {
         PlayingMoviesAdapter(homeViewModel)
@@ -72,7 +73,7 @@ class HomeAdapter(
     )
         set(value) {
             field = value
-            buildList()
+            submitList(buildList())
         }
 
     override fun onCreateViewHolder(
@@ -112,7 +113,7 @@ class HomeAdapter(
         when (holder) {
             is BannersViewHolder -> holder.apply {
                 val adapter =
-                    BannersAdapter(list[position] as List<Banner>)
+                    BannersAdapter(getItem(position) as List<Banner>)
                 pager.adapter = adapter
                 pager.currentItem = currentBannerIndex
                 pager.removeOnPageChangeListener(bannerPageChangeListener)
@@ -162,7 +163,7 @@ class HomeAdapter(
             }
 
             is UpcomingMovieViewHolder -> holder.apply {
-                val movie = list[position] as Movie
+                val movie = getItem(position) as Movie
                 title.text = movie.title
                 synopsis.text = movie.synopsis
 
@@ -204,7 +205,7 @@ class HomeAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        return when (val item = list[position]) {
+        return when (val item = getItem(position)) {
             is PlayingMoviesHeader -> VIEW_TYPE_PLAYING_HEADER
             is UpcomingMoviesHeader -> VIEW_TYPE_UPCOMING_HEADER
             is BannersViewHolder -> VIEW_TYPE_BANNERS
@@ -223,8 +224,6 @@ class HomeAdapter(
         }
     }
 
-    override fun getItemCount(): Int = list.size
-
     fun save(outState: Bundle) {
         outState.putInt(CURRENT_BANNER_INDEX, currentBannerIndex)
         outState.putInt(PLAYING_MOVIES_SCROLL, playingMoviesScroll)
@@ -237,13 +236,13 @@ class HomeAdapter(
         }
     }
 
-    private fun buildList() {
+    private fun buildList(): List<Any> {
         val result = mutableListOf<Any>()
         if (data.banners.isNotEmpty()) {
             result.add(data.banners)
         }
         if (data.playingMovies.isNotEmpty()) {
-            playingMoviesAdapter.list = data.playingMovies
+            playingMoviesAdapter.submitList(data.playingMovies)
             result.add(PlayingMoviesHeader)
             result.add(data.playingMovies)
         }
@@ -252,7 +251,7 @@ class HomeAdapter(
             result.addAll(data.upcomingMovies)
             result.add(UpcomingMoviesAll)
         }
-        list = result
+        return result
     }
 }
 
@@ -282,4 +281,30 @@ sealed class HomeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) 
     }
 
     class UpcomingAllViewHolder(itemView: View) : HomeViewHolder(itemView)
+}
+
+object HomeDiff : DiffUtil.ItemCallback<Any>() {
+    override fun areItemsTheSame(
+        oldItem: Any,
+        newItem: Any
+    ): Boolean {
+        return when {
+            oldItem === PlayingMoviesHeader && newItem === PlayingMoviesHeader -> true
+            oldItem === UpcomingMoviesHeader && newItem === UpcomingMoviesHeader -> true
+            oldItem === UpcomingMoviesAll && newItem === UpcomingMoviesAll -> true
+            oldItem is Movie && newItem is Movie -> oldItem.id == newItem.id
+            oldItem is List<*> && newItem is List<*> -> oldItem == newItem
+            else -> false
+        }
+    }
+
+    @SuppressLint("DiffUtilEquals")
+    override fun areContentsTheSame(oldItem: Any, newItem: Any): Boolean {
+        return when {
+            oldItem is List<*> && newItem is List<*> -> oldItem == newItem
+            oldItem is Movie && newItem is Movie -> oldItem == newItem
+            oldItem is Banner && newItem is Banner -> oldItem == newItem
+            else -> true
+        }
+    }
 }
