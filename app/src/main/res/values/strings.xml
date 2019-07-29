@@ -97,6 +97,23 @@
     <string name="error_title_unknown">Oops…</string>
     <string name="error_message_unknown">Ocorreu um erro inesperado durante a requisição.\nPor favor tente novamente mais tarde.</string>
     <string name="error_title_timeout">Tempo de requisição esgotado</string>
-    <string name="error_message_timeout">Por favor verifique se sua rede possui conexão com à Internet ou tente novamente mais tarde.</string>
+    <string name="error_message_timeout">Por favor verifique se sua rede possui acesso à Internet ou tente novamente mais tarde.</string>
+
+    <!-- Empty Strings -->
     <string name="empty_message_movies">Nenhum filme encontrado</string>
+    <string name="empty_message_schedule_filter">O filtro escolhido não possui sessões disponíveis :(</string>
+
+    <!-- Filter Strings -->
+    <string name="filter_header_audio">Áudio</string>
+    <string name="filter_audio_dub">Dublado</string>
+    <string name="filter_audio_sub">Legendado</string>
+    <string name="filter_audio_nac">Nacional</string>
+
+    <string name="filter_header_video">Vídeo</string>
+    <string name="filter_video_2d">2D</string>
+    <string name="filter_video_3d">3D</string>
+
+    <string name="filter_header_room">Sala</string>
+    <string name="filter_room_magicd">Magic D</string>
+    <string name="filter_room_vip">VIP</string>
 </resources>

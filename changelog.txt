@@ -2,6 +2,9 @@ Changelog
 
 VersionName (VersionCode)
 
+0.0.38-beta (25)
+- Fix timeout text.
+
 0.0.37-beta (24)
 - Fix buy tickets button colors.
 - Add EmptyView initial implementation.

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+
+    <data>
+
+        <variable
+            name="scheduleFilter"
+            type="com.diegobezerra.cinemaisapp.ui.schedule.filters.ScheduleFilter"
+            />
+
+        <variable
+            name="viewModel"
+            type="com.diegobezerra.cinemaisapp.ui.cinema.CinemaViewModel"
+            />
+    </data>
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        >
+
+        <com.diegobezerra.cinemaisapp.widget.ScheduleFilterView
+            android:id="@+id/filter_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_tiny"
+            android:layout_marginBottom="@dimen/spacing_tiny"
+            android:checked="@{scheduleFilter.isChecked}"
+            android:text="@{context.getString(scheduleFilter.labelRes)}"
+            app:scheduleFilter="@{scheduleFilter}"
+            app:selectedTextColor="@{@android:color/white}"
+            app:viewModel="@{viewModel}"
+            />
+
+    </FrameLayout>
+</layout>

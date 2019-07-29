@@ -16,6 +16,7 @@ import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.Fade
 import androidx.transition.Slide
 import androidx.transition.TransitionManager
@@ -26,6 +27,7 @@ import com.diegobezerra.cinemaisapp.databinding.FragmentCinemaBinding
 import com.diegobezerra.cinemaisapp.ui.main.MainFragment
 import com.diegobezerra.cinemaisapp.ui.main.cinemas.CinemasFragment
 import com.diegobezerra.cinemaisapp.ui.schedule.ScheduleAdapter
+import com.diegobezerra.cinemaisapp.ui.schedule.filters.ScheduleFiltersAdapter
 import com.diegobezerra.cinemaisapp.ui.tickets.TicketsActivity
 import com.diegobezerra.cinemaisapp.ui.tickets.TicketsActivity.Companion.EXTRA_CINEMA_ID
 import com.diegobezerra.cinemaisapp.ui.tickets.TicketsActivity.Companion.EXTRA_REVEAL_START_RADIUS
@@ -34,10 +36,11 @@ import com.diegobezerra.cinemaisapp.ui.tickets.TicketsActivity.Companion.EXTRA_R
 import com.diegobezerra.cinemaisapp.util.setupToolbarAsActionBar
 import com.diegobezerra.cinemaisapp.widget.CinemaActionView
 import com.diegobezerra.cinemaisapp.widget.CinemaisTabLayout
+import com.diegobezerra.cinemaisapp.widget.SpaceItemDecoration
 import com.diegobezerra.core.cinemais.data.CinemaisService
-import com.diegobezerra.core.cinemais.domain.model.Schedule
 import com.diegobezerra.core.event.EventObserver
 import com.google.android.material.appbar.AppBarLayout
+import kotlinx.android.synthetic.main.include_progress_bar.progress_bar
 import timber.log.Timber
 import javax.inject.Inject
 import kotlin.math.abs
@@ -82,11 +85,11 @@ class CinemaFragment : MainFragment() {
 
     private lateinit var ticketsAction: CinemaActionView
 
+    private val filtersAdapter by lazy { ScheduleFiltersAdapter(cinemaViewModel) }
+
     private var cinemaLayout: View? = null
     private var sessionsLayout: ViewGroup? = null
     private var sessionsHeaderTranslationValues = intArrayOf(0, 0)
-
-    private var schedule: Schedule? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -112,19 +115,23 @@ class CinemaFragment : MainFragment() {
         cinemaLayout = root.findViewById(R.id.cinema_layout)
         sessionsLayout = root.findViewById(R.id.sessions_layout)
 
-        val progress = root.findViewById<View>(R.id.progress_bar)
+        root.findViewById<RecyclerView>(R.id.filters_recycler_view).apply {
+            adapter = filtersAdapter
+            addItemDecoration(
+                SpaceItemDecoration(
+                    resources.getDimension(R.dimen.spacing_small).toInt(),
+                    resources.getDimension(R.dimen.spacing_medium).toInt(),
+                    addSpaceAboveFirstItem = true,
+                    addSpaceBelowLastItem = true
+                )
+            )
+            setHasFixedSize(true)
+        }
 
         setupToolbarAsActionBar(root, R.id.toolbar) {
             title = getString(R.string.title_cinema)
             setDisplayHomeAsUpEnabled(true)
         }
-
-        cinemaViewModel.loading.observe(this@CinemaFragment, Observer {
-            progress.isGone = !it
-            if (it) {
-                setViewsIsGone(true)
-            }
-        })
 
         cinemaViewModel.navigateToSchedulePageAction.observe(this, EventObserver { cinemaId ->
             openSchedulePage(cinemaId)
@@ -161,12 +168,12 @@ class CinemaFragment : MainFragment() {
             it ?: return@Observer
 
             initSessionsLayout()
-            if (schedule != it) {
-                viewPager.adapter = ScheduleAdapter(childFragmentManager, requireActivity(), it)
-                schedule = it
-            }
-
+            viewPager.adapter = ScheduleAdapter(childFragmentManager, requireActivity(), it)
             runDisplayTransition(view as ViewGroup)
+        })
+
+        cinemaViewModel.loading.observe(this, Observer {
+            progress_bar.isGone = !it && cinemaViewModel.isCinemaLayoutVisible.get()
         })
     }
 
@@ -205,16 +212,9 @@ class CinemaFragment : MainFragment() {
                         .setStartDelay(200L)
                 )
                 .setDuration(400L)
+                .setStartDelay(400L)
                 .setInterpolator(FastOutSlowInInterpolator())
         )
-        setViewsIsGone(false)
-    }
-
-    private fun setViewsIsGone(isGone: Boolean) {
-        tabs.isGone = isGone
-        viewPager.isGone = isGone
-        cinemaLayout?.isGone = isGone
-        sessionsLayout?.isGone = isGone
     }
 
     private fun applyTransformation(slideOffset: Float) {
@@ -227,7 +227,7 @@ class CinemaFragment : MainFragment() {
         sessionsLayout?.let { v ->
             sessionsHeaderTranslationValues = intArrayOf(
                 resources.getDimension(R.dimen.sessions_header_margin_start).toInt(),
-                -(v.paddingTop - v.paddingBottom / 2f).toInt()
+                -(v.paddingTop / 2f).toInt()
             )
         }
         updateSessionsLayout(0f)
@@ -235,18 +235,18 @@ class CinemaFragment : MainFragment() {
 
     private fun updateSessionsLayout(slideOffset: Float) {
         sessionsLayout?.let {
-            val headerValue =
+            val value =
                 offsetToProperty(slideOffset, ALPHA_SESSIONS_CHANGEOVER, ALPHA_SESSIONS_MAX)
-            it.translationX = sessionsHeaderTranslationValues[0] * headerValue
-            it.translationY = sessionsHeaderTranslationValues[1] * headerValue
+            it.translationX = sessionsHeaderTranslationValues[0] * value
+            it.translationY = sessionsHeaderTranslationValues[1] * value
 
             val header = it.getChildAt(0)
             val name = it.getChildAt(1)
-            val value =
-                offsetToProperty(slideOffset, ALPHA_SESSIONS_CHANGEOVER, ALPHA_SESSIONS_MAX)
+            val filter = it.getChildAt(2)
             name.alpha = value
             name.translationX =
                 (header.right - header.left) * value
+            filter.translationX = (filter.width * value * -2.2f)
         }
     }
 

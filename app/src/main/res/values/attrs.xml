@@ -29,9 +29,16 @@
         <attr format="reference" name="caColor" />
     </declare-styleable>
 
-    <declare-styleable name="SessionFilterView">
-        <attr format="string" name="filterId"/>
-        <attr format="string" name="filterName"/>
+    <declare-styleable name="ScheduleFilterView">
+        <attr name="android:checked" />
+        <attr name="android:text" />
+        <attr name="android:textColor" />
+        <attr name="android:textSize" />
+        <attr name="android:color" />
+        <attr name="android:padding" />
+        <attr name="android:strokeColor" />
+        <attr name="outlineWidth" format="dimension" />
+        <attr name="foreground" format="reference" />
     </declare-styleable>
 
 </resources>

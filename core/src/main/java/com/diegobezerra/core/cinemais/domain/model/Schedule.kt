@@ -23,15 +23,17 @@ data class Schedule(
         createDays()
     }
 
-    fun recreateDays(): Schedule {
-        val todayMillis = DateUtils.calendarAtStartOfDay(null).timeInMillis
-        if (todayMillis != generatedTimestamp) {
-            createDays()
-        }
+    fun recreateDays(matcher: SessionMatcher? = null): Schedule {
+//        val todayMillis = DateUtils.calendarAtStartOfDay(null).timeInMillis
+//        if (todayMillis != generatedTimestamp) {
+//            createDays(matcher)
+//        }
+        createDays(matcher)
+//        lastMatcher = matcher
         return this
     }
 
-    private fun createDays() {
+    private fun createDays(matcher: SessionMatcher? = null) {
         val today = DateUtils.calendarAtStartOfDay(null).timeInMillis
         if (week.end.time < today) {
             // Better display nothing than a wrong schedule.
@@ -46,6 +48,11 @@ data class Schedule(
                 if (session.startTimeDate == null || session.startTimeDate?.time!! < today) {
                     continue
                 }
+
+                if (matcher != null && !matcher.matches(session)) {
+                    continue
+                }
+
                 try {
                     val key = dateFormat.format(session.startTimeDate)
                     if (key != "") {
@@ -64,7 +71,6 @@ data class Schedule(
             }
             generatedTimestamp = today
         }
-
         days = map.toSortedMap().values.toList()
     }
 
@@ -101,9 +107,21 @@ data class Session(
         const val VersionNational = "national"
         const val VersionSubtitled = "subtitled"
         const val VersionDubbed = "dubbed"
+
         const val VideoFormat2D = "2D"
         const val VideoFormat3D = "3D"
 
+        const val RoomMagicD = "room_magic_d"
+        const val RoomVIP = "room_vip"
+    }
+
+    fun getProperties(): List<String> {
+        return mutableListOf<String>().also { properties ->
+            properties += version
+            properties += format
+            if (magic) properties += RoomMagicD
+            if (vip) properties += RoomVIP
+        }
     }
 }
 

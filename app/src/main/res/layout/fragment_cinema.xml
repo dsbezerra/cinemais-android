@@ -25,14 +25,51 @@
             app:viewModel="@{viewModel}"
             />
 
-        <androidx.viewpager.widget.ViewPager
-            android:id="@+id/viewpager"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:animateLayoutChanges="true"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            />
+            >
 
-        <include layout="@layout/include_progress_bar"/>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/filters_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clipToPadding="false"
+                android:orientation="horizontal"
+                android:requiresFadingEdge="horizontal"
+                app:goneUnless="@{viewModel.isFilterVisible &amp;&amp; viewModel.isCinemaLayoutVisible}"
+                app:layoutManager="LinearLayoutManager"
+                tools:listitem="@layout/item_schedule_filter"
+                />
+
+            <com.diegobezerra.cinemaisapp.widget.CinemaisTabLayout
+                android:id="@+id/tabs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:goneUnless="@{!viewModel.isScheduleEmpty &amp;&amp; !viewModel.loading}"
+                style="@style/Widget.Cinemais.TabLayout.Schedule"
+                />
+
+            <androidx.viewpager.widget.ViewPager
+                android:id="@+id/viewpager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:goneUnless="@{!viewModel.isScheduleEmpty &amp;&amp; !viewModel.loading}"
+                />
+
+            <com.diegobezerra.cinemaisapp.widget.EmptyView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:emptyMessage="@string/empty_message_schedule_filter"
+                app:goneUnless="@{viewModel.isFilterEnabled &amp;&amp; viewModel.isScheduleEmpty}"
+                />
+
+        </LinearLayout>
+
+        <include layout="@layout/include_progress_bar" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

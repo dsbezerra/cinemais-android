@@ -107,6 +107,15 @@
         <item name="android:lineSpacingExtra">@dimen/spacing_tiny</item>
     </style>
 
+    <style name="Widget.Cinemais.ScheduleFilters">
+        <item name="android:padding">6dp</item>
+        <item name="android:strokeColor">?android:textColorTertiary</item>
+        <item name="android:textColor">?android:textColorPrimary</item>
+        <item name="android:textSize">14sp</item>
+        <item name="outlineWidth">1dp</item>
+        <item name="foreground">?selectableItemBackground</item>
+    </style>
+
     <!-- Appearances -->
     <style name="TextAppearance.Cinemais.ToolbarTitle" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
         <item name="android:fontFamily">@font/opensans_bold</item>

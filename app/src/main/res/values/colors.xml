@@ -17,6 +17,7 @@
     <color name="subhead_text">@color/gray_900</color>
 
     <!-- Others -->
+    <color name="filter_active">#5dd08b</color>
     <color name="gray_50">#fafafa</color>
     <color name="gray_900">#212121</color>
     <color name="magic">#00a0e3</color>

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import androidx.core.view.isGone
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -66,7 +67,6 @@ class HomeFragment : MainFragment() {
 
         homeViewModel.home.observe(this@HomeFragment, Observer {
             homeAdapter.data = it
-            homeAdapter.notifyDataSetChanged()
         })
 
         homeViewModel.navigateToMovieDetail.observe(this@HomeFragment, EventObserver { movieId ->

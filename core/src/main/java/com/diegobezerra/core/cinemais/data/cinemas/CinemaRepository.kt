@@ -5,6 +5,7 @@ import com.diegobezerra.core.cinemais.data.home.HomeRepository
 import com.diegobezerra.core.cinemais.domain.model.Cinemas
 import com.diegobezerra.core.cinemais.domain.model.Location
 import com.diegobezerra.core.cinemais.domain.model.Schedule
+import com.diegobezerra.core.cinemais.domain.model.SessionMatcher
 import com.diegobezerra.core.cinemais.domain.model.Tickets
 import com.diegobezerra.core.result.Result
 import com.diegobezerra.core.result.getRemoteAndCache
@@ -34,15 +35,17 @@ class CinemaRepository @Inject constructor(
      * Returns the schedule of the cinema with the given ID
      * @param id Cinema ID
      */
-    suspend fun getSchedule(id: Int): Result<Schedule> {
+    suspend fun getSchedule(id: Int, matcher: SessionMatcher? = null): Result<Schedule> {
         val cached = scheduleCache[id]
         return if (cached != null) {
             // NOTE(diego): We recreate days here because these cached schedules may contain
             // old sessions
-            Result.Success(cached.recreateDays())
+            Result.Success(cached.recreateDays(matcher))
         } else {
             getRemoteAndCache(
-                call = { remoteDataSource.getSchedule(id) },
+                call = {
+                    remoteDataSource.getSchedule(id)
+                },
                 cacheMap = scheduleCache,
                 entryKey = id
             )
@@ -72,8 +75,11 @@ class CinemaRepository @Inject constructor(
      *
      * @param cinemaId ID of the desired cinema.
      */
-    suspend fun getScheduleWithLocation(cinemaId: Int): Result<Schedule> {
-        val scheduleResult = getSchedule(cinemaId)
+    suspend fun getScheduleWithLocation(
+        cinemaId: Int,
+        matcher: SessionMatcher? = null
+    ): Result<Schedule> {
+        val scheduleResult = getSchedule(cinemaId, matcher)
         if (scheduleResult is Result.Success) {
             getLocation(cinemaId).let {
                 if (it is Result.Success) {
