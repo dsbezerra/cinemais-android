@@ -8,6 +8,7 @@ import com.diegobezerra.core.cinemais.domain.model.Schedule
 import com.diegobezerra.core.cinemais.domain.model.SessionMatcher
 import com.diegobezerra.core.cinemais.domain.model.Tickets
 import com.diegobezerra.core.result.Result
+import com.diegobezerra.core.result.Result.Success
 import com.diegobezerra.core.result.getRemoteAndCache
 import javax.inject.Inject
 
@@ -25,8 +26,8 @@ class CinemaRepository @Inject constructor(
      */
     suspend fun getCinemas(): Result<Cinemas> {
         val result = homeRepository.getHome()
-        if (result is Result.Success) {
-            return Result.Success(result.data.cinemas)
+        if (result is Success) {
+            return Success(result.data.cinemas)
         }
         return result as Result.Error
     }
@@ -39,12 +40,16 @@ class CinemaRepository @Inject constructor(
         val cached = scheduleCache[id]
         return if (cached != null) {
             // NOTE(diego): We recreate days here because these cached schedules may contain
-            // old sessions
-            Result.Success(cached.recreateDays(matcher))
+            // old sessions or may need to be re-filtered
+            Success(cached.recreateDays(matcher))
         } else {
             getRemoteAndCache(
                 call = {
-                    remoteDataSource.getSchedule(id)
+                    remoteDataSource.getSchedule(id).also {
+                        if (it is Success && matcher != null) {
+                            it.data.recreateDays(matcher)
+                        }
+                    }
                 },
                 cacheMap = scheduleCache,
                 entryKey = id
@@ -60,7 +65,7 @@ class CinemaRepository @Inject constructor(
     private suspend fun getLocation(id: Int): Result<Location> {
         val cached = locationCache[id]
         return if (cached != null) {
-            Result.Success(cached)
+            Success(cached)
         } else {
             getRemoteAndCache(
                 call = { remoteDataSource.getLocation(id) },
@@ -80,9 +85,9 @@ class CinemaRepository @Inject constructor(
         matcher: SessionMatcher? = null
     ): Result<Schedule> {
         val scheduleResult = getSchedule(cinemaId, matcher)
-        if (scheduleResult is Result.Success) {
+        if (scheduleResult is Success) {
             getLocation(cinemaId).let {
-                if (it is Result.Success) {
+                if (it is Success) {
                     scheduleResult.data.cinema.location = it.data
                 }
             }
@@ -98,7 +103,7 @@ class CinemaRepository @Inject constructor(
     suspend fun getTickets(cinemaId: Int): Result<Tickets> {
         val cached = ticketsCache[cinemaId]
         return if (cached != null) {
-            Result.Success(cached)
+            Success(cached)
         } else {
             getRemoteAndCache(
                 call = { remoteDataSource.getTickets(cinemaId) },

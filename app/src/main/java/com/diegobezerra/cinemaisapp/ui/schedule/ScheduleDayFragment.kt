@@ -8,6 +8,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.diegobezerra.cinemaisapp.databinding.FragmentScheduleDayBinding
+import com.diegobezerra.cinemaisapp.ui.cinema.CinemaViewModel
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
 
@@ -38,6 +39,10 @@ class ScheduleDayFragment : DaggerFragment() {
         ViewModelProviders.of(parentFragment!!, viewModelFactory)
             .get(ScheduleViewModel::class.java)
     }
+    private val cinemaViewModel by lazy {
+        ViewModelProviders.of(parentFragment!!, viewModelFactory)
+            .get(CinemaViewModel::class.java)
+    }
 
     private lateinit var sessionsAdapter: SessionsAdapter
 
@@ -53,23 +58,23 @@ class ScheduleDayFragment : DaggerFragment() {
 
         val args = requireNotNull(arguments)
 
+        val playingRooms = args.getBoolean(PLAYING_ROOMS)
+        val dayPosition = args.getInt(DAY_POSITION)
         binding.recyclerView.run {
-            val playingRooms = args.getBoolean(PLAYING_ROOMS)
             adapter = SessionsAdapter(playingRooms).also {
                 sessionsAdapter = it
             }
             setHasFixedSize(true)
         }
 
-        scheduleViewModel.apply {
-            val dayPosition = args.getInt(DAY_POSITION)
-            schedule.observe(this@ScheduleDayFragment, Observer {
-                it.getDay(dayPosition)?.let { day ->
-                    sessionsAdapter.data = day.sessions
-                    sessionsAdapter.notifyDataSetChanged()
-                }
-            })
-        }
+        // @Temporary
+        val schedule = if (playingRooms) scheduleViewModel.schedule else cinemaViewModel.schedule
+        schedule.observe(this@ScheduleDayFragment, Observer {
+            it.getDay(dayPosition)?.let { day ->
+                sessionsAdapter.data = day.sessions
+                sessionsAdapter.notifyDataSetChanged()
+            }
+        })
 
         return binding.root
     }

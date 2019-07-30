@@ -38,7 +38,7 @@ class CinemasViewModel @Inject constructor(
     }
 
     override fun onCinemaClicked(cinemaId: Int) {
-        preferencesHelper.setSelectedCinemaId(cinemaId)
+        preferencesHelper.saveSelectedCinemaId(cinemaId)
         _switchToCinemaDetail.postValue(Event(cinemaId))
     }
 }

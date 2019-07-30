@@ -15,7 +15,7 @@ private val DATE_TITLE_WEEKDAY = SimpleDateFormat("E', 'd 'de' MMM", BRAZIL)
 class ScheduleAdapter(
     fm: FragmentManager,
     val context: Context,
-    var schedule: Schedule,
+    val schedule: Schedule,
     val playingRooms: Boolean = false
 ) : FragmentStatePagerAdapter(fm) {
 

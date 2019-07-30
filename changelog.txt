@@ -1,6 +1,12 @@
 Changelog
 
-VersionName (VersionCode)
+VersionName (VersionCode) - Date
+
+0.0.39-beta (26) - 30 july 2019
+- Add filter for schedules in CinemaFragment.
+- Separate ScheduleDayFragment and CinemaFragment view models.
+- Filters are persisted to SharedPreferences.
+- Fix changelog.txt
 
 0.0.38-beta (25)
 - Fix timeout text.
@@ -15,11 +21,9 @@ VersionName (VersionCode)
 - Fix single premiere notification title.
 - Better way to check if we should retry due to empty schedule.
 
-VersionName (VersionCode)
 0.0.35-beta (22)
 - We now check for premieres at least 2 times in case the first check retrieves zero elements.
 
-VersionName (VersionCode)
 0.0.34-beta (21)
 - Proper night mode
 
@@ -90,7 +94,6 @@ Bug fixes:
 - Add movie title for now playing movies in HomeFragment
 - Little design changes in AboutActivity
 - Other simple design changes
-  
 
 0.0.22-beta (9) 
 - Fix crash preventing app to start in <28 API devices caused by misusage of VectorDrawables

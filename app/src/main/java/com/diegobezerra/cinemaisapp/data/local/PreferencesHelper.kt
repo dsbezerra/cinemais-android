@@ -10,6 +10,7 @@ class PreferencesHelper @Inject constructor(context: Context) {
 
         const val PREFS_NAME = "cinemais"
         const val PREF_SELECTED_CINEMA = "pref_selected_cinema"
+        const val PREF_SELECTED_FILTERS = "pref_selected_filters"
         const val PREF_DARK_THEME = "pref_dark_theme"
         const val PREF_INTERSTITIAL_LAST_DISPLAY_TIMESTAMP =
             "pref_interstitial_last_display_timestamp"
@@ -27,9 +28,24 @@ class PreferencesHelper @Inject constructor(context: Context) {
         }
     }
 
-    fun setSelectedCinemaId(cinemaId: Int) {
+    fun saveSelectedCinemaId(cinemaId: Int) {
         prefs.update {
             putInt(PREF_SELECTED_CINEMA, cinemaId)
+        }
+    }
+
+    fun saveSelectedFilters(filters: HashSet<String>) {
+        prefs.update {
+            putString(PREF_SELECTED_FILTERS, filters.joinToString(","))
+        }
+    }
+
+    fun getSelectedFilters(): HashSet<String> {
+        val filters = prefs.getString(PREF_SELECTED_FILTERS, null) ?: ""
+        return if (filters.isNotEmpty()) {
+            filters.split(",").toHashSet()
+        } else {
+            hashSetOf()
         }
     }
 

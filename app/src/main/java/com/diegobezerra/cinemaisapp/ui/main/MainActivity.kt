@@ -1,7 +1,5 @@
 package com.diegobezerra.cinemaisapp.ui.main
 
-import android.app.PendingIntent
-import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -17,7 +15,6 @@ import com.diegobezerra.cinemaisapp.ui.main.cinemas.CinemasFragment
 import com.diegobezerra.cinemaisapp.ui.main.home.HomeFragment
 import com.diegobezerra.cinemaisapp.ui.main.movies.MoviesFragment
 import com.diegobezerra.cinemaisapp.ui.settings.SettingsActivity
-import com.diegobezerra.cinemaisapp.util.setupTheme
 import com.diegobezerra.cinemaisapp.util.switchToAdded
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest.Builder
@@ -26,7 +23,6 @@ import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.InterstitialAd
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.android.support.DaggerAppCompatActivity
-import io.karn.notify.Notify
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -229,7 +225,7 @@ class MainActivity : DaggerAppCompatActivity() {
 
     override fun onBackPressed() {
         if (fragment is CinemaFragment) {
-            preferencesHelper.setSelectedCinemaId(0)
+            preferencesHelper.saveSelectedCinemaId(0)
             showFragment(CinemasFragment.TAG)
         } else {
             super.onBackPressed()

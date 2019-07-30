@@ -38,6 +38,7 @@ import com.diegobezerra.cinemaisapp.widget.CinemaActionView
 import com.diegobezerra.cinemaisapp.widget.CinemaisTabLayout
 import com.diegobezerra.cinemaisapp.widget.SpaceItemDecoration
 import com.diegobezerra.core.cinemais.data.CinemaisService
+import com.diegobezerra.core.cinemais.domain.model.Schedule
 import com.diegobezerra.core.event.EventObserver
 import com.google.android.material.appbar.AppBarLayout
 import kotlinx.android.synthetic.main.include_progress_bar.progress_bar
@@ -133,6 +134,10 @@ class CinemaFragment : MainFragment() {
             setDisplayHomeAsUpEnabled(true)
         }
 
+        cinemaViewModel.filters.observe(this, Observer {
+            filtersAdapter.submitList(it)
+        })
+
         cinemaViewModel.navigateToSchedulePageAction.observe(this, EventObserver { cinemaId ->
             openSchedulePage(cinemaId)
         })
@@ -167,13 +172,16 @@ class CinemaFragment : MainFragment() {
         cinemaViewModel.schedule.observe(this@CinemaFragment, Observer {
             it ?: return@Observer
 
+            val hadNoAdapter = viewPager.adapter == null
             initSessionsLayout()
             viewPager.adapter = ScheduleAdapter(childFragmentManager, requireActivity(), it)
-            runDisplayTransition(view as ViewGroup)
+            if (hadNoAdapter) {
+                runDisplayTransition(view as ViewGroup)
+            }
         })
 
         cinemaViewModel.loading.observe(this, Observer {
-            progress_bar.isGone = !it && cinemaViewModel.isCinemaLayoutVisible.get()
+            progress_bar.isGone = cinemaViewModel.isCinemaLayoutVisible.get() || !it
         })
     }
 

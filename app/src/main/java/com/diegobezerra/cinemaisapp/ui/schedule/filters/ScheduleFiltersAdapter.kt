@@ -22,10 +22,6 @@ class ScheduleFiltersAdapter(
     val viewModel: CinemaViewModel
 ) : ListAdapter<ScheduleFilter, ScheduleFiltersViewHolder>(FilterDiff) {
 
-    init {
-        submitList(buildList())
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScheduleFiltersViewHolder {
         val binding = ItemScheduleFilterBinding.inflate(
             LayoutInflater.from(parent.context), parent, false
@@ -37,22 +33,6 @@ class ScheduleFiltersAdapter(
 
     override fun onBindViewHolder(holder: ScheduleFiltersViewHolder, position: Int) {
         holder.bind(getItem(position))
-    }
-
-    private fun buildList(): List<ScheduleFilter> {
-        val result = mutableListOf<ScheduleFilter>()
-
-        result += ScheduleFilter(VersionDubbed, R.string.filter_audio_dub, false)
-        result += ScheduleFilter(VersionSubtitled, R.string.filter_audio_sub, false)
-        result += ScheduleFilter(VersionNational, R.string.filter_audio_nac, false)
-
-        result += ScheduleFilter(VideoFormat2D, R.string.filter_video_2d, false)
-        result += ScheduleFilter(VideoFormat3D, R.string.filter_video_3d, false)
-
-        result += ScheduleFilter(RoomMagicD, R.string.filter_room_magicd, false)
-        result += ScheduleFilter(RoomVIP, R.string.filter_room_vip, false)
-
-        return result
     }
 
     class ScheduleFiltersViewHolder(private val binding: ItemScheduleFilterBinding) :

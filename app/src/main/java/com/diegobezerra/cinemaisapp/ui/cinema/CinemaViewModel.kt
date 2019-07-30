@@ -4,19 +4,32 @@ import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
+import com.diegobezerra.cinemaisapp.R
 import com.diegobezerra.cinemaisapp.base.BaseViewModel
+import com.diegobezerra.cinemaisapp.data.local.PreferencesHelper
 import com.diegobezerra.cinemaisapp.ui.schedule.filters.ScheduleFilter
 import com.diegobezerra.cinemaisapp.util.setValueIfNew
 import com.diegobezerra.core.cinemais.data.cinemas.CinemaRepository
 import com.diegobezerra.core.cinemais.domain.model.Cinema
 import com.diegobezerra.core.cinemais.domain.model.Location
 import com.diegobezerra.core.cinemais.domain.model.Schedule
+import com.diegobezerra.core.cinemais.domain.model.Session.Companion.RoomMagicD
+import com.diegobezerra.core.cinemais.domain.model.Session.Companion.RoomVIP
+import com.diegobezerra.core.cinemais.domain.model.Session.Companion.VersionDubbed
+import com.diegobezerra.core.cinemais.domain.model.Session.Companion.VersionNational
+import com.diegobezerra.core.cinemais.domain.model.Session.Companion.VersionSubtitled
+import com.diegobezerra.core.cinemais.domain.model.Session.Companion.VideoFormat2D
+import com.diegobezerra.core.cinemais.domain.model.Session.Companion.VideoFormat3D
 import com.diegobezerra.core.cinemais.domain.model.SessionMatcher
 import com.diegobezerra.core.event.Event
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 class CinemaViewModel @Inject constructor(
-    private val cinemaRepository: CinemaRepository
+    private val cinemaRepository: CinemaRepository,
+    private val preferencesHelper: PreferencesHelper
 ) : BaseViewModel() {
 
     private val _cinema = MediatorLiveData<Cinema>()
@@ -43,7 +56,11 @@ class CinemaViewModel @Inject constructor(
     val navigateToInfoAction: LiveData<Event<Unit>>
         get() = _navigateToInfoAction
 
-    private val selectedFilters: HashSet<String> = hashSetOf()
+    private val _filters = MutableLiveData<List<ScheduleFilter>>()
+    val filters: LiveData<List<ScheduleFilter>>
+        get() = _filters
+
+    private val selectedFilters: HashSet<String> = preferencesHelper.getSelectedFilters()
 
     val isCinemaLayoutVisible = ObservableBoolean()
 
@@ -56,8 +73,13 @@ class CinemaViewModel @Inject constructor(
     private val cinemaId = MutableLiveData<Int>()
 
     init {
+        createFilters()
+
         _schedule.addSource(cinemaId) {
-            refreshSchedule(cinemaChanged = true)
+            refreshSchedule(
+                filtering = selectedFilters.isNotEmpty(),
+                cinemaChanged = true
+            )
         }
     }
 
@@ -108,8 +130,12 @@ class CinemaViewModel @Inject constructor(
         _navigateToInfoAction.value = Event(Unit)
     }
 
-    fun onFilterClick() {
-        isFilterVisible.set(!isFilterVisible.get())
+    fun onFilterClick() = runBlocking {
+        // NOTE(diego): Make sure ripple effect runs for a while...
+        launch {
+            delay(200L)
+            isFilterVisible.set(!isFilterVisible.get())
+        }
     }
 
     fun toggleFilter(filter: ScheduleFilter, checked: Boolean) {
@@ -120,19 +146,51 @@ class CinemaViewModel @Inject constructor(
             selectedFilters.remove(filter.id)
         }
         isFilterEnabled.set(selectedFilters.isNotEmpty())
-        refreshSchedule(true)
+        preferencesHelper.saveSelectedFilters(selectedFilters)
+        refreshSchedule()
     }
 
     private fun updateLayoutVisibility(
         filtering: Boolean = false,
         cinemaChanged: Boolean = false
     ) {
-        if (isFilterEnabled.get() && filtering) {
+        if (isFilterEnabled.get() && filtering && !cinemaChanged) {
             isCinemaLayoutVisible.set(true)
         } else {
             val loading = if (loading.value == null || cinemaChanged) true else loading.value!!
             isCinemaLayoutVisible.set(!loading)
         }
+    }
+
+    private fun createFilters() {
+        val filters = listOf(
+            VersionDubbed,
+            VersionSubtitled,
+            VersionNational,
+            VideoFormat2D,
+            VideoFormat3D,
+            RoomMagicD,
+            RoomVIP
+        ).map { createFilter(it) }
+        if (filters.any { it.isChecked.get() }) {
+            isFilterEnabled.set(true)
+            isFilterVisible.set(true)
+        }
+        _filters.setValueIfNew(filters)
+    }
+
+    private fun createFilter(id: String): ScheduleFilter {
+        val label = when (id) {
+            VersionDubbed -> R.string.filter_audio_dub
+            VersionSubtitled -> R.string.filter_audio_sub
+            VersionNational -> R.string.filter_audio_nac
+            VideoFormat2D -> R.string.filter_video_2d
+            VideoFormat3D -> R.string.filter_video_3d
+            RoomMagicD -> R.string.filter_room_magicd
+            RoomVIP -> R.string.filter_room_vip
+            else -> throw IllegalStateException("invalid filter $id")
+        }
+        return ScheduleFilter(id, label, selectedFilters.contains(id))
     }
 
     /**
