@@ -3,6 +3,8 @@ package com.diegobezerra.cinemaisapp.widget
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.LinearLayout
+import androidx.annotation.ColorInt
+import androidx.core.content.res.getColorOrThrow
 import com.diegobezerra.cinemaisapp.R
 import kotlinx.android.synthetic.main.empty_view.view.text_message
 
@@ -24,8 +26,16 @@ class EmptyView @JvmOverloads constructor(
      * resource that supplies default values for the view. Can be 0 to not look for defaults.
      */
     private fun setFromAttrs(attrs: AttributeSet?, defStyleAttr: Int) {
-        context.obtainStyledAttributes(attrs, R.styleable.EmptyView, defStyleAttr, 0).run {
-            set(getString(R.styleable.EmptyView_emptyMessage))
+        context.obtainStyledAttributes(
+            attrs,
+            R.styleable.EmptyView,
+            defStyleAttr,
+            R.style.Widget_Cinemais_EmptyView
+        ).run {
+            set(
+                getString(R.styleable.EmptyView_emptyMessage),
+                getColorOrThrow(R.styleable.EmptyView_android_textColor)
+            )
             recycle()
         }
     }
@@ -34,14 +44,8 @@ class EmptyView @JvmOverloads constructor(
      * Set the empty view data
      * @param message message of error view
      */
-    fun set(message: String?) {
+    fun set(message: String?, @ColorInt color: Int) {
         text_message.text = message
-    }
-
-    /**
-     * Clears the empty view data
-     */
-    fun clear() {
-        set(null)
+        text_message.setTextColor(color)
     }
 }

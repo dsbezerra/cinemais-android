@@ -2,6 +2,11 @@ Changelog
 
 VersionName (VersionCode) - Date
 
+0.0.40-beta (26) - 31 july 2019
+- Add filter for schedules in PlayingCinemasFragment.
+- Add attr ScheduleFilterView style to make easier to create different styles for different activities. 
+- Add filter by movie in SessionMatcher.
+
 0.0.39-beta (26) - 30 july 2019
 - Add filter for schedules in CinemaFragment.
 - Separate ScheduleDayFragment and CinemaFragment view models.

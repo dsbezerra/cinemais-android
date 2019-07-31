@@ -28,7 +28,8 @@
             android:name=".ui.main.MainActivity"/>
         <activity
             android:name=".ui.movie.MovieActivity"
-            android:parentActivityName=".ui.main.MainActivity">
+            android:parentActivityName=".ui.main.MainActivity"
+            android:theme="@style/Cinemais.Movie">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.diegobezerra.cinemaisapp.ui.main.MainActivity"/>

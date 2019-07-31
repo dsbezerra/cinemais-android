@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <attr format="reference" name="scheduleFilterViewStyle"/>
+
     <declare-styleable name="AutoSlideViewPager">
         <attr format="integer" name="slideInterval"/>
     </declare-styleable>
 
     <declare-styleable name="EmptyView">
+        <attr name="android:textColor"/>
         <attr format="reference" name="emptyIcon"/>
         <attr format="reference" name="emptyIconTint"/>
         <attr format="string" name="emptyMessage"/>

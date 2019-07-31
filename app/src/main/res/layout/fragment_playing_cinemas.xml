@@ -12,22 +12,25 @@
             />
     </data>
 
-    <LinearLayout
-        android:id="@+id/playing_cinemas_sheet"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/sheet"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/bg_session_rooms"
         android:clickable="true"
         android:focusable="true"
-        android:orientation="vertical"
         >
 
         <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/btn_session_rooms_height"
+            android:id="@+id/sheet_header_container"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:gravity="center"
             android:paddingBottom="@dimen/spacing_small"
             android:paddingTop="@dimen/spacing_small"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             >
 
             <ImageButton
@@ -36,6 +39,7 @@
                 android:layout_marginStart="@dimen/spacing_tiny"
                 android:contentDescription="@null"
                 android:onClick="@{() -> viewModel.onBackClicked()}"
+                app:goneUnless="@{viewModel.isViewingSchedule}"
                 app:srcCompat="@drawable/ic_keyboard_arrow_left"
                 style="@style/Widget.Cinemais.ScheduleButton"
                 />
@@ -56,8 +60,8 @@
                     android:gravity="center"
                     android:text="@{viewModel.getHeaderText(viewModel.state)}"
                     android:textAlignment="center"
-                    style="@style/TextAppearance.Cinemais.Subhead"
                     android:textColor="@android:color/white"
+                    style="@style/TextAppearance.Cinemais.Subhead"
                     />
 
                 <TextView
@@ -70,6 +74,7 @@
                     android:textAlignment="center"
                     android:textColor="#96FFFFFF"
                     android:textSize="12sp"
+                    app:goneUnless="@{viewModel.isViewingSchedule}"
                     />
 
             </LinearLayout>
@@ -82,7 +87,20 @@
                 android:layout_marginEnd="56dp"
                 android:indeterminate="true"
                 android:indeterminateTint="@android:color/white"
+                app:goneUnless="@{viewModel.loading}"
                 style="@style/Widget.AppCompat.ProgressBar"
+                />
+
+            <ImageButton
+                android:id="@+id/filter_button"
+                android:layout_gravity="end|center_vertical"
+                android:layout_marginEnd="56dp"
+                android:contentDescription="@null"
+                android:onClick="@{() -> viewModel.onFilterClick()}"
+                android:tint="@{viewModel.isFilterEnabled ? @color/filter_active : @android:color/white}"
+                app:goneUnless="@{viewModel.isViewingSchedule &amp;&amp; !viewModel.loading}"
+                app:srcCompat="@drawable/ic_filter_list"
+                style="@style/Widget.Cinemais.ScheduleButton"
                 />
 
             <ImageButton
@@ -98,26 +116,50 @@
         </FrameLayout>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:id="@+id/playing_cinemas"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:fadingEdgeLength="@dimen/spacing_medium"
             android:requiresFadingEdge="vertical"
+            app:goneUnless="@{viewModel.isViewingPlayingRooms}"
             app:layoutManager="LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/sheet_header_container"
             tools:listitem="@layout/item_playing_cinema"
             />
 
         <LinearLayout
             android:id="@+id/schedule_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:animateLayoutChanges="true"
             android:orientation="vertical"
+            app:goneUnless="@{viewModel.isViewingSchedule}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/sheet_header_container"
             >
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/filters_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clipToPadding="false"
+                android:orientation="horizontal"
+                android:requiresFadingEdge="horizontal"
+                app:goneUnless="@{viewModel.isFilterVisible}"
+                app:layoutManager="LinearLayoutManager"
+                tools:listitem="@layout/item_schedule_filter"
+                />
 
             <com.diegobezerra.cinemaisapp.widget.CinemaisTabLayout
                 android:id="@+id/tabs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:goneUnless="@{!viewModel.isScheduleEmpty}"
                 style="@style/Widget.Cinemais.TabLayout.Schedule.PlayingRooms"
                 />
 
@@ -125,10 +167,19 @@
                 android:id="@+id/viewpager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                app:goneUnless="@{!viewModel.isScheduleEmpty}"
+                />
+
+            <com.diegobezerra.cinemaisapp.widget.EmptyView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                app:emptyMessage="@string/empty_message_schedule_filter"
+                app:goneUnless="@{viewModel.isScheduleEmpty}"
                 />
 
         </LinearLayout>
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

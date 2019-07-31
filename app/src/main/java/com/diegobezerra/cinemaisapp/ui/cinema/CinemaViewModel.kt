@@ -4,10 +4,11 @@ import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import com.diegobezerra.cinemaisapp.R
 import com.diegobezerra.cinemaisapp.base.BaseViewModel
 import com.diegobezerra.cinemaisapp.data.local.PreferencesHelper
+import com.diegobezerra.cinemaisapp.ui.schedule.filters.FilterableSchedule
 import com.diegobezerra.cinemaisapp.ui.schedule.filters.ScheduleFilter
+import com.diegobezerra.cinemaisapp.ui.schedule.filters.ScheduleFilter.Companion.createFilter
 import com.diegobezerra.cinemaisapp.util.setValueIfNew
 import com.diegobezerra.core.cinemais.data.cinemas.CinemaRepository
 import com.diegobezerra.core.cinemais.domain.model.Cinema
@@ -30,7 +31,7 @@ import javax.inject.Inject
 class CinemaViewModel @Inject constructor(
     private val cinemaRepository: CinemaRepository,
     private val preferencesHelper: PreferencesHelper
-) : BaseViewModel() {
+) : BaseViewModel(), FilterableSchedule {
 
     private val _cinema = MediatorLiveData<Cinema>()
     val cinema: LiveData<Cinema>
@@ -138,7 +139,7 @@ class CinemaViewModel @Inject constructor(
         }
     }
 
-    fun toggleFilter(filter: ScheduleFilter, checked: Boolean) {
+    override fun onToggleFilter(filter: ScheduleFilter, checked: Boolean) {
         filter.isChecked.set(checked)
         if (checked) {
             selectedFilters.add(filter.id)
@@ -171,26 +172,12 @@ class CinemaViewModel @Inject constructor(
             VideoFormat3D,
             RoomMagicD,
             RoomVIP
-        ).map { createFilter(it) }
+        ).map { createFilter(it, selectedFilters.contains(it)) }
         if (filters.any { it.isChecked.get() }) {
             isFilterEnabled.set(true)
             isFilterVisible.set(true)
         }
         _filters.setValueIfNew(filters)
-    }
-
-    private fun createFilter(id: String): ScheduleFilter {
-        val label = when (id) {
-            VersionDubbed -> R.string.filter_audio_dub
-            VersionSubtitled -> R.string.filter_audio_sub
-            VersionNational -> R.string.filter_audio_nac
-            VideoFormat2D -> R.string.filter_video_2d
-            VideoFormat3D -> R.string.filter_video_3d
-            RoomMagicD -> R.string.filter_room_magicd
-            RoomVIP -> R.string.filter_room_vip
-            else -> throw IllegalStateException("invalid filter $id")
-        }
-        return ScheduleFilter(id, label, selectedFilters.contains(id))
     }
 
     /**

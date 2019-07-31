@@ -102,7 +102,7 @@ class ScheduleFilterView @JvmOverloads constructor(
         val a = context.obtainStyledAttributes(
             attrs,
             R.styleable.ScheduleFilterView,
-            0,
+            R.attr.scheduleFilterViewStyle,
             R.style.Widget_Cinemais_ScheduleFilters
         )
         outlinePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {

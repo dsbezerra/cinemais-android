@@ -7,7 +7,6 @@ import com.diegobezerra.cinemaisapp.ui.main.movies.MoviesFragment
 import com.diegobezerra.cinemaisapp.ui.main.movies.TabMoviesFragment
 import com.diegobezerra.cinemaisapp.ui.movie.MovieFragment
 import com.diegobezerra.cinemaisapp.ui.movie.playingcinemas.PlayingCinemasFragment
-import com.diegobezerra.cinemaisapp.ui.schedule.filters.ScheduleFiltersFragment
 import com.diegobezerra.cinemaisapp.ui.tickets.TicketsFragment
 import com.diegobezerra.core.dagger.scopes.FragmentScope
 import dagger.Module
@@ -31,10 +30,6 @@ abstract class FragmentBindingModule {
     @FragmentScope
     @ContributesAndroidInjector
     internal abstract fun cinemaFragment(): CinemaFragment
-
-    @FragmentScope
-    @ContributesAndroidInjector
-    internal abstract fun scheduleFiltersFragment(): ScheduleFiltersFragment
 
     @FragmentScope
     @ContributesAndroidInjector

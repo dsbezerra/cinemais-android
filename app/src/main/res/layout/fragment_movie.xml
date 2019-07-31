@@ -28,7 +28,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:animateLayoutChanges="true"
-                android:paddingBottom="@dimen/btn_session_rooms_height"
+                android:paddingBottom="@dimen/playing_rooms_peek_height"
                 >
 
                 <FrameLayout
@@ -214,7 +214,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="bottom"
-        android:layout_marginBottom="4dp"
         app:behavior_peekHeight="0dp"
         app:layout_behavior="@string/bottom_sheet_behavior"
         tools:layout="@layout/fragment_playing_cinemas"

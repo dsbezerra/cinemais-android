@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.diegobezerra.cinemaisapp.databinding.FragmentScheduleDayBinding
 import com.diegobezerra.cinemaisapp.ui.cinema.CinemaViewModel
+import com.diegobezerra.cinemaisapp.ui.movie.playingcinemas.PlayingCinemasViewModel
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
 
@@ -35,9 +36,9 @@ class ScheduleDayFragment : DaggerFragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private val scheduleViewModel by lazy {
+    private val playingCinemasViewModel by lazy {
         ViewModelProviders.of(parentFragment!!, viewModelFactory)
-            .get(ScheduleViewModel::class.java)
+            .get(PlayingCinemasViewModel::class.java)
     }
     private val cinemaViewModel by lazy {
         ViewModelProviders.of(parentFragment!!, viewModelFactory)
@@ -53,7 +54,6 @@ class ScheduleDayFragment : DaggerFragment() {
 
         val binding = FragmentScheduleDayBinding.inflate(inflater, container, false).apply {
             lifecycleOwner = this@ScheduleDayFragment
-            viewModel = scheduleViewModel
         }
 
         val args = requireNotNull(arguments)
@@ -68,7 +68,8 @@ class ScheduleDayFragment : DaggerFragment() {
         }
 
         // @Temporary
-        val schedule = if (playingRooms) scheduleViewModel.schedule else cinemaViewModel.schedule
+        val schedule =
+            if (playingRooms) playingCinemasViewModel.schedule else cinemaViewModel.schedule
         schedule.observe(this@ScheduleDayFragment, Observer {
             it.getDay(dayPosition)?.let { day ->
                 sessionsAdapter.data = day.sessions
@@ -77,10 +78,5 @@ class ScheduleDayFragment : DaggerFragment() {
         })
 
         return binding.root
-    }
-
-    override fun onStart() {
-        super.onStart()
-        scheduleViewModel.setCinemaId(requireNotNull(arguments).getInt(CINEMA_ID))
     }
 }

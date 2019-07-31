@@ -4,15 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     >
 
-    <data>
-
-        <variable
-            name="viewModel"
-            type="com.diegobezerra.cinemaisapp.ui.schedule.ScheduleViewModel"
-            />
-
-    </data>
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

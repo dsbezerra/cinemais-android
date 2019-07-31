@@ -6,27 +6,18 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.diegobezerra.cinemaisapp.R
 import com.diegobezerra.cinemaisapp.databinding.ItemScheduleFilterBinding
-import com.diegobezerra.cinemaisapp.ui.cinema.CinemaViewModel
 import com.diegobezerra.cinemaisapp.ui.schedule.filters.ScheduleFiltersAdapter.ScheduleFiltersViewHolder
-import com.diegobezerra.core.cinemais.domain.model.Session.Companion.RoomMagicD
-import com.diegobezerra.core.cinemais.domain.model.Session.Companion.RoomVIP
-import com.diegobezerra.core.cinemais.domain.model.Session.Companion.VersionDubbed
-import com.diegobezerra.core.cinemais.domain.model.Session.Companion.VersionNational
-import com.diegobezerra.core.cinemais.domain.model.Session.Companion.VersionSubtitled
-import com.diegobezerra.core.cinemais.domain.model.Session.Companion.VideoFormat2D
-import com.diegobezerra.core.cinemais.domain.model.Session.Companion.VideoFormat3D
 
 class ScheduleFiltersAdapter(
-    val viewModel: CinemaViewModel
+    private val filterableSchedule: FilterableSchedule
 ) : ListAdapter<ScheduleFilter, ScheduleFiltersViewHolder>(FilterDiff) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScheduleFiltersViewHolder {
         val binding = ItemScheduleFilterBinding.inflate(
             LayoutInflater.from(parent.context), parent, false
         ).apply {
-            viewModel = this@ScheduleFiltersAdapter.viewModel
+            filterableSchedule = this@ScheduleFiltersAdapter.filterableSchedule
         }
         return ScheduleFiltersViewHolder(binding)
     }

@@ -11,8 +11,8 @@
             />
 
         <variable
-            name="viewModel"
-            type="com.diegobezerra.cinemaisapp.ui.cinema.CinemaViewModel"
+            name="filterableSchedule"
+            type="com.diegobezerra.cinemaisapp.ui.schedule.filters.FilterableSchedule"
             />
     </data>
 
@@ -31,7 +31,7 @@
             android:text="@{context.getString(scheduleFilter.labelRes)}"
             app:scheduleFilter="@{scheduleFilter}"
             app:selectedTextColor="@{@android:color/white}"
-            app:viewModel="@{viewModel}"
+            app:filterableSchedule="@{filterableSchedule}"
             />
 
     </FrameLayout>
