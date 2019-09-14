@@ -110,6 +110,7 @@ data class Session(
 
         const val VideoFormat2D = "2D"
         const val VideoFormat3D = "3D"
+        const val VideoFormatBoth = "2D-3D"
 
         const val RoomMagicD = "room_magic_d"
         const val RoomVIP = "room_vip"

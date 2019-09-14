@@ -1,9 +1,17 @@
 package com.diegobezerra.core.cinemais.data.cinemas.tickets
 
 import com.diegobezerra.core.cinemais.data.TestUtil
+import com.diegobezerra.core.cinemais.domain.model.Weekdays
 import okhttp3.ResponseBody
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Test
+import java.util.Calendar.FRIDAY
+import java.util.Calendar.MONDAY
+import java.util.Calendar.SATURDAY
+import java.util.Calendar.SUNDAY
+import java.util.Calendar.THURSDAY
+import java.util.Calendar.TUESDAY
 
 class CinemaisTicketsConverterTest {
 
@@ -13,6 +21,35 @@ class CinemaisTicketsConverterTest {
         val response = ResponseBody.create(null, data)
         val result = CinemaisTicketsConverter.convert(response)
         assertNotNull(result)
+    }
+
+    @Test
+    fun parseWeekdays() {
+        var expected = Weekdays(
+            weekdays = listOf(MONDAY, TUESDAY, THURSDAY, FRIDAY),
+            holidays = false,
+            exceptHolidays = true,
+            exceptPreviews = true
+        )
+        var actual =
+            CinemaisTicketsConverter.parseWeekdays("2ª, 3ª, 5ª e 6ª  (exceto feriados e pré-estreias especiais)")
+        assertEquals(expected, actual)
+
+        expected = Weekdays(
+            weekdays = listOf(SATURDAY, SUNDAY),
+            holidays = true,
+            exceptHolidays = false,
+            exceptPreviews = false
+        )
+        actual = CinemaisTicketsConverter.parseWeekdays("Sábados, domingos e feriados")
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun parsePrice() {
+        val expected = 18.0f
+        val actual = CinemaisTicketsConverter.parsePrice("R$ 18,00 (Inteira)")
+        assertEquals(expected, actual)
     }
 
 }
