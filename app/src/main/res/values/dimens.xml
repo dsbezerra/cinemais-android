@@ -17,7 +17,7 @@
 
     <dimen name="sessions_header_margin_start">42dp</dimen>
 
-    <dimen name="playing_rooms_peek_height">66dp</dimen>
+    <dimen name="playing_rooms_peek_height">64dp</dimen>
 
     <dimen name="banner_height">103dp</dimen>
     <dimen name="banner_height_land">206dp</dimen>

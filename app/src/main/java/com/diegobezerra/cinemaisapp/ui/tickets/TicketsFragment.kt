@@ -36,6 +36,7 @@ class TicketsFragment : DaggerFragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
+    private val ticketsAdapter by lazy { TicketAdapter() }
     private val ticketsViewModel by lazy {
         ViewModelProviders.of(this, viewModelFactory)
             .get(TicketsViewModel::class.java)
@@ -54,8 +55,17 @@ class TicketsFragment : DaggerFragment() {
         val root = binding.root
         val progress = root.findViewById<View>(R.id.progress_bar)
 
+        binding.recyclerView.run {
+            adapter = ticketsAdapter
+            setHasFixedSize(true)
+        }
+
         ticketsViewModel.loading.observe(this, Observer {
             progress.isGone = !it
+        })
+
+        ticketsViewModel.tickets.observe(this, Observer {
+            ticketsAdapter.data = it.tickets
         })
 
         ticketsViewModel.navigateToBuyWebsiteAction.observe(this, EventObserver { buyOnlineUrl ->

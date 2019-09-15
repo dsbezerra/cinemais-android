@@ -4,44 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     >
 
-    <data>
-
-        <variable
-            name="viewModel"
-            type="com.diegobezerra.cinemaisapp.ui.tickets.TicketsViewModel"
-            />
-
-    </data>
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:animateLayoutChanges="true"
         tools:context=".ui.tickets.TicketsFragment"
         >
-
-        <androidx.core.widget.NestedScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingBottom="?actionBarSize"
-            android:paddingTop="58dp"
-            android:requiresFadingEdge="vertical"
-            android:scrollbars="vertical"
-            >
-
-            <TextView
-                android:id="@+id/content"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/spacing_medium"
-                android:textAppearance="@style/TextAppearance.Cinemais.Body"
-                android:textColor="@android:color/white"
-                app:fromHtml="@{viewModel.tickets.content}"
-                />
-
-        </androidx.core.widget.NestedScrollView>
-
-        <include layout="@layout/include_normal_progress_bar"/>
 
         <Button
             android:id="@+id/buy_online"
@@ -54,5 +21,28 @@
             style="@style/Widget.Cinemais.BuyTickets"
             />
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:orientation="vertical"
+            android:paddingBottom="62dp"
+            android:paddingEnd="@dimen/spacing_medium"
+            android:paddingStart="@dimen/spacing_medium"
+            app:layoutManager="LinearLayoutManager"
+            />
+
+        <include layout="@layout/include_normal_progress_bar" />
+
     </FrameLayout>
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.diegobezerra.cinemaisapp.ui.tickets.TicketsViewModel"
+            />
+
+    </data>
 </layout>

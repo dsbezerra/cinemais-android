@@ -6,6 +6,7 @@ import com.diegobezerra.core.cinemais.domain.model.Session.Companion.VideoFormat
 import com.diegobezerra.core.cinemais.domain.model.Session.Companion.VideoFormatBoth
 import com.diegobezerra.core.cinemais.domain.model.Ticket
 import com.diegobezerra.core.cinemais.domain.model.Tickets
+import com.diegobezerra.core.cinemais.domain.model.Weekday
 import com.diegobezerra.core.cinemais.domain.model.Weekdays
 import com.diegobezerra.core.util.breakBySpaces
 import okhttp3.ResponseBody
@@ -29,7 +30,7 @@ object CinemaisTicketsConverter : Converter<ResponseBody, Tickets> {
         val result = mutableListOf<Ticket>()
         element.select("table tr").forEachIndexed { rowIndex, row ->
             if (rowIndex > 1) { // Skip header and 2D or 3D rows
-                var weekdays = Weekdays()
+                var weekdays = Weekdays(disclaimer = "")
                 row.select("td").forEachIndexed { i, column ->
                     if (i == 0) {
                         weekdays = parseWeekdays(column.text().trim())
@@ -93,7 +94,9 @@ object CinemaisTicketsConverter : Converter<ResponseBody, Tickets> {
     }
 
     fun parseWeekdays(text: String): Weekdays {
-        val result = mutableListOf<Int>()
+        val result = mutableListOf<Weekday>()
+
+        var disclaimer = ""
         var holidays = false
         var exceptHolidays = false
         var exceptPreviews = false
@@ -107,15 +110,16 @@ object CinemaisTicketsConverter : Converter<ResponseBody, Tickets> {
 
             val pair = w.breakBySpaces()
             val weekday = parseWeekday(pair.first)
-            if (weekday != 0) {
+            if (weekday != null) {
                 if (!result.contains(weekday)) {
                     result.add(weekday)
                 }
             } else {
                 if (pair.first.isNotEmpty() && pair.first[0] == '(') {
-                    if (pair.first.drop(1) == "exceto") {
+                    if (pair.first.drop(1).startsWith("exceto")) {
                         exceptHolidays = pair.second.contains("feriados")
                         exceptPreviews = pair.second.contains("pré-estreias")
+                        disclaimer = "${pair.first} ${pair.second}"
                         break
                     }
                 } else if (pair.first.contains("feriados")) {
@@ -129,56 +133,57 @@ object CinemaisTicketsConverter : Converter<ResponseBody, Tickets> {
 
         return Weekdays(
             weekdays = result,
+            disclaimer = disclaimer,
             holidays = holidays,
             exceptHolidays = exceptHolidays,
             exceptPreviews = exceptPreviews
         )
     }
 
-    private fun parseWeekday(text: String): Int {
+    private fun parseWeekday(text: String): Weekday? {
         val lc = text.toLowerCase()
         if (lc.startsWith("domingo") ||
             lc.startsWith("dom.") ||
             lc.startsWith("dom")
         ) {
-            return SUNDAY
+            return Weekday(SUNDAY, "Domingo")
         } else if (lc.startsWith("2ª") ||
             lc.startsWith("segunda") ||
             lc.startsWith("seg.") ||
             lc.startsWith("seg")
         ) {
-            return MONDAY
+            return Weekday(MONDAY, "Segunda")
         } else if (lc.startsWith("3ª") ||
             lc.startsWith("terça") ||
             lc.startsWith("ter.") ||
             lc.startsWith("ter")
         ) {
-            return TUESDAY
+            return Weekday(TUESDAY, "Terça")
         } else if (lc.startsWith("4ª") ||
             lc.startsWith("quarta") ||
             lc.startsWith("qua.") ||
             lc.startsWith("qua")
         ) {
-            return WEDNESDAY
+            return Weekday(WEDNESDAY, "Quarta")
         } else if (lc.startsWith("5ª") ||
             lc.startsWith("quinta") ||
             lc.startsWith("qui.") ||
             lc.startsWith("qui")
         ) {
-            return THURSDAY
+            return Weekday(THURSDAY, "Quinta")
         } else if (lc.startsWith("6ª") ||
             lc.startsWith("sexta") ||
             lc.startsWith("sex.") ||
             lc.startsWith("sex")
         ) {
-            return FRIDAY
+            return Weekday(FRIDAY, "Sexta")
         } else if (lc.startsWith("sábado") ||
             lc.startsWith("sáb.") ||
             lc.startsWith("sáb")
         ) {
-            return SATURDAY
+            return Weekday(SATURDAY, "Sábado")
         }
-        return 0
+        return null
     }
 
     fun parsePrice(text: String): Float {

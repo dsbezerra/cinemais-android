@@ -47,6 +47,10 @@
 
     <!-- Tickets Strings -->
     <string name="text_buy_tickets">Comprar ingressos on-line</string>
+    <string name="ticket_header_normal_rooms">Salas convencionais</string>
+    <string name="ticket_header_magic_d">Salas Magic D - Poltronas convencionais</string>
+    <string name="ticket_header_magic_d_vip">Salas Magic D - Poltronas VIP</string>
+    <string name="tickets_value">R$ %1$s / %2$s (Inteira / Meia)</string>
 
     <!-- Session Strings -->
     <string name="today">Hoje</string>
