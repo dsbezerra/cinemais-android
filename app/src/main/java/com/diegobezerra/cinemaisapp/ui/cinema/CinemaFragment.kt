@@ -92,6 +92,8 @@ class CinemaFragment : MainFragment() {
     private var sessionsLayout: ViewGroup? = null
     private var sessionsHeaderTranslationValues = intArrayOf(0, 0)
 
+    private var currentSchedule: Schedule? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
@@ -172,10 +174,17 @@ class CinemaFragment : MainFragment() {
         cinemaViewModel.schedule.observe(this@CinemaFragment, Observer {
             it ?: return@Observer
 
-            val hadNoAdapter = viewPager.adapter == null
             initSessionsLayout()
-            viewPager.adapter = ScheduleAdapter(childFragmentManager, requireActivity(), it)
-            if (hadNoAdapter) {
+
+            val noAdapter = viewPager.adapter == null
+            val copy = it.copy()
+            if (copy != currentSchedule) {
+                val activity = requireActivity()
+                viewPager.adapter =
+                    ScheduleAdapter(childFragmentManager, activity, copy)
+                currentSchedule = copy
+            }
+            if (noAdapter) {
                 runDisplayTransition(view as ViewGroup)
             }
         })
