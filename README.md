@@ -9,7 +9,7 @@ Este aplicativo serve como uma alternativa para o site da rede de cinemas [Cinem
 * Programação, tabela de preços e outras informações de cada cinema da rede.
 * Detalhes de um determinado filme, como sinopse, duração, gêneros, trailers e mais.
 
-Esse aplicativo foi construído para por em prática conhecimentos de algumas bibliotecas encontradas no Android Architecture Components, então é possível ver o uso dos seguintes componentes: [ViewModels](https://developer.android.com/reference/android/arch/lifecycle/ViewModel.html), [LiveData](https://developer.android.com/reference/android/arch/lifecycle/LiveData.html) e [WorkManager](https://developer.android.com/topic/libraries/architecture/workmanager).
+Este aplicativo foi construído para por em prática conhecimentos de algumas bibliotecas encontradas no Android Architecture Components, então é possível ver o uso dos seguintes componentes: [ViewModels](https://developer.android.com/reference/android/arch/lifecycle/ViewModel.html), [LiveData](https://developer.android.com/reference/android/arch/lifecycle/LiveData.html) e [WorkManager](https://developer.android.com/topic/libraries/architecture/workmanager).
 
 [<img src="https://play.google.com/intl/pt_br/badges/images/generic/pt_badge_web_generic.png"
      alt="Disponível no Google Play"
