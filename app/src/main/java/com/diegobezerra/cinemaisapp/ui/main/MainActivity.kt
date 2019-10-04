@@ -129,7 +129,7 @@ class MainActivity : DaggerAppCompatActivity() {
             setOnNavigationItemReselectedListener {}
         }
 
-        // TODO: Add check for ads enabled or disabled
+        // NOTE(diego): Emulator becomes too slow when ads is enabled
         if (!BuildConfig.DEBUG) {
             setupAds(navContainer)
         }

@@ -11,7 +11,7 @@ VersionName (VersionCode) - Date
 
 0.0.40-beta (27) - 31 july 2019
 - Add filter for schedules in PlayingCinemasFragment.
-- Add attr ScheduleFilterView style to make easier to create different styles for different activities. 
+- Add attr ScheduleFilterView style to make easier to create different styles for different activities.
 - Add filter by movie in SessionMatcher.
 
 0.0.39-beta (26) - 30 july 2019
@@ -107,10 +107,10 @@ Bug fixes:
 - Little design changes in AboutActivity
 - Other simple design changes
 
-0.0.22-beta (9) 
+0.0.22-beta (9)
 - Fix crash preventing app to start in <28 API devices caused by misusage of VectorDrawables
 
-0.0.21-beta (8) 
+0.0.21-beta (8)
 - Use new color for Magic D logo
 - Add movie ratings in schedule views
 - Change author link from Twitter to GitHub page
