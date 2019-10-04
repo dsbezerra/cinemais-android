@@ -35,6 +35,8 @@ import com.diegobezerra.cinemaisapp.R
 /**
  * A custom view for displaying filters. Allows a custom presentation of the tag color and selection
  * state.
+ *
+ * Adapted from Google I/O 2018 source.
  */
 class ScheduleFilterView @JvmOverloads constructor(
     context: Context,

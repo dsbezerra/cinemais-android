@@ -41,7 +41,7 @@ class TicketsViewModel @Inject constructor(
                     _tickets.value = it
                 },
                 onError = {
-
+                    // No-op
                 })
         }
     }

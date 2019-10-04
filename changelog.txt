@@ -7,7 +7,7 @@ VersionName (VersionCode) - Date
 
 0.0.41-beta (28) - 14 sept 2019
 - Update tickets parser
-- Updaate tickets display list
+- Update tickets display list
 
 0.0.40-beta (27) - 31 july 2019
 - Add filter for schedules in PlayingCinemasFragment.
