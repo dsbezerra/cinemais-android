@@ -48,7 +48,7 @@ class MainActivity : DaggerAppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setupViews()
-        setupWorkers()
+//        setupWorkers()
         if (savedInstanceState == null) {
             showFragment(HomeFragment.TAG)
         } else {

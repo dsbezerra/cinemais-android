@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatDelegate
 import com.diegobezerra.cinemaisapp.dagger.DaggerAppComponent
 import com.diegobezerra.cinemaisapp.dagger.DaggerWorkerFactory
 import com.diegobezerra.cinemaisapp.data.local.PreferencesHelper
-import com.diegobezerra.cinemaisapp.data.local.PreferencesHelper.Companion
 import com.google.android.gms.ads.MobileAds
 import com.squareup.leakcanary.LeakCanary
 import dagger.android.AndroidInjector
@@ -38,7 +37,7 @@ class CinemaisApplication : DaggerApplication() {
             Timber.plant(Timber.DebugTree())
         }
         MobileAds.initialize(this, BuildConfig.ADMOB_APP_ID)
-        WorkerHelper.initialize(this, workerFactory)
+//        WorkerHelper.initialize(this, workerFactory)
         NotificationHelper.createChannels(this)
 
         // Apply night mode

@@ -14,6 +14,7 @@ buildscript {
         'fabricTools'           : '1.29.0',
         'firebaseAds'           : '18.0.0',
         'firebaseCore'          : '17.0.0',
+        'firebaseMessaging'     : '19.0.0',
         'glide'                 : '4.9.0',
         'glideTransformations'  : '4.0.1',
         'googleServices'        : '4.2.0',

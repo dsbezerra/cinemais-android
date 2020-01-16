@@ -2,6 +2,8 @@ package com.diegobezerra.cinemaisapp.data.local
 
 import android.content.Context
 import com.diegobezerra.cinemaisapp.util.update
+import com.google.firebase.messaging.FirebaseMessaging
+import timber.log.Timber
 import javax.inject.Inject
 
 class PreferencesHelper @Inject constructor(context: Context) {
@@ -29,6 +31,15 @@ class PreferencesHelper @Inject constructor(context: Context) {
     }
 
     fun saveSelectedCinemaId(cinemaId: Int) {
+        if (cinemaId == 0) {
+            getSelectedCinemaId()?.also {
+                Timber.d("Unsubscribe from $it")
+                FirebaseMessaging.getInstance().unsubscribeFromTopic("theater_$it")
+            }
+        } else {
+            Timber.d("Subscribe to $cinemaId")
+            FirebaseMessaging.getInstance().subscribeToTopic("theater_$cinemaId")
+        }
         prefs.update {
             putInt(PREF_SELECTED_CINEMA, cinemaId)
         }
