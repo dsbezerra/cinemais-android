@@ -2,7 +2,10 @@ Changelog
 
 VersionName (VersionCode) - Date
 
-0.0.43-beta (29) - 16 jan 2020
+0.0.44-beta (31) - 28 jan 2020
+- Reinitialize WorkManager to avoid observed crashes.
+
+0.0.43-beta (30) - 16 jan 2020
 - Replace CheckPremieresWorker with FCM to avoid Cinemais server load.
 
 0.0.42-beta (29) - 22 sept 2019

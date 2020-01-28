@@ -37,7 +37,7 @@ class CinemaisApplication : DaggerApplication() {
             Timber.plant(Timber.DebugTree())
         }
         MobileAds.initialize(this, BuildConfig.ADMOB_APP_ID)
-//        WorkerHelper.initialize(this, workerFactory)
+        WorkerHelper.initialize(this, workerFactory)
         NotificationHelper.createChannels(this)
 
         // Apply night mode
