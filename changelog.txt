@@ -2,6 +2,9 @@ Changelog
 
 VersionName (VersionCode) - Date
 
+0.0.45-beta (32) - 13 feb 2020
+- Disables CheckPremieresWorker completely.
+
 0.0.44-beta (31) - 28 jan 2020
 - Reinitialize WorkManager to avoid observed crashes.
 
