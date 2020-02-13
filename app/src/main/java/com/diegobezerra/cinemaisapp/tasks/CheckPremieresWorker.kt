@@ -33,6 +33,7 @@ import java.util.Calendar
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
+@Deprecated("Not used anymore")
 class CheckPremieresWorker constructor(
     private val preferencesHelper: PreferencesHelper,
     private val cinemaRepository: CinemaRepository,
@@ -68,7 +69,6 @@ class CheckPremieresWorker constructor(
         @JvmStatic
         fun scheduleWithDelay(context: Context, delay: Long) {
             val constraints = Constraints.Builder()
-                // TODO: Add settings to choose between Wi-Fi or Mobile
                 .setRequiredNetworkType(UNMETERED)
                 .setRequiresBatteryNotLow(true)
                 .build()
@@ -82,7 +82,10 @@ class CheckPremieresWorker constructor(
         }
     }
 
-    override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
+    // NOTE(diego): This worker is not used anymore since 0.0.43-beta (30)
+    override suspend fun doWork(): Result = Result.success()
+
+    private suspend fun oldDoWork(): Result = withContext(Dispatchers.IO) {
         val now = Calendar.getInstance().time
         Timber.d("Checking premieres... %d:%d", now.hours, now.minutes)
         var retry = false
