@@ -275,7 +275,7 @@ class MovieFragment : DaggerFragment() {
                 toolbarAnimator = ValueAnimator.ofFloat(1f, 0f).apply {
                     addUpdateListener {
                         val value = animatedValue as Float
-                        appbar.setBackgroundColor(
+                        appbar?.setBackgroundColor(
                             argbEvaluator.evaluate(
                                 value,
                                 toolbarColors[0],
@@ -293,7 +293,7 @@ class MovieFragment : DaggerFragment() {
                 toolbarAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
                     addUpdateListener {
                         val value = animatedValue as Float
-                        appbar.setBackgroundColor(
+                        appbar?.setBackgroundColor(
                             argbEvaluator.evaluate(
                                 value,
                                 toolbarColors[0],

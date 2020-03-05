@@ -13,6 +13,7 @@ import com.google.firebase.messaging.RemoteMessage
 import io.karn.notify.Notify
 import io.karn.notify.internal.utils.Action
 import org.json.JSONArray
+import java.net.SocketTimeoutException
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {
 
@@ -63,7 +64,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             return
         }
 
-        Notify.with(context)
+        val creator = Notify.with(context)
             .header {
                 icon = R.drawable.ic_stat_notification
             }
@@ -74,17 +75,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                     MovieActivity.getStartIntent(context, movieId),
                     PendingIntent.FLAG_UPDATE_CURRENT
                 )
-            }
-            .asBigPicture {
-                image = GlideApp.with(context)
-                    .asBitmap()
-                    .load(data[KEY_IMAGE])
-                    .submit()
-                    .get()
-                title =
-                    context.resources.getQuantityString(R.plurals.notification_title_premieres, 1)
-                text = data[KEY_TEXT]
-                expandedText = data[KEY_EXPANDED_TEXT]
             }
             .actions {
                 val actionsJson = JSONArray(data[KEY_ACTIONS])
@@ -101,7 +91,29 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                     }
                 }
             }
-            .show()
+
+        try {
+            creator.asBigPicture {
+                image = GlideApp.with(context)
+                    .asBitmap()
+                    .load(data[KEY_IMAGE])
+                    .submit()
+                    .get()
+                title =
+                    context.resources.getQuantityString(R.plurals.notification_title_premieres, 1)
+                text = data[KEY_TEXT]
+                expandedText = data[KEY_EXPANDED_TEXT]
+            }.show()
+        } catch (e: SocketTimeoutException) {
+            // Ignore poster
+            creator.content {
+                title =
+                    context.resources.getQuantityString(R.plurals.notification_title_premieres, 1)
+                text = data[KEY_TEXT]
+            }.show()
+        } catch (e: Exception) {
+            // No-op
+        }
     }
 
     private fun notifyReleases(context: Context, data: Map<String, String>) {

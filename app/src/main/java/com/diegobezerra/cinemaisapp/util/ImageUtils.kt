@@ -63,12 +63,16 @@ class ImageUtils {
          * Load poster utility.
          */
         fun loadPoster(src: String, target: ImageView) {
-            GlideApp.with(target.context)
+            val context = target.context
+            if (ContextUtils.isDestroyed(context)) {
+                return
+            }
+            GlideApp.with(context)
                 .load(src)
                 .transition(getDefaultTransition())
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .placeholder(getPosterPlaceholder(target.context))
-                .apply(getPosterOptions(target.context))
+                .placeholder(getPosterPlaceholder(context))
+                .apply(getPosterOptions(context))
                 .into(target)
         }
 

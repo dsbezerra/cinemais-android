@@ -2,6 +2,10 @@ Changelog
 
 VersionName (VersionCode) - Date
 
+0.0.46-beta (32) - 03 mar 2020
+- Fix crash due to SocketTimeoutException in notify releases notification handler.
+- Prevent sending a destroyed context to Glide image loader.
+
 0.0.45-beta (32) - 13 feb 2020
 - Disables CheckPremieresWorker completely.
 
