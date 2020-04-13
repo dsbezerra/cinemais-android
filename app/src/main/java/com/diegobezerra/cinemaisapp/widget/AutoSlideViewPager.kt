@@ -30,7 +30,8 @@ class AutoSlideViewPager @JvmOverloads constructor(
             isUserInteracting = state == SCROLL_STATE_DRAGGING
 
             if (previousState == SCROLL_STATE_SETTLING &&
-                state == SCROLL_STATE_IDLE && !isIntervalActive) {
+                state == SCROLL_STATE_IDLE && !isIntervalActive
+            ) {
                 startInterval(false)
             }
 
@@ -71,21 +72,23 @@ class AutoSlideViewPager @JvmOverloads constructor(
     }
 
     override fun onDetachedFromWindow() {
-        super.onDetachedFromWindow()
-
         if (isIntervalActive) {
             stopInterval()
         }
+        super.onDetachedFromWindow()
     }
 
     private fun startInterval(firstLayout: Boolean) {
         adapter ?: return
 
+        if (!isAttachedToWindow) {
+            return
+        }
+
         // Make sure we get our smooth scroll.
         if (firstLayout) {
             requestLayout()
         }
-
         runnable = Runnable {
             adapter?.let {
                 val nextItem = if (currentItem + 1 < it.count) {
@@ -95,12 +98,12 @@ class AutoSlideViewPager @JvmOverloads constructor(
                 }
                 setCurrentItem(nextItem, true)
                 if (isIntervalActive) {
-                    handler.postDelayed(runnable, interval)
+                    postDelayed(runnable, interval)
                 }
             }
         }
         isIntervalActive = true
-        handler.postDelayed(runnable, interval)
+        postDelayed(runnable, interval)
     }
 
     private fun resetInterval() {
@@ -110,7 +113,7 @@ class AutoSlideViewPager @JvmOverloads constructor(
 
     private fun stopInterval() {
         isIntervalActive = false
-        handler?.removeCallbacks(runnable)
+        removeCallbacks(runnable)
     }
 
 }

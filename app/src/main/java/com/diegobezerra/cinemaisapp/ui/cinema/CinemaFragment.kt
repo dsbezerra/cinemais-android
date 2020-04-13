@@ -23,6 +23,7 @@ import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
 import androidx.viewpager.widget.ViewPager
 import com.diegobezerra.cinemaisapp.R
+import com.diegobezerra.cinemaisapp.base.RevealActivity
 import com.diegobezerra.cinemaisapp.databinding.FragmentCinemaBinding
 import com.diegobezerra.cinemaisapp.ui.main.MainFragment
 import com.diegobezerra.cinemaisapp.ui.main.cinemas.CinemasFragment
@@ -30,9 +31,6 @@ import com.diegobezerra.cinemaisapp.ui.schedule.ScheduleAdapter
 import com.diegobezerra.cinemaisapp.ui.schedule.filters.ScheduleFiltersAdapter
 import com.diegobezerra.cinemaisapp.ui.tickets.TicketsActivity
 import com.diegobezerra.cinemaisapp.ui.tickets.TicketsActivity.Companion.EXTRA_CINEMA_ID
-import com.diegobezerra.cinemaisapp.ui.tickets.TicketsActivity.Companion.EXTRA_REVEAL_START_RADIUS
-import com.diegobezerra.cinemaisapp.ui.tickets.TicketsActivity.Companion.EXTRA_REVEAL_X
-import com.diegobezerra.cinemaisapp.ui.tickets.TicketsActivity.Companion.EXTRA_REVEAL_Y
 import com.diegobezerra.cinemaisapp.util.setupToolbarAsActionBar
 import com.diegobezerra.cinemaisapp.widget.CinemaActionView
 import com.diegobezerra.cinemaisapp.widget.CinemaisTabLayout
@@ -278,12 +276,9 @@ class CinemaFragment : MainFragment() {
 
     private fun openTickets(cinemaId: Int) {
         requireActivity().run {
-            val revealOpts = ticketsAction.getRevealOptions()
             val intent = Intent(this, TicketsActivity::class.java).apply {
                 putExtra(EXTRA_CINEMA_ID, cinemaId)
-                putExtra(EXTRA_REVEAL_X, revealOpts[0])
-                putExtra(EXTRA_REVEAL_Y, revealOpts[1])
-                putExtra(EXTRA_REVEAL_START_RADIUS, revealOpts[2])
+                putExtras(RevealActivity.makeReveal(ticketsAction.getRevealOptions(), null))
             }
             val opts = ActivityOptions.makeSceneTransitionAnimation(this).toBundle()
             startActivity(intent, opts)

@@ -38,8 +38,11 @@ object CinemaisScheduleConverter : Converter<ResponseBody, Schedule> {
         )
     }
 
-    private fun parseDisclaimer(element: Element): Disclaimer {
+    private fun parseDisclaimer(element: Element?): Disclaimer {
         val result = hashMapOf<Char, DisclaimerEntry>()
+        if (element == null) {
+            return result
+        }
         val childNodes = element.childNodes()
         val dayRegex by lazy { "\\((\\d{2}/\\d{2})\\)".toRegex() }
         childNodes.forEachIndexed { index, it ->

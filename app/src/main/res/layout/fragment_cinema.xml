@@ -60,11 +60,20 @@
                 app:goneUnless="@{!viewModel.isScheduleEmpty &amp;&amp; !viewModel.loading}"
                 />
 
+            <!-- Empty view for empty schedule based on filter -->
             <com.diegobezerra.cinemaisapp.widget.EmptyView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:emptyMessage="@string/empty_message_schedule_filter"
                 app:goneUnless="@{viewModel.isFilterEnabled &amp;&amp; viewModel.isScheduleEmpty &amp;&amp; viewModel.isCinemaLayoutVisible}"
+                />
+
+            <!-- Empty view for empty schedule -->
+            <com.diegobezerra.cinemaisapp.widget.EmptyView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:emptyMessage="@string/empty_message_schedule"
+                app:goneUnless="@{!viewModel.isFilterEnabled &amp;&amp; viewModel.isScheduleEmpty &amp;&amp; viewModel.isCinemaLayoutVisible}"
                 />
 
         </LinearLayout>
