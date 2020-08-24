@@ -7,7 +7,7 @@ apply from: '../dependencies.gradle'
 
 def versionMajor = 0
 def versionMinor = 0
-def versionPatch = 47
+def versionPatch = 48
 def versionSuffix = "-beta"
 
 android {
