@@ -3,12 +3,9 @@ package com.diegobezerra.cinemaisapp.ui.main
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
-import com.diegobezerra.cinemaisapp.BuildConfig
 import com.diegobezerra.cinemaisapp.R
 import com.diegobezerra.cinemaisapp.data.local.PreferencesHelper
-import com.diegobezerra.cinemaisapp.tasks.CheckPremieresWorker
 import com.diegobezerra.cinemaisapp.ui.about.AboutActivity
 import com.diegobezerra.cinemaisapp.ui.cinema.CinemaFragment
 import com.diegobezerra.cinemaisapp.ui.main.cinemas.CinemasFragment
@@ -16,11 +13,6 @@ import com.diegobezerra.cinemaisapp.ui.main.home.HomeFragment
 import com.diegobezerra.cinemaisapp.ui.main.movies.MoviesFragment
 import com.diegobezerra.cinemaisapp.ui.settings.SettingsActivity
 import com.diegobezerra.cinemaisapp.util.switchToAdded
-import com.google.android.gms.ads.AdListener
-import com.google.android.gms.ads.AdRequest.Builder
-import com.google.android.gms.ads.AdSize
-import com.google.android.gms.ads.AdView
-import com.google.android.gms.ads.InterstitialAd
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.android.support.DaggerAppCompatActivity
 import timber.log.Timber
@@ -32,8 +24,6 @@ class MainActivity : DaggerAppCompatActivity() {
 
         const val FRAGMENT_ID = R.id.fragment_container
 
-        const val INTERSTITIAL_INTERVAL = 1000 * 60 * 2
-
     }
 
     @Inject
@@ -42,34 +32,15 @@ class MainActivity : DaggerAppCompatActivity() {
     private var fragment: MainFragment? = null
     private val fragments: MutableList<MainFragment> = mutableListOf()
 
-    private var interstitialAd: InterstitialAd? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setupViews()
-//        setupWorkers()
+
         if (savedInstanceState == null) {
             showFragment(HomeFragment.TAG)
         } else {
             fragment = supportFragmentManager.findFragmentById(FRAGMENT_ID) as MainFragment
-        }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-        interstitialAd?.adListener = null
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        val lastDisplayTimestamp = preferencesHelper.getInterstitialLastDisplayTimestamp()
-        interstitialAd?.let {
-            if (it.isLoaded && System.currentTimeMillis() - lastDisplayTimestamp > INTERSTITIAL_INTERVAL) {
-                interstitialAd?.show()
-            }
         }
     }
 
@@ -78,8 +49,8 @@ class MainActivity : DaggerAppCompatActivity() {
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        return when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
             R.id.settings -> {
                 SettingsActivity.startActivity(this)
                 true
@@ -104,7 +75,6 @@ class MainActivity : DaggerAppCompatActivity() {
     }
 
     private fun setupViews() {
-        val navContainer = findViewById<LinearLayout>(R.id.nav_container)
         findViewById<BottomNavigationView>(R.id.bottom_nav).apply {
             itemIconTintList = null
             setOnNavigationItemSelectedListener { menuItem ->
@@ -128,18 +98,6 @@ class MainActivity : DaggerAppCompatActivity() {
             // whenever we reselect an item
             setOnNavigationItemReselectedListener {}
         }
-
-        // NOTE(diego): Emulator becomes too slow when ads is enabled
-        if (!BuildConfig.DEBUG) {
-            setupAds(navContainer)
-        }
-    }
-
-    private fun setupWorkers() {
-        if (!preferencesHelper.isCheckPremieresScheduled()) {
-            CheckPremieresWorker.scheduleToNextThursday(this)
-            preferencesHelper.setCheckPremieresScheduled(true)
-        }
     }
 
     private fun handleTheatersAction() {
@@ -153,28 +111,6 @@ class MainActivity : DaggerAppCompatActivity() {
     fun showCinemaFragment(cinemaId: Int) {
         showFragment(CinemaFragment.TAG, args = CinemaFragment.newArgs(cinemaId)) {
             CinemaFragment.newInstance(cinemaId)
-        }
-    }
-
-    private fun setupAds(navContainer: LinearLayout) {
-        AdView(this).apply {
-            adSize = AdSize.SMART_BANNER
-            adUnitId = BuildConfig.BANNER
-            if (navContainer.childCount == 2) {
-                navContainer.addView(this, 0)
-            }
-            loadAd(Builder().build())
-        }
-
-        interstitialAd = InterstitialAd(applicationContext).apply {
-            adUnitId = BuildConfig.INTERSTITIAL
-            adListener = object : AdListener() {
-                override fun onAdClosed() {
-                    preferencesHelper.setInterstitialLastDisplayTimestamp(System.currentTimeMillis())
-                    interstitialAd?.loadAd(Builder().build())
-                }
-            }
-            loadAd(Builder().build())
         }
     }
 

@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.core.animation.doOnEnd
 import androidx.core.view.isGone
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.transition.TransitionManager
@@ -73,28 +72,28 @@ class PlayingCinemasFragment : DaggerFragment() {
             setHasFixedSize(true)
         }
 
-        playingCinemasViewModel.filters.observe(this, Observer {
+        playingCinemasViewModel.filters.observe(viewLifecycleOwner, {
             filtersAdapter.submitList(it)
         })
 
-        playingCinemasViewModel.cinemas.observe(this, Observer {
+        playingCinemasViewModel.cinemas.observe(viewLifecycleOwner, {
             playingCinemasAdapter.data = it
             playingCinemasAdapter.notifyDataSetChanged()
         })
 
-        playingCinemasViewModel.schedule.observe(this, Observer { schedule ->
+        playingCinemasViewModel.schedule.observe(viewLifecycleOwner, { schedule ->
             binding.viewpager.adapter =
                 ScheduleAdapter(childFragmentManager, requireActivity(), schedule, true)
         })
 
-        playingCinemasViewModel.state.observe(this, Observer {
+        playingCinemasViewModel.state.observe(viewLifecycleOwner, {
             // Make sure our views are visible just in case the last onSlide
             // set them to invisible.
             interpolateChildViews(1f)
             updateViews(it)
         })
 
-        playingCinemasViewModel.toggleSheetAction.observe(this, EventObserver {
+        playingCinemasViewModel.toggleSheetAction.observe(viewLifecycleOwner, EventObserver {
             toggleSheet()
         })
 
@@ -105,9 +104,11 @@ class PlayingCinemasFragment : DaggerFragment() {
         super.onActivityCreated(savedInstanceState)
 
         behavior = BottomSheetBehavior.from(binding.sheet)
-        behavior?.setBottomSheetCallback(
+        behavior?.addBottomSheetCallback(
             object : BottomSheetBehavior.BottomSheetCallback() {
-                override fun onStateChanged(bottomSheet: View, newState: Int) {}
+                override fun onStateChanged(bottomSheet: View, newState: Int) {
+                    // No-op
+                }
 
                 override fun onSlide(bottomSheet: View, slideOffset: Float) {
                     interpolateChildViews(slideOffset)

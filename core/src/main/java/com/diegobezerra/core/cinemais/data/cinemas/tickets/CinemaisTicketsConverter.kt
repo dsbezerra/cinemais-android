@@ -1,6 +1,7 @@
 package com.diegobezerra.core.cinemais.data.cinemas.tickets
 
 import com.diegobezerra.core.cinemais.data.asJsoup
+import com.diegobezerra.core.cinemais.domain.model.MinMaxPeople
 import com.diegobezerra.core.cinemais.domain.model.Session.Companion.VideoFormat2D
 import com.diegobezerra.core.cinemais.domain.model.Session.Companion.VideoFormat3D
 import com.diegobezerra.core.cinemais.domain.model.Session.Companion.VideoFormatBoth
@@ -19,6 +20,7 @@ import java.util.Calendar.SUNDAY
 import java.util.Calendar.THURSDAY
 import java.util.Calendar.TUESDAY
 import java.util.Calendar.WEDNESDAY
+import java.util.Locale
 
 object CinemaisTicketsConverter : Converter<ResponseBody, Tickets> {
 
@@ -26,29 +28,58 @@ object CinemaisTicketsConverter : Converter<ResponseBody, Tickets> {
         return parseTickets(value.asJsoup().body())
     }
 
+    private fun isDriveIn(element: Element): Boolean {
+        val headers = element.select("table th")
+        if (headers.size == 2) {
+            if (headers.first().text().trim() == "Dias da Semana"
+                && headers.last().text().trim() == "Sessões"
+            ) {
+                element.select("table tr").forEach {
+                    if (it.text().startsWith("Carros")) {
+                        return true
+                    }
+                }
+            }
+        }
+        return false
+    }
+
     private fun parseTickets(element: Element): Tickets {
+        val result = if (!isDriveIn(element)) {
+            parseNormalTickets(element)
+        } else {
+            parseDriveInTickets(element)
+        }
+        val buyOnlineUrl = element.select("a[title='Comprar ingressos on-line']").attr("href")
+        return Tickets(
+            tickets = result,
+            buyOnlineUrl = buyOnlineUrl
+        )
+    }
+
+    private fun parseNormalTickets(element: Element): MutableList<Ticket> {
         val result = mutableListOf<Ticket>()
         element.select("table tr").forEachIndexed { rowIndex, row ->
             if (rowIndex > 1) { // Skip header and 2D or 3D rows
                 var weekdays = Weekdays(disclaimer = "")
-                row.select("td").forEachIndexed { i, column ->
+                row.select("td").forEachIndexed ForEachColumn@{ i, column ->
                     if (i == 0) {
                         weekdays = parseWeekdays(column.text().trim())
                         if (weekdays.isEmpty()) {
-                            return@forEachIndexed
+                            return@ForEachColumn
                         }
                     } else {
 
                         val full = parsePrice(column.text().trim())
                         if (full == 0.0f) {
-                            return@forEachIndexed
+                            return@ForEachColumn
                         }
 
                         var ticket: Ticket? = null
                         when (i) {
                             // Rooms columns
                             1, 2 -> {
-                                ticket = Ticket(
+                                ticket = Ticket.Normal(
                                     weekdays,
                                     full,
                                     half = full / 2,
@@ -59,7 +90,7 @@ object CinemaisTicketsConverter : Converter<ResponseBody, Tickets> {
                             }
                             // Magic D columns
                             3, 4 -> {
-                                ticket = Ticket(
+                                ticket = Ticket.Normal(
                                     weekdays,
                                     full,
                                     half = full / 2,
@@ -70,7 +101,7 @@ object CinemaisTicketsConverter : Converter<ResponseBody, Tickets> {
                             }
                             // Magic D VIP columns
                             5 -> {
-                                ticket = Ticket(
+                                ticket = Ticket.Normal(
                                     weekdays,
                                     full,
                                     half = full / 2,
@@ -85,12 +116,91 @@ object CinemaisTicketsConverter : Converter<ResponseBody, Tickets> {
                 }
             }
         }
+        return result
+    }
 
-        val buyOnlineUrl = element.select("a[title='Comprar ingressos on-line']").attr("href")
-        return Tickets(
-            tickets = result,
-            buyOnlineUrl = buyOnlineUrl
-        )
+    private fun parseDriveInTickets(element: Element): MutableList<Ticket> {
+        val result = mutableListOf<Ticket>()
+        var mapping: HashMap<Int, MinMaxPeople>? = null
+        element.select("table tr").forEachIndexed { rowIndex, row ->
+            if (rowIndex == 1) {
+                mapping = parseDriveInHeader(element)
+            } else if (rowIndex > 1) {
+                if (mapping.isNullOrEmpty()) {
+                    return@forEachIndexed
+                }
+                var weekdays = Weekdays(disclaimer = "")
+                row.select("td").forEachIndexed ForEachColumn@{ columnIndex, column ->
+                    if (columnIndex == 0) {
+                        weekdays = parseWeekdays(column.text().trim())
+                        if (weekdays.isEmpty()) {
+                            return@ForEachColumn
+                        }
+                    } else {
+                        val people = mapping?.get(columnIndex - 1)
+                        val price = parsePrice(column.text().trim())
+                        if (price == 0.0f || people == null) {
+                            return@ForEachColumn
+                        }
+                        result.add(
+                            Ticket.DriveIn(
+                                weekdays = weekdays,
+                                price = price,
+                                people = people,
+                            )
+                        )
+                    }
+                }
+            }
+        }
+        return result
+    }
+
+    private fun parseDriveInHeader(element: Element): HashMap<Int, MinMaxPeople> {
+        val result = hashMapOf<Int, MinMaxPeople>()
+        element.select("td").forEachIndexed { columnIndex, column ->
+            val minMaxPeople = parseMinMaxPeople(column.text())
+            if (minMaxPeople != null) {
+                result[columnIndex] = minMaxPeople
+            }
+        }
+        return result
+    }
+
+    private fun parseMinMaxPeople(text: String): MinMaxPeople? {
+        var result: MinMaxPeople? = null
+
+        var w = text
+        while (true) {
+            if (w.isEmpty()) {
+                break
+            }
+
+            val pair = w.breakBySpaces()
+            if (pair.first == "até") {
+                val min = pair.second.breakBySpaces()
+                if (min.first.isDigitsOnly()) {
+                    val value = min.first.toInt()
+                    result = MinMaxPeople(value, value)
+                    break
+                }
+            } else if (pair.first.isDigitsOnly()) {
+                val min = pair.first.toInt()
+                val next = pair.second.breakBySpaces()
+                if (next.first == "à") {
+                    val max = next.second.breakBySpaces()
+                    if (max.first.isDigitsOnly()) {
+                        val value = max.first.toInt()
+                        result = MinMaxPeople(min, value)
+                        break
+                    }
+                }
+            }
+
+            w = pair.second
+        }
+
+        return result
     }
 
     fun parseWeekdays(text: String): Weekdays {
@@ -100,6 +210,8 @@ object CinemaisTicketsConverter : Converter<ResponseBody, Tickets> {
         var holidays = false
         var exceptHolidays = false
         var exceptPreviews = false
+
+        var toWasSeen = false
 
         var w = text
         while (true) {
@@ -115,6 +227,9 @@ object CinemaisTicketsConverter : Converter<ResponseBody, Tickets> {
                     result.add(weekday)
                 }
             } else {
+                if (!toWasSeen && pair.first == "à") {
+                    toWasSeen = true
+                }
                 if (pair.first.isNotEmpty() && pair.first[0] == '(') {
                     if (pair.first.drop(1).startsWith("exceto")) {
                         exceptHolidays = pair.second.contains("feriados")
@@ -130,18 +245,23 @@ object CinemaisTicketsConverter : Converter<ResponseBody, Tickets> {
 
             w = pair.second
         }
-
+        val lastPrefix = if (toWasSeen && result.size == 2) {
+            "à"
+        } else {
+            "e"
+        }
         return Weekdays(
             weekdays = result,
             disclaimer = disclaimer,
             holidays = holidays,
             exceptHolidays = exceptHolidays,
-            exceptPreviews = exceptPreviews
+            exceptPreviews = exceptPreviews,
+            lastPrefix = lastPrefix
         )
     }
 
     private fun parseWeekday(text: String): Weekday? {
-        val lc = text.toLowerCase()
+        val lc = text.toLowerCase(Locale.getDefault())
         if (lc.startsWith("domingo") ||
             lc.startsWith("dom.") ||
             lc.startsWith("dom")
@@ -199,4 +319,12 @@ object CinemaisTicketsConverter : Converter<ResponseBody, Tickets> {
         return result
     }
 
+    private fun String.isDigitsOnly(): Boolean {
+        forEach {
+            if (!it.isDigit()) {
+                return false
+            }
+        }
+        return true
+    }
 }

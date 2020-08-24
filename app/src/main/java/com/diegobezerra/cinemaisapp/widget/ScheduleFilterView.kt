@@ -68,9 +68,9 @@ class ScheduleFilterView @JvmOverloads constructor(
 
     private val color by lazy {
         LinearGradient(
-            -(width.toFloat()/2f),
+            -(width.toFloat() / 2f),
             0f,
-            width.toFloat() + width.toFloat()/2f,
+            width.toFloat() + width.toFloat() / 2f,
             0f,
             defaultColors,
             defaultPositions,
@@ -230,7 +230,7 @@ class ScheduleFilterView @JvmOverloads constructor(
         progress = if (checked) 1f else 0f
     }
 
-    override fun verifyDrawable(who: Drawable?): Boolean {
+    override fun verifyDrawable(who: Drawable): Boolean {
         return super.verifyDrawable(who) || who == touchFeedback
     }
 
@@ -249,9 +249,10 @@ class ScheduleFilterView @JvmOverloads constructor(
         touchFeedback.setHotspot(x, y)
     }
 
+    @Suppress("DEPRECATION")
     private fun createLayout(textWidth: Int) {
         textLayout = if (VERSION.SDK_INT >= VERSION_CODES.M) {
-            StaticLayout.Builder.obtain(text, 0, text?.length!!, textPaint, textWidth).build()
+            StaticLayout.Builder.obtain(text!!, 0, text?.length!!, textPaint, textWidth).build()
         } else {
             StaticLayout(text, textPaint, textWidth, ALIGN_NORMAL, 1f, 0f, true)
         }

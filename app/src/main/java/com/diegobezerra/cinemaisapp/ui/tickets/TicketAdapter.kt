@@ -1,5 +1,7 @@
 package com.diegobezerra.cinemaisapp.ui.tickets
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,15 +10,21 @@ import androidx.core.view.isGone
 import androidx.recyclerview.widget.RecyclerView
 import com.diegobezerra.cinemaisapp.R
 import com.diegobezerra.cinemaisapp.ui.tickets.TicketsViewHolder.HeaderViewHolder
-import com.diegobezerra.cinemaisapp.ui.tickets.TicketsViewHolder.TickerViewHolder
+import com.diegobezerra.cinemaisapp.ui.tickets.TicketsViewHolder.TicketViewHolder
 import com.diegobezerra.cinemaisapp.ui.tickets.TicketsViewHolder.WeekdaysViewHolder
 import com.diegobezerra.core.cinemais.domain.model.Session.Companion.VideoFormat2D
 import com.diegobezerra.core.cinemais.domain.model.Session.Companion.VideoFormat3D
 import com.diegobezerra.core.cinemais.domain.model.Ticket
+import com.diegobezerra.core.cinemais.domain.model.Ticket.DriveIn
+import com.diegobezerra.core.cinemais.domain.model.Ticket.Normal
 import com.diegobezerra.core.cinemais.domain.model.Weekdays
+import com.diegobezerra.core.cinemais.domain.model.isEqual
 import com.diegobezerra.core.util.DateUtils.Companion.BRAZIL
+import java.util.Locale
 
-class TicketAdapter : RecyclerView.Adapter<TicketsViewHolder>() {
+class TicketAdapter(
+    private val context: Context
+) : RecyclerView.Adapter<TicketsViewHolder>() {
 
     companion object {
 
@@ -47,7 +55,7 @@ class TicketAdapter : RecyclerView.Adapter<TicketsViewHolder>() {
             VIEW_TYPE_WEEKDAYS -> WeekdaysViewHolder(
                 inflater.inflate(R.layout.item_ticket_weekdays, parent, false)
             )
-            VIEW_TYPE_TICKET -> TickerViewHolder(
+            VIEW_TYPE_TICKET -> TicketViewHolder(
                 inflater.inflate(R.layout.item_ticket, parent, false)
             )
             else -> throw IllegalStateException("Unknown viewType $viewType")
@@ -62,7 +70,7 @@ class TicketAdapter : RecyclerView.Adapter<TicketsViewHolder>() {
 
             is HeaderViewHolder -> {
                 val view = (holder.itemView as TextView)
-                when (getItem(position)) {
+                when (val item = getItem(position)) {
                     is NormalRoomsHeader -> {
                         view.text = view.resources.getString(R.string.ticket_header_normal_rooms)
                     }
@@ -72,18 +80,22 @@ class TicketAdapter : RecyclerView.Adapter<TicketsViewHolder>() {
                     is MagicDVipHeader -> {
                         view.text = view.resources.getString(R.string.ticket_header_magic_d_vip)
                     }
+                    is DriveInHeader -> {
+                        view.text = item.text
+                    }
                 }
             }
 
             is WeekdaysViewHolder -> holder.bind(getItem(position) as Weekdays)
 
-            is TickerViewHolder -> holder.bind(getItem(position) as Ticket)
+            is TicketViewHolder -> holder.bind(getItem(position) as Ticket)
         }
     }
 
     override fun getItemViewType(position: Int): Int {
         return when (getItem(position)) {
             is NormalRoomsHeader, MagicDHeader, MagicDVipHeader -> VIEW_TYPE_HEADER
+            is DriveInHeader -> VIEW_TYPE_HEADER
             is Weekdays -> VIEW_TYPE_WEEKDAYS
             is Ticket -> VIEW_TYPE_TICKET
             else -> throw IllegalStateException("Unknown view type at position $position")
@@ -118,23 +130,51 @@ class TicketAdapter : RecyclerView.Adapter<TicketsViewHolder>() {
 
     private fun sort(tickets: List<Ticket>): List<Ticket> {
         return tickets.sortedBy {
-            if (it.magic && it.vip) {
-                3 // Should be the last one
-            } else if (it.magic) {
-                2
+            if (it is Normal) {
+                if (it.magic && it.vip) {
+                    3 // Should be the last one
+                } else if (it.magic) {
+                    2
+                } else {
+                    1
+                }
+            } else if (it is DriveIn) {
+                it.people.first
             } else {
-                1
+                0
             }
         }
     }
 
     private fun getHeaderForTicket(ticket: Ticket): Any {
-        return if (ticket.magic && ticket.vip) {
-            MagicDVipHeader
-        } else if (ticket.magic) {
-            MagicDHeader
+        return if (ticket is Normal) {
+            if (ticket.magic && ticket.vip) {
+                MagicDVipHeader
+            } else if (ticket.magic) {
+                MagicDHeader
+            } else {
+                NormalRoomsHeader
+            }
+        } else if (ticket is DriveIn) {
+            val people = ticket.people
+            if (people.isEqual()) {
+                DriveInHeader(
+                    context.getString(
+                        R.string.tickets_drive_in_until,
+                        people.first
+                    )
+                )
+            } else {
+                DriveInHeader(
+                    context.getString(
+                        R.string.tickets_drive_in_min_and_max,
+                        people.first,
+                        people.second
+                    )
+                )
+            }
         } else {
-            NormalRoomsHeader
+            ""
         }
     }
 }
@@ -144,6 +184,8 @@ object NormalRoomsHeader
 object MagicDHeader
 
 object MagicDVipHeader
+
+data class DriveInHeader(val text: String)
 
 sealed class TicketsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -166,9 +208,9 @@ sealed class TicketsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemVie
                 if (index == 0) {
                     sb.append(weekday.name)
                 } else if (index < item.weekdays.size - 1) {
-                    sb.append(", ${weekday.name.toLowerCase()}")
+                    sb.append(", ${weekday.name.toLowerCase(Locale.getDefault())}")
                 } else {
-                    sb.append(" e ${weekday.name.toLowerCase()}")
+                    sb.append(" ${item.lastPrefix} ${weekday.name.toLowerCase(Locale.getDefault())}")
                 }
             }
             return sb.toString()
@@ -176,19 +218,28 @@ sealed class TicketsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemVie
 
     }
 
-    class TickerViewHolder(itemView: View) : TicketsViewHolder(itemView) {
+    class TicketViewHolder(itemView: View) : TicketsViewHolder(itemView) {
 
         private val label: TextView = itemView.findViewById(R.id.tickets_format_label)
         private val value: TextView = itemView.findViewById(R.id.tickets_format_value)
 
-        fun bind(ticket: Ticket) {
-            label.text = formatFormat(ticket.format)
-            value.text =
-                itemView.resources.getString(
-                    R.string.tickets_value,
-                    formatPrice(ticket.full),
-                    formatPrice(ticket.half)
-                )
+        @SuppressLint("SetTextI18n") fun bind(ticket: Ticket) {
+            if (ticket is Normal) {
+                label.text = formatFormat(ticket.format)
+                value.text =
+                    itemView.resources.getString(
+                        R.string.tickets_value,
+                        formatPrice(ticket.full),
+                        formatPrice(ticket.half)
+                    )
+            } else if (ticket is DriveIn) {
+                label.text = "Drive-In"
+                value.text =
+                    itemView.resources.getString(
+                        R.string.tickets_drive_in_value,
+                        formatPrice(ticket.price)
+                    )
+            }
         }
 
         private fun formatFormat(format: String): String {

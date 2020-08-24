@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isGone
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
@@ -63,16 +62,16 @@ class TabMoviesFragment : DaggerFragment() {
         }
 
         viewModel.apply {
-            loading.observe(this@TabMoviesFragment, Observer {
+            loading.observe(viewLifecycleOwner, {
                 swipeRefreshLayout.isRefreshing = it
             })
 
-            movies.observe(this@TabMoviesFragment, Observer {
+            movies.observe(viewLifecycleOwner, {
                 moviesAdapter.submitList(it)
                 emptyView.isGone = it.isNotEmpty()
             })
 
-            navigateToMovieDetail.observe(this@TabMoviesFragment, EventObserver { movieId ->
+            navigateToMovieDetail.observe(viewLifecycleOwner, EventObserver { movieId ->
                 startActivity(MovieActivity.getStartIntent(requireActivity(), movieId))
             })
 

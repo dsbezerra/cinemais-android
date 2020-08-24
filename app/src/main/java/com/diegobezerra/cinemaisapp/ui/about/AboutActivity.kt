@@ -11,7 +11,6 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.diegobezerra.cinemaisapp.R
 import com.diegobezerra.cinemaisapp.util.setupActionBar
-import com.diegobezerra.cinemaisapp.util.setupTheme
 
 class AboutActivity : AppCompatActivity() {
 
@@ -40,6 +39,7 @@ class AboutActivity : AppCompatActivity() {
             .setLinkable(R.string.about_app_3)
     }
 
+    @Suppress("DEPRECATION")
     private fun TextView.setLinkable(resId: Int) {
         movementMethod = LinkMovementMethod.getInstance()
         text = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {

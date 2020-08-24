@@ -6,7 +6,6 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -15,7 +14,6 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.view.isGone
 import androidx.core.widget.NestedScrollView
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -50,6 +48,11 @@ import kotlinx.android.synthetic.main.fragment_movie.title
 import kotlinx.android.synthetic.main.include_cinemais_border.cinemais_border
 import kotlinx.android.synthetic.main.include_movie_appbar.appbar
 import kotlinx.android.synthetic.main.include_trailer.trailer
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import javax.inject.Inject
@@ -86,8 +89,9 @@ class MovieFragment : DaggerFragment() {
     private lateinit var toolbar: Toolbar
     private var displayingTitleInToolbar = false
 
-    private val peekHandler = Handler()
-    private var peekRunnable: Runnable? = null
+    private val peekJob: Job? = null
+    private val scope = CoroutineScope(Dispatchers.Main)
+
     private lateinit var playingCinemasFragment: PlayingCinemasFragment
     private lateinit var playingCinemasSheet: ViewGroup
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<*>
@@ -119,11 +123,11 @@ class MovieFragment : DaggerFragment() {
         }
         viewModel.apply {
 
-            loading.observe(this@MovieFragment, Observer {
+            loading.observe(viewLifecycleOwner, {
                 swipeRefreshLayout.isRefreshing = it
             })
 
-            movie.observe(this@MovieFragment, Observer {
+            movie.observe(viewLifecycleOwner, {
                 initMovie(it)
             })
 
@@ -136,12 +140,6 @@ class MovieFragment : DaggerFragment() {
             }
 
         return root
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-        peekHandler.removeCallbacks(peekRunnable)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -215,10 +213,13 @@ class MovieFragment : DaggerFragment() {
         executiveProduction.setContentOrHideIfEmpty(movie.executiveProduction)
         direction.setContentOrHideIfEmpty(movie.direction)
         if (movie.isPlaying()) {
-            peekRunnable = Runnable {
+            if (peekJob?.isActive == true) {
+                return
+            }
+            scope.launch {
+                delay(PEEK_DELAY)
                 playingCinemasFragment.peek(movie.id)
             }
-            peekHandler.postDelayed(peekRunnable, PEEK_DELAY)
         } else {
             playingCinemasSheet.isGone = true
         }
@@ -242,11 +243,11 @@ class MovieFragment : DaggerFragment() {
         if (movie.releaseDate != null && movie.runtime > 0) {
             releaseRuntime.text = getString(
                 R.string.release_with_runtime,
-                FORMAT.format(movie.releaseDate),
+                FORMAT.format(movie.releaseDate!!),
                 movie.runtime
             )
         } else if (movie.releaseDate != null) {
-            releaseRuntime.text = FORMAT.format(movie.releaseDate)
+            releaseRuntime.text = FORMAT.format(movie.releaseDate!!)
         } else if (movie.runtime > 0) {
             releaseRuntime.text = getString(R.string.runtime_only, movie.runtime)
         }
@@ -306,8 +307,6 @@ class MovieFragment : DaggerFragment() {
                 }
                 displayingTitleInToolbar = true
                 toolbar.title = movie.title
-            } else {
-                // No-op.
             }
         }
     }

@@ -3,23 +3,17 @@ package com.diegobezerra.cinemaisapp
 import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
 import com.diegobezerra.cinemaisapp.dagger.DaggerAppComponent
-import com.diegobezerra.cinemaisapp.dagger.DaggerWorkerFactory
 import com.diegobezerra.cinemaisapp.data.local.PreferencesHelper
-import com.google.android.gms.ads.MobileAds
 import com.squareup.leakcanary.LeakCanary
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
 import timber.log.Timber
-import javax.inject.Inject
 
 class CinemaisApplication : DaggerApplication() {
 
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
         return DaggerAppComponent.builder().create(this)
     }
-
-    @Inject
-    lateinit var workerFactory: DaggerWorkerFactory
 
     override fun onCreate() {
         super.onCreate()
@@ -36,8 +30,6 @@ class CinemaisApplication : DaggerApplication() {
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         }
-        MobileAds.initialize(this, BuildConfig.ADMOB_APP_ID)
-        WorkerHelper.initialize(this, workerFactory)
         NotificationHelper.createChannels(this)
 
         // Apply night mode

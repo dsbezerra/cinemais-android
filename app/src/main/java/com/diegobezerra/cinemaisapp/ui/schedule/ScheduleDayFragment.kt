@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.diegobezerra.cinemaisapp.databinding.FragmentScheduleDayBinding
@@ -19,6 +18,7 @@ class ScheduleDayFragment : DaggerFragment() {
 
         const val CINEMA_ID = "arg.CINEMA_ID"
         const val DAY_POSITION = "arg.DAY_POSITION"
+
         // Whether the fragment was created inside a PlayingRoomsFragment or not.
         const val PLAYING_ROOMS = "arg.PLAYING_ROOMS"
 
@@ -37,11 +37,11 @@ class ScheduleDayFragment : DaggerFragment() {
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private val playingCinemasViewModel by lazy {
-        ViewModelProviders.of(parentFragment!!, viewModelFactory)
+        ViewModelProviders.of(requireParentFragment(), viewModelFactory)
             .get(PlayingCinemasViewModel::class.java)
     }
     private val cinemaViewModel by lazy {
-        ViewModelProviders.of(parentFragment!!, viewModelFactory)
+        ViewModelProviders.of(requireParentFragment(), viewModelFactory)
             .get(CinemaViewModel::class.java)
     }
 
@@ -70,7 +70,7 @@ class ScheduleDayFragment : DaggerFragment() {
         // @Temporary
         val schedule =
             if (playingRooms) playingCinemasViewModel.schedule else cinemaViewModel.schedule
-        schedule.observe(this@ScheduleDayFragment, Observer {
+        schedule.observe(viewLifecycleOwner, {
             it.getDay(dayPosition)?.let { day ->
                 sessionsAdapter.data = day.sessions
                 sessionsAdapter.notifyDataSetChanged()

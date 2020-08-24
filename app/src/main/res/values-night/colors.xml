@@ -11,7 +11,7 @@
     <color name="primary_text">#deffffff</color>
     <color name="secondary_text">#99ffffff</color>
     <color name="divider">#1affffff</color>
-    <color name="placeholder">#61ffffff</color>
+    <color name="placeholder">#40ffffff</color>
     <color name="session_label_background_color">#555555</color>
 
     <color name="subhead_text">@color/gray_50</color>

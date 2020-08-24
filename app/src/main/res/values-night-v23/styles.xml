@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Cinemais" parent="Theme.AppCompat.DayNight.NoActionBar">
+    <style name="Cinemais" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="windowActionBar">false</item>
 
         <item name="colorPrimary">@color/primary</item>
@@ -9,6 +9,7 @@
         <item name="colorAccent">@color/accent</item>
 
         <item name="toolbarStyle">@style/Widget.Cinemais.Toolbar</item>
+        <item name="bottomNavigationStyle">@style/Widget.Cinemais.BottomNavigation</item>
 
         <!-- Windows -->
         <item name="android:statusBarColor">@color/primary</item>
@@ -18,4 +19,25 @@
         <item name="windowActionModeOverlay">true</item>
     </style>
 
+    <!-- Widgets -->
+    <style name="Widget.Cinemais.Toolbar" parent="Widget.MaterialComponents.Toolbar.PrimarySurface">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.Cinemais.Toolbar</item>
+        <item name="titleTextAppearance">@style/TextAppearance.Cinemais.ToolbarTitle</item>
+    </style>
+
+    <style name="Widget.Cinemais.BottomNavigation" parent="Widget.MaterialComponents.BottomNavigationView.Colored">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.Cinemais.BottomNavigationView</item>
+    </style>
+
+    <!-- Overlays -->
+    <style name="ThemeOverlay.Cinemais.BottomNavigationView" parent="">
+        <item name="colorPrimary">@color/primary_dark</item>
+        <item name="colorOnPrimary">@color/primary_dark</item>
+    </style>
+
+    <style name="ThemeOverlay.Cinemais.Toolbar" parent="">
+        <item name="colorPrimary">@color/primary_dark</item>
+        <item name="colorPrimaryVariant">@color/primary_dark</item>
+        <item name="colorOnPrimary">@color/primary_dark</item>
+    </style>
 </resources>

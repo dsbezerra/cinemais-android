@@ -22,15 +22,13 @@
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        app:elevation="0dp"
         >
 
-        <androidx.appcompat.widget.Toolbar
+        <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
+            style="@style/Widget.Cinemais.Toolbar.Tickets"
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
-            style="@style/Widget.Cinemais.Toolbar.Light"
             />
 
     </com.google.android.material.appbar.AppBarLayout>

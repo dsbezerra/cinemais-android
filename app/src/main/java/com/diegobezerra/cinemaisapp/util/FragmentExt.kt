@@ -4,15 +4,15 @@ import android.view.View
 import androidx.annotation.IdRes
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import com.google.android.material.appbar.MaterialToolbar
 
 fun Fragment.setupToolbarAsActionBar(
     rootView: View, @IdRes toolbarId: Int,
     action: ActionBar.() -> Unit
-): Toolbar {
-    val toolbar = rootView.findViewById<Toolbar>(toolbarId)
+): MaterialToolbar {
+    val toolbar = rootView.findViewById<MaterialToolbar>(toolbarId)
     (requireActivity() as AppCompatActivity).run {
         setSupportActionBar(toolbar)
         supportActionBar?.run {

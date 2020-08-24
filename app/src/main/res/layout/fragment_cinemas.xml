@@ -20,6 +20,6 @@
 
     <include layout="@layout/include_progress_bar" />
 
-    <include layout="@layout/include_gradient_appbar" />
+    <include layout="@layout/include_appbar" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

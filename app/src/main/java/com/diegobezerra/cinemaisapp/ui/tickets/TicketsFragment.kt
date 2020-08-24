@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isGone
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.diegobezerra.cinemaisapp.R
@@ -36,7 +35,7 @@ class TicketsFragment : DaggerFragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private val ticketsAdapter by lazy { TicketAdapter() }
+    private val ticketsAdapter by lazy { TicketAdapter(requireContext()) }
     private val ticketsViewModel by lazy {
         ViewModelProviders.of(this, viewModelFactory)
             .get(TicketsViewModel::class.java)
@@ -60,17 +59,19 @@ class TicketsFragment : DaggerFragment() {
             setHasFixedSize(true)
         }
 
-        ticketsViewModel.loading.observe(this, Observer {
+        ticketsViewModel.loading.observe(viewLifecycleOwner, {
             progress.isGone = !it
         })
 
-        ticketsViewModel.tickets.observe(this, Observer {
+        ticketsViewModel.tickets.observe(viewLifecycleOwner, {
             ticketsAdapter.data = it.tickets
         })
 
-        ticketsViewModel.navigateToBuyWebsiteAction.observe(this, EventObserver { buyOnlineUrl ->
-            startActivity(Intent(ACTION_VIEW, Uri.parse(buyOnlineUrl)))
-        })
+        ticketsViewModel.navigateToBuyWebsiteAction.observe(
+            viewLifecycleOwner,
+            EventObserver { buyOnlineUrl ->
+                startActivity(Intent(ACTION_VIEW, Uri.parse(buyOnlineUrl)))
+            })
 
         return root
     }

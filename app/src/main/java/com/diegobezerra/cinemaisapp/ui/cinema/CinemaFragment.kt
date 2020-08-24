@@ -134,23 +134,29 @@ class CinemaFragment : MainFragment() {
             setDisplayHomeAsUpEnabled(true)
         }
 
-        cinemaViewModel.filters.observe(this, Observer {
+        cinemaViewModel.filters.observe(viewLifecycleOwner, {
             filtersAdapter.submitList(it)
         })
 
-        cinemaViewModel.navigateToSchedulePageAction.observe(this, EventObserver { cinemaId ->
-            openSchedulePage(cinemaId)
-        })
+        cinemaViewModel.navigateToSchedulePageAction.observe(
+            viewLifecycleOwner,
+            EventObserver { cinemaId ->
+                openSchedulePage(cinemaId)
+            })
 
-        cinemaViewModel.navigateToTicketsAction.observe(this, EventObserver { cinemaId ->
-            openTickets(cinemaId)
-        })
+        cinemaViewModel.navigateToTicketsAction.observe(
+            viewLifecycleOwner,
+            EventObserver { cinemaId ->
+                openTickets(cinemaId)
+            })
 
-        cinemaViewModel.navigateToLocationAction.observe(this, EventObserver { location ->
-            openMaps(location.latitude, location.longitude)
-        })
+        cinemaViewModel.navigateToLocationAction.observe(
+            viewLifecycleOwner,
+            EventObserver { location ->
+                openMaps(location.latitude, location.longitude)
+            })
 
-        cinemaViewModel.navigateToInfoAction.observe(this, EventObserver {
+        cinemaViewModel.navigateToInfoAction.observe(viewLifecycleOwner, EventObserver {
             Toast.makeText(requireActivity(), "Indisponível", Toast.LENGTH_SHORT).show()
         })
 
@@ -169,7 +175,7 @@ class CinemaFragment : MainFragment() {
             }
         )
 
-        cinemaViewModel.schedule.observe(this@CinemaFragment, Observer {
+        cinemaViewModel.schedule.observe(viewLifecycleOwner, Observer {
             it ?: return@Observer
 
             initSessionsLayout()
@@ -187,7 +193,7 @@ class CinemaFragment : MainFragment() {
             }
         })
 
-        cinemaViewModel.loading.observe(this, Observer {
+        cinemaViewModel.loading.observe(viewLifecycleOwner, {
             progress_bar.isGone = cinemaViewModel.isCinemaLayoutVisible.get() || !it
         })
     }

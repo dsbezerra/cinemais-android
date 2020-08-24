@@ -10,20 +10,34 @@ data class Weekdays(
     val disclaimer: String,
     val holidays: Boolean = false,
     val exceptHolidays: Boolean = false,
-    val exceptPreviews: Boolean = false
+    val exceptPreviews: Boolean = false,
+    val lastPrefix: String = "e",
 ) {
     fun isEmpty(): Boolean = weekdays.isEmpty()
 }
 
-data class Ticket(
-    val weekdays: Weekdays?,
-    val full: Float,
-    val half: Float,
-    val format: String,
-    val vip: Boolean,
-    val magic: Boolean
-)
+sealed class Ticket(
+    open val weekdays: Weekdays?
+) {
+    data class Normal(
+        override val weekdays: Weekdays?,
+        val full: Float,
+        val half: Float,
+        val format: String,
+        val vip: Boolean,
+        val magic: Boolean,
+    ) : Ticket(weekdays)
 
+    data class DriveIn(
+        override val weekdays: Weekdays?,
+        val price: Float,
+        val people: MinMaxPeople,
+    ) : Ticket(weekdays)
+}
+
+typealias MinMaxPeople = Pair<Int, Int>
+
+fun MinMaxPeople.isEqual(): Boolean = first == second
 
 data class Tickets(
     val tickets: List<Ticket>,

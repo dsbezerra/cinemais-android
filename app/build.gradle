@@ -2,13 +2,12 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'io.fabric'
 
 apply from: '../dependencies.gradle'
 
 def versionMajor = 0
 def versionMinor = 0
-def versionPatch = 46
+def versionPatch = 47
 def versionSuffix = "-beta"
 
 android {
@@ -17,30 +16,26 @@ android {
         applicationId "com.diegobezerra.cinemaisapp"
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
-        versionCode 33
+        versionCode 35
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-
-        buildConfigField("String", "ADMOB_APP_ID", "\"ca-app-pub-8142728452724363~3961172725\"")
     }
-    buildTypes {
-        debug {
-            buildConfigField "String", "INTERSTITIAL", "\"ca-app-pub-3940256099942544/1033173712\""
-            buildConfigField "String", "BANNER", "\"ca-app-pub-3940256099942544/6300978111\""
+
+    buildFeatures {
+        dataBinding {
+            enabled = true
         }
+    }
+
+    buildTypes {
         release {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),
                 'proguard-rules.pro'
 
-            buildConfigField "String", "INTERSTITIAL", "\"ca-app-pub-8142728452724363/6607517366\""
-            buildConfigField "String", "BANNER", "\"ca-app-pub-8142728452724363/5193070712\""
             versionNameSuffix = versionSuffix
         }
-    }
-    dataBinding {
-        enabled = true
     }
     //    splits {
     //        abi {
@@ -68,14 +63,13 @@ android {
 dependencies {
     implementation project(':core')
     implementation "androidx.constraintlayout:constraintlayout:${versions.constraintLayout}"
-    implementation "androidx.preference:preference:${versions.androidx}"
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:${versions.swipeRefreshLayout}"
+    implementation "androidx.preference:preference:${versions.preference}"
 
     implementation "androidx.work:work-runtime-ktx:${versions.work}"
 
     implementation "com.google.firebase:firebase-core:${versions.firebaseCore}"
-    implementation "com.google.firebase:firebase-ads:${versions.firebaseAds}"
     implementation "com.google.firebase:firebase-messaging:${versions.firebaseMessaging}"
-    implementation "com.crashlytics.sdk.android:crashlytics:${versions.crashlytics}"
     implementation "io.karn:notify:${versions.notify}"
 
     kapt "com.github.bumptech.glide:compiler:${versions.glide}"

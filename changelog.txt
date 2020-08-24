@@ -2,6 +2,14 @@ Changelog
 
 VersionName (VersionCode) - Date
 
+0.0.48-beta (35)
+- Atualizado o Target SDK para API 30;
+- Atualizado algumas dependências;
+- Adicionado suporte inicial para sessões Drive-In (http://www.cinemais.com.br/institucional/noticias_page.php?cn=159);
+- Removido alguns códigos não usados;
+- Corrigido alguns avisos no código;
+- Algumas mudanças de design.
+
 0.0.46-beta (32) - 03 mar 2020
 - Fix crash due to SocketTimeoutException in notify releases notification handler.
 - Prevent sending a destroyed context to Glide image loader.

@@ -1,5 +1,5 @@
 dependencies {
-    implementation "androidx.appcompat:appcompat:${versions.androidx}"
+    implementation "androidx.appcompat:appcompat:${versions.appcompat}"
     implementation "androidx.core:core-ktx:${versions.coreKtx}"
 
     implementation "androidx.lifecycle:lifecycle-extensions:${versions.lifecycle}"

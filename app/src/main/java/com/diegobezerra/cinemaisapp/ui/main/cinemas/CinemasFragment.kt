@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isGone
 import androidx.fragment.app.FragmentTransaction
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
@@ -53,15 +52,15 @@ class CinemasFragment : MainFragment() {
         }
 
         viewModel.apply {
-            loading.observe(this@CinemasFragment, Observer {
+            loading.observe(viewLifecycleOwner, {
                 progressBar.isGone = !it
             })
 
-            cinemas.observe(this@CinemasFragment, Observer {
+            cinemas.observe(viewLifecycleOwner, {
                 cinemasAdapter.data = it
             })
 
-            switchToCinemaDetail.observe(this@CinemasFragment, EventObserver {
+            switchToCinemaDetail.observe(viewLifecycleOwner, EventObserver {
                 (requireActivity() as MainActivity).run {
                     showCinemaFragment(it)
                 }

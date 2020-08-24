@@ -4,9 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AnimationUtils
 import androidx.core.view.isGone
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.diegobezerra.cinemaisapp.R
@@ -61,19 +59,19 @@ class HomeFragment : MainFragment() {
             title = title()
         }
 
-        homeViewModel.loading.observe(this@HomeFragment, Observer {
+        homeViewModel.loading.observe(viewLifecycleOwner, {
             progressBar.isGone = !it
         })
 
-        homeViewModel.home.observe(this@HomeFragment, Observer {
+        homeViewModel.home.observe(viewLifecycleOwner, {
             homeAdapter.data = it
         })
 
-        homeViewModel.navigateToMovieDetail.observe(this@HomeFragment, EventObserver { movieId ->
+        homeViewModel.navigateToMovieDetail.observe(viewLifecycleOwner, EventObserver { movieId ->
             startActivity(MovieActivity.getStartIntent(requireActivity(), movieId))
         })
 
-        homeViewModel.navigateToAllUpcomingMovies.observe(this@HomeFragment, EventObserver {
+        homeViewModel.navigateToAllUpcomingMovies.observe(viewLifecycleOwner, EventObserver {
             startActivity(UpcomingMoviesActivity.getStartIntent(requireActivity()))
         })
 
