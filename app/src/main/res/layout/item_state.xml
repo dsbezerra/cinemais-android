@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
+
+    <data>
+
+        <variable
+            name="sstate"
+            type="com.diegobezerra.core.cinemais.domain.model.State"
+            />
+
+    </data>
+
+    <TextView
+        android:id="@+id/state"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/spacing_medium"
+        android:paddingTop="@dimen/spacing_medium"
+        android:paddingEnd="@dimen/spacing_medium"
+        android:paddingBottom="@dimen/spacing_small"
+        android:text="@{sstate.name}"
+        android:textAppearance="@style/TextAppearance.Cinemais.Subhead"
+        tools:text="State Name"
+        />
+
+</layout>

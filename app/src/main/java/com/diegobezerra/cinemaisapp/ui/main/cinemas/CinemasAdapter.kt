@@ -4,24 +4,20 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.diegobezerra.cinemaisapp.R
+import com.diegobezerra.cinemaisapp.databinding.ItemCinemaBinding
+import com.diegobezerra.cinemaisapp.databinding.ItemStateBinding
 import com.diegobezerra.cinemaisapp.ui.main.cinemas.CinemasViewHolder.CinemaViewHolder
 import com.diegobezerra.cinemaisapp.ui.main.cinemas.CinemasViewHolder.StateViewHolder
 import com.diegobezerra.core.cinemais.domain.model.Cinema
 import com.diegobezerra.core.cinemais.domain.model.State
 
 class CinemasAdapter(
-    private val cinemasViewModel: CinemasViewModel
-) : ListAdapter<Any, CinemasViewHolder>(CinemaDiff) {
-
-    companion object {
-        private const val VIEW_TYPE_STATE = 0
-        private const val VIEW_TYPE_CINEMA = 1
-    }
+    private val eventListener: CinemasEventListener
+) : ListAdapter<Any, CinemasViewHolder>(CinemasDiff) {
 
     var data: List<Cinema> = emptyList()
         set(value) {
@@ -32,11 +28,20 @@ class CinemasAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CinemasViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         return when (viewType) {
-            VIEW_TYPE_STATE -> StateViewHolder(
-                inflater.inflate(R.layout.item_cinema_state, parent, false)
+            R.layout.item_state -> StateViewHolder(
+                ItemStateBinding.inflate(
+                    inflater,
+                    parent,
+                    false
+                )
             )
-            VIEW_TYPE_CINEMA -> CinemaViewHolder(
-                inflater.inflate(R.layout.item_cinema, parent, false)
+            R.layout.item_cinema -> CinemaViewHolder(
+                ItemCinemaBinding.inflate(
+                    inflater,
+                    parent,
+                    false
+                ),
+                eventListener
             )
             else -> throw IllegalStateException("Unknown viewType $viewType")
         }
@@ -44,33 +49,15 @@ class CinemasAdapter(
 
     override fun onBindViewHolder(holder: CinemasViewHolder, position: Int) {
         when (holder) {
-            is StateViewHolder -> holder.apply {
-                val state = getItem(position) as State
-                name.text = state.name
-            }
-            is CinemaViewHolder -> holder.apply {
-                val cinema = getItem(position) as Cinema
-                if (cinema.cityName != cinema.name) {
-                    name.text = itemView.resources.getString(
-                        R.string.label_cinema,
-                        cinema.name,
-                        cinema.cityName
-                    )
-                } else {
-                    name.text = cinema.name
-                }
-
-                itemView.setOnClickListener {
-                    cinemasViewModel.onCinemaClicked(cinema.id)
-                }
-            }
+            is StateViewHolder -> holder.bind(getItem(position) as State)
+            is CinemaViewHolder -> holder.bind(getItem(position) as Cinema)
         }
     }
 
     override fun getItemViewType(position: Int): Int {
         return when (getItem(position)) {
-            is State -> VIEW_TYPE_STATE
-            is Cinema -> VIEW_TYPE_CINEMA
+            is State -> R.layout.item_state
+            is Cinema -> R.layout.item_cinema
             else -> throw IllegalStateException("Unknown view type at position $position")
         }
     }
@@ -93,23 +80,27 @@ class CinemasAdapter(
 sealed class CinemasViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     class StateViewHolder(
-        itemView: View
-    ) : CinemasViewHolder(itemView) {
-
-        val name: TextView = itemView.findViewById(R.id.name)
-
+        private val binding: ItemStateBinding
+    ) : CinemasViewHolder(binding.root) {
+        fun bind(state: State) {
+            binding.sstate = state
+            binding.executePendingBindings()
+        }
     }
 
     class CinemaViewHolder(
-        itemView: View
-    ) : CinemasViewHolder(itemView) {
-
-        val name: TextView = itemView.findViewById(R.id.name)
-
+        private val binding: ItemCinemaBinding,
+        private val eventListener: CinemasEventListener,
+    ) : CinemasViewHolder(binding.root) {
+        fun bind(cinema: Cinema) {
+            binding.eventListener = eventListener
+            binding.cinema = cinema
+            binding.executePendingBindings()
+        }
     }
 }
 
-object CinemaDiff : DiffUtil.ItemCallback<Any>() {
+object CinemasDiff : DiffUtil.ItemCallback<Any>() {
     override fun areItemsTheSame(
         oldItem: Any,
         newItem: Any
