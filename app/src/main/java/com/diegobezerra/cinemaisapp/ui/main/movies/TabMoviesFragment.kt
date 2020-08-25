@@ -5,19 +5,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isGone
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.diegobezerra.cinemaisapp.R
 import com.diegobezerra.cinemaisapp.ui.movie.MovieActivity
 import com.diegobezerra.cinemaisapp.util.NetworkUtils
 import com.diegobezerra.cinemaisapp.widget.EmptyView
-import com.diegobezerra.core.event.EventObserver
-import dagger.android.support.DaggerFragment
-import javax.inject.Inject
+import com.diegobezerra.shared.result.EventObserver
+import dagger.hilt.android.AndroidEntryPoint
 
-class TabMoviesFragment : DaggerFragment() {
+@AndroidEntryPoint
+class TabMoviesFragment : Fragment() {
 
     companion object {
 
@@ -32,13 +32,7 @@ class TabMoviesFragment : DaggerFragment() {
         }
     }
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    private val viewModel by lazy {
-        ViewModelProviders.of(this, viewModelFactory)
-            .get(TabMoviesViewModel::class.java)
-    }
+    private val tabMoviesViewModel: TabMoviesViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,7 +44,11 @@ class TabMoviesFragment : DaggerFragment() {
         val type = requireNotNull(arguments).getInt(TYPE)
 
         val moviesAdapter =
-            MoviesAdapter(viewModel, type, NetworkUtils.isWifiConnection(requireActivity()))
+            MoviesAdapter(
+                tabMoviesViewModel,
+                type,
+                NetworkUtils.isWifiConnection(requireActivity())
+            )
         val recyclerView = root.findViewById<RecyclerView>(R.id.recyclerView)
         recyclerView.run {
             adapter = moviesAdapter
@@ -58,10 +56,10 @@ class TabMoviesFragment : DaggerFragment() {
         }
 
         swipeRefreshLayout.setOnRefreshListener {
-            viewModel.refresh()
+            tabMoviesViewModel.refresh()
         }
 
-        viewModel.apply {
+        tabMoviesViewModel.apply {
             loading.observe(viewLifecycleOwner, {
                 swipeRefreshLayout.isRefreshing = it
             })
@@ -71,9 +69,10 @@ class TabMoviesFragment : DaggerFragment() {
                 emptyView.isGone = it.isNotEmpty()
             })
 
-            navigateToMovieDetail.observe(viewLifecycleOwner, EventObserver { movieId ->
-                startActivity(MovieActivity.getStartIntent(requireActivity(), movieId))
-            })
+            navigateToMovieDetail.observe(viewLifecycleOwner,
+                EventObserver { movieId ->
+                    startActivity(MovieActivity.getStartIntent(requireActivity(), movieId))
+                })
 
             setType(type)
         }

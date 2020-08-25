@@ -1,11 +1,9 @@
 package com.diegobezerra.cinemaisapp.ui.main
 
 import android.os.Bundle
-import androidx.fragment.app.FragmentTransaction
-import androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE
-import dagger.android.support.DaggerFragment
+import androidx.fragment.app.Fragment
 
-abstract class MainFragment : DaggerFragment() {
+abstract class MainFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -13,10 +11,6 @@ abstract class MainFragment : DaggerFragment() {
         (requireActivity() as MainActivity).supportActionBar?.let {
             it.title = title()
         }
-    }
-
-    open fun transition(ft: FragmentTransaction, to: String) {
-        ft.setTransition(TRANSIT_FRAGMENT_FADE)
     }
 
     open fun id(): Int = 0

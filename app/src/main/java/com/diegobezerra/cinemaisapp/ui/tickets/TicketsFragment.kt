@@ -8,16 +8,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isGone
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.diegobezerra.cinemaisapp.R
 import com.diegobezerra.cinemaisapp.databinding.FragmentTicketsBinding
 import com.diegobezerra.cinemaisapp.ui.cinema.CinemaFragment.Companion.CINEMA_ID
-import com.diegobezerra.core.event.EventObserver
-import dagger.android.support.DaggerFragment
-import javax.inject.Inject
+import com.diegobezerra.shared.result.EventObserver
+import dagger.hilt.android.AndroidEntryPoint
 
-class TicketsFragment : DaggerFragment() {
+@AndroidEntryPoint
+class TicketsFragment : Fragment() {
 
     companion object {
 
@@ -32,14 +32,8 @@ class TicketsFragment : DaggerFragment() {
 
     }
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
+    private val ticketsViewModel: TicketsViewModel by viewModels()
     private val ticketsAdapter by lazy { TicketAdapter(requireContext()) }
-    private val ticketsViewModel by lazy {
-        ViewModelProviders.of(this, viewModelFactory)
-            .get(TicketsViewModel::class.java)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

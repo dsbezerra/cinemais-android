@@ -1,5 +1,6 @@
 package com.diegobezerra.cinemaisapp.ui.movie
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -7,9 +8,8 @@ import com.diegobezerra.cinemaisapp.base.BaseViewModel
 import com.diegobezerra.cinemaisapp.util.setValueIfNew
 import com.diegobezerra.core.cinemais.data.movie.MovieRepository
 import com.diegobezerra.core.cinemais.domain.model.Movie
-import javax.inject.Inject
 
-class MovieViewModel @Inject constructor(
+class MovieViewModel @ViewModelInject constructor(
     private val movieRepository: MovieRepository
 ) : BaseViewModel() {
 

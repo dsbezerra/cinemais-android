@@ -185,7 +185,7 @@
     <!-- Overlays -->
     <style name="ThemeOverlay.Cinemais.Toolbar.Tickets" parent="">
         <item name="colorPrimary">@color/alt_green</item>
-        <item name="colorPrimaryVariant">@color/accent</item>
+        <item name="colorOnPrimary">@color/white</item>
     </style>
 
 </resources>

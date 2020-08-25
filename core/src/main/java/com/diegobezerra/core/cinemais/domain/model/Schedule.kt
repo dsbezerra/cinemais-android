@@ -24,12 +24,7 @@ data class Schedule(
     }
 
     fun recreateDays(matcher: SessionMatcher? = null): Schedule {
-//        val todayMillis = DateUtils.calendarAtStartOfDay(null).timeInMillis
-//        if (todayMillis != generatedTimestamp) {
-//            createDays(matcher)
-//        }
         createDays(matcher)
-//        lastMatcher = matcher
         return this
     }
 
@@ -54,7 +49,7 @@ data class Schedule(
                 }
 
                 try {
-                    val key = dateFormat.format(session.startTimeDate)
+                    val key = dateFormat.format(session.startTimeDate!!)
                     if (key != "") {
                         if (!map.containsKey(key)) {
                             map[key] = ScheduleDay(

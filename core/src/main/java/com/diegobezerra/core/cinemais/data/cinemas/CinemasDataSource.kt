@@ -3,7 +3,7 @@ package com.diegobezerra.core.cinemais.data.cinemas
 import com.diegobezerra.core.cinemais.domain.model.Location
 import com.diegobezerra.core.cinemais.domain.model.Schedule
 import com.diegobezerra.core.cinemais.domain.model.Tickets
-import com.diegobezerra.core.result.Result
+import com.diegobezerra.shared.result.Result
 
 interface CinemasDataSource {
 

@@ -1,5 +1,6 @@
 package com.diegobezerra.cinemaisapp.ui.schedule
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -7,9 +8,8 @@ import com.diegobezerra.cinemaisapp.base.BaseViewModel
 import com.diegobezerra.cinemaisapp.util.setValueIfNew
 import com.diegobezerra.core.cinemais.data.cinemas.CinemaRepository
 import com.diegobezerra.core.cinemais.domain.model.Schedule
-import javax.inject.Inject
 
-class ScheduleViewModel @Inject constructor(
+class ScheduleViewModel @ViewModelInject constructor(
     private val cinemaRepository: CinemaRepository
 ) : BaseViewModel() {
 

@@ -1,5 +1,6 @@
 package com.diegobezerra.cinemaisapp.ui.main.movies
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -8,11 +9,10 @@ import com.diegobezerra.cinemaisapp.util.setValueIfNew
 import com.diegobezerra.core.cinemais.data.movie.MovieRepository
 import com.diegobezerra.core.cinemais.data.movie.MovieRepository.Companion.NOW_PLAYING
 import com.diegobezerra.core.cinemais.domain.model.Movie
-import com.diegobezerra.core.event.Event
-import com.diegobezerra.core.result.Result
-import javax.inject.Inject
+import com.diegobezerra.shared.result.Event
+import com.diegobezerra.shared.result.Result
 
-class TabMoviesViewModel @Inject constructor(
+class TabMoviesViewModel @ViewModelInject constructor(
     private val movieRepository: MovieRepository
 ) : BaseViewModel(), MoviesEventListener {
 

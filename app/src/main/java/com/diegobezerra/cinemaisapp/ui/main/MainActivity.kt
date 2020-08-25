@@ -3,6 +3,7 @@ package com.diegobezerra.cinemaisapp.ui.main
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.diegobezerra.cinemaisapp.R
 import com.diegobezerra.cinemaisapp.data.local.PreferencesHelper
@@ -14,11 +15,12 @@ import com.diegobezerra.cinemaisapp.ui.main.movies.MoviesFragment
 import com.diegobezerra.cinemaisapp.ui.settings.SettingsActivity
 import com.diegobezerra.cinemaisapp.util.switchToAdded
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import dagger.android.support.DaggerAppCompatActivity
+import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 import javax.inject.Inject
 
-class MainActivity : DaggerAppCompatActivity() {
+@AndroidEntryPoint
+class MainActivity : AppCompatActivity() {
 
     companion object {
 
@@ -120,27 +122,25 @@ class MainActivity : DaggerAppCompatActivity() {
         init: () -> MainFragment? = { getFragmentByTag(tag) }
     ) {
         supportFragmentManager.beginTransaction().run {
-
-            fragment?.transition(this, tag)
-
+            setCustomAnimations(
+                R.animator.fade_in,
+                R.animator.fade_out,
+                R.animator.fade_in,
+                R.animator.fade_out,
+            )
             switchToAdded(tag, fragments)?.also {
                 if (it.arguments != args) {
                     it.arguments = args
                 }
                 fragment = it as MainFragment
             }
-
             // If the fragment was never added then add it
             if (supportFragmentManager.findFragmentByTag(tag) == null) {
                 init()?.let { frag ->
-                    val ft = this
-                    add(FRAGMENT_ID, frag.apply {
-                        transition(ft, tag)
-                    }, tag)
+                    add(FRAGMENT_ID, frag, tag)
                     fragment = frag
                 }
             }
-
             commit()
         }
     }

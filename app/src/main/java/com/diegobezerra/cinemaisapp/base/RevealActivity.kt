@@ -7,12 +7,12 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewAnimationUtils
 import android.view.WindowManager
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.animation.doOnEnd
 import com.diegobezerra.cinemaisapp.R
-import dagger.android.support.DaggerAppCompatActivity
 import kotlin.math.hypot
 
-abstract class RevealActivity : DaggerAppCompatActivity() {
+abstract class RevealActivity : AppCompatActivity() {
 
     companion object {
         const val EXTRA_REVEAL_X = "extra.REVEAL_X"

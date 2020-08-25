@@ -3,7 +3,7 @@ package com.diegobezerra.core.cinemais.data.movie
 import com.diegobezerra.core.cinemais.data.CinemaisService
 import com.diegobezerra.core.cinemais.data.movie
 import com.diegobezerra.core.cinemais.data.movie.remote.MovieRemoteDataSource
-import com.diegobezerra.core.result.Result
+import com.diegobezerra.shared.result.Result
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.runBlocking

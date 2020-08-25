@@ -3,7 +3,7 @@ package com.diegobezerra.core.util
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
-import com.diegobezerra.core.result.Result
+import com.diegobezerra.shared.result.Result
 
 fun isNetworkConnected(context: Context): Boolean? {
     val connectivityManager =

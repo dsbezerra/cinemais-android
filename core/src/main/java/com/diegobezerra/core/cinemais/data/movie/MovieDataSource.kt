@@ -1,7 +1,7 @@
 package com.diegobezerra.core.cinemais.data.movie
 
 import com.diegobezerra.core.cinemais.domain.model.Movie
-import com.diegobezerra.core.result.Result
+import com.diegobezerra.shared.result.Result
 
 interface MovieDataSource {
 

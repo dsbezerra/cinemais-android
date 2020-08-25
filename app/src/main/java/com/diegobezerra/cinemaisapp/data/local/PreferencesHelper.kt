@@ -3,19 +3,21 @@ package com.diegobezerra.cinemaisapp.data.local
 import android.content.Context
 import com.diegobezerra.cinemaisapp.util.update
 import com.google.firebase.messaging.FirebaseMessaging
+import dagger.hilt.android.qualifiers.ApplicationContext
 import timber.log.Timber
 import javax.inject.Inject
+import javax.inject.Singleton
 
-class PreferencesHelper @Inject constructor(context: Context) {
+@Singleton
+class PreferencesHelper @Inject constructor(
+    @ApplicationContext context: Context
+) {
 
     companion object {
-
         const val PREFS_NAME = "cinemais"
         const val PREF_SELECTED_CINEMA = "pref_selected_cinema"
         const val PREF_SELECTED_FILTERS = "pref_selected_filters"
         const val PREF_DARK_THEME = "pref_dark_theme"
-        const val PREF_INTERSTITIAL_LAST_DISPLAY_TIMESTAMP =
-            "pref_interstitial_last_display_timestamp"
     }
 
     private val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
@@ -61,13 +63,4 @@ class PreferencesHelper @Inject constructor(context: Context) {
 
     fun isDarkTheme(): Boolean =
         prefs.getBoolean(PREF_DARK_THEME, false)
-
-    fun getInterstitialLastDisplayTimestamp() =
-        prefs.getLong(PREF_INTERSTITIAL_LAST_DISPLAY_TIMESTAMP, 0)
-
-    fun setInterstitialLastDisplayTimestamp(value: Long) {
-        prefs.update {
-            putLong(PREF_INTERSTITIAL_LAST_DISPLAY_TIMESTAMP, value)
-        }
-    }
 }

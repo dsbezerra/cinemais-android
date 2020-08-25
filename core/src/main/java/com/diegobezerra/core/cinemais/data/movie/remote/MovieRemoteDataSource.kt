@@ -5,7 +5,7 @@ import com.diegobezerra.core.cinemais.data.movie.MovieDataSource
 import com.diegobezerra.core.cinemais.domain.model.Images
 import com.diegobezerra.core.cinemais.domain.model.Movie
 import com.diegobezerra.core.cinemais.domain.model.Trailer
-import com.diegobezerra.core.result.Result
+import com.diegobezerra.shared.result.Result
 import com.diegobezerra.core.util.safeRequest
 import javax.inject.Inject
 

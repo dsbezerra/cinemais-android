@@ -1,19 +1,14 @@
 package com.diegobezerra.cinemaisapp
 
+import android.app.Application
 import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
-import com.diegobezerra.cinemaisapp.dagger.DaggerAppComponent
 import com.diegobezerra.cinemaisapp.data.local.PreferencesHelper
-import com.squareup.leakcanary.LeakCanary
-import dagger.android.AndroidInjector
-import dagger.android.DaggerApplication
+import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 
-class CinemaisApplication : DaggerApplication() {
-
-    override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
-        return DaggerAppComponent.builder().create(this)
-    }
+@HiltAndroidApp
+class CinemaisApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
@@ -21,12 +16,6 @@ class CinemaisApplication : DaggerApplication() {
     }
 
     private fun init() {
-        if (LeakCanary.isInAnalyzerProcess(this)) {
-            // This process is dedicated to LeakCanary for heap analysis.
-            // You should not init your app in this process.
-            return
-        }
-        LeakCanary.install(this)
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         }

@@ -5,18 +5,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isGone
-import androidx.fragment.app.FragmentTransaction
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.diegobezerra.cinemaisapp.R
-import com.diegobezerra.cinemaisapp.ui.cinema.CinemaFragment
 import com.diegobezerra.cinemaisapp.ui.main.MainActivity
 import com.diegobezerra.cinemaisapp.ui.main.MainFragment
 import com.diegobezerra.cinemaisapp.util.setupToolbarAsActionBar
-import com.diegobezerra.core.event.EventObserver
-import javax.inject.Inject
+import com.diegobezerra.shared.result.EventObserver
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class CinemasFragment : MainFragment() {
 
     companion object {
@@ -25,15 +23,8 @@ class CinemasFragment : MainFragment() {
 
     }
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    private val viewModel by lazy {
-        ViewModelProviders.of(this, viewModelFactory)
-            .get(CinemasViewModel::class.java)
-    }
-
-    private val cinemasAdapter by lazy { CinemasAdapter(viewModel) }
+    private val cinemasViewModel: CinemasViewModel by viewModels()
+    private val cinemasAdapter by lazy { CinemasAdapter(cinemasViewModel) }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,7 +42,7 @@ class CinemasFragment : MainFragment() {
             title = title()
         }
 
-        viewModel.apply {
+        cinemasViewModel.apply {
             loading.observe(viewLifecycleOwner, {
                 progressBar.isGone = !it
             })
@@ -60,23 +51,16 @@ class CinemasFragment : MainFragment() {
                 cinemasAdapter.data = it
             })
 
-            switchToCinemaDetail.observe(viewLifecycleOwner, EventObserver {
-                (requireActivity() as MainActivity).run {
-                    showCinemaFragment(it)
-                }
-            })
+            switchToCinemaDetail.observe(viewLifecycleOwner,
+                EventObserver {
+                    (requireActivity() as MainActivity).run {
+                        showCinemaFragment(it)
+                    }
+                })
         }
 
         return root
     }
 
     override fun title() = getString(R.string.title_theaters)
-
-    override fun transition(ft: FragmentTransaction, to: String) {
-        if (to == CinemaFragment.TAG) {
-            ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left)
-        } else {
-            super.transition(ft, to)
-        }
-    }
 }

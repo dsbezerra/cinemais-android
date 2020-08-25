@@ -4,15 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.diegobezerra.cinemaisapp.databinding.FragmentScheduleDayBinding
 import com.diegobezerra.cinemaisapp.ui.cinema.CinemaViewModel
 import com.diegobezerra.cinemaisapp.ui.movie.playingcinemas.PlayingCinemasViewModel
-import dagger.android.support.DaggerFragment
-import javax.inject.Inject
+import dagger.hilt.android.AndroidEntryPoint
 
-class ScheduleDayFragment : DaggerFragment() {
+@AndroidEntryPoint
+class ScheduleDayFragment : Fragment() {
 
     companion object {
 
@@ -33,17 +33,8 @@ class ScheduleDayFragment : DaggerFragment() {
         }
     }
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    private val playingCinemasViewModel by lazy {
-        ViewModelProviders.of(requireParentFragment(), viewModelFactory)
-            .get(PlayingCinemasViewModel::class.java)
-    }
-    private val cinemaViewModel by lazy {
-        ViewModelProviders.of(requireParentFragment(), viewModelFactory)
-            .get(CinemaViewModel::class.java)
-    }
+    private val playingCinemasViewModel: PlayingCinemasViewModel by viewModels()
+    private val cinemaViewModel: CinemaViewModel by viewModels()
 
     private lateinit var sessionsAdapter: SessionsAdapter
 

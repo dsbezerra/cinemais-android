@@ -14,8 +14,9 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.view.isGone
 import androidx.core.widget.NestedScrollView
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Priority
 import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions.withCrossFade
@@ -30,7 +31,7 @@ import com.diegobezerra.core.util.DateUtils.Companion.BRAZIL
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
-import dagger.android.support.DaggerFragment
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_movie.backdrop
 import kotlinx.android.synthetic.main.fragment_movie.cast
 import kotlinx.android.synthetic.main.fragment_movie.direction
@@ -55,11 +56,11 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
-import javax.inject.Inject
 
 private val FORMAT = SimpleDateFormat("d 'de' MMMM", BRAZIL)
 
-class MovieFragment : DaggerFragment() {
+@AndroidEntryPoint
+class MovieFragment : Fragment() {
 
     companion object {
 
@@ -78,13 +79,7 @@ class MovieFragment : DaggerFragment() {
 
     }
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    private val viewModel by lazy {
-        ViewModelProviders.of(this, viewModelFactory)
-            .get(MovieViewModel::class.java)
-    }
+    private val movieViewModel: MovieViewModel by viewModels()
 
     private lateinit var toolbar: Toolbar
     private var displayingTitleInToolbar = false
@@ -112,7 +107,7 @@ class MovieFragment : DaggerFragment() {
         bottomSheetBehavior = BottomSheetBehavior.from(playingCinemasSheet)
 
         swipeRefreshLayout.setOnRefreshListener {
-            viewModel.refresh()
+            movieViewModel.refresh()
         }
 
         val args = requireNotNull(arguments)
@@ -121,7 +116,7 @@ class MovieFragment : DaggerFragment() {
             title = null
             setDisplayHomeAsUpEnabled(true)
         }
-        viewModel.apply {
+        movieViewModel.apply {
 
             loading.observe(viewLifecycleOwner, {
                 swipeRefreshLayout.isRefreshing = it
@@ -274,6 +269,7 @@ class MovieFragment : DaggerFragment() {
             if (displayingTitleInToolbar && !displayTitle) {
                 toolbarAnimator?.cancel()
                 toolbarAnimator = ValueAnimator.ofFloat(1f, 0f).apply {
+                    interpolator = FastOutSlowInInterpolator()
                     addUpdateListener {
                         val value = animatedValue as Float
                         appbar?.setBackgroundColor(
@@ -283,7 +279,6 @@ class MovieFragment : DaggerFragment() {
                                 toolbarColors[1]
                             ) as Int
                         )
-                        cinemais_border.scaleX = value
                     }
                     start()
                 }
@@ -292,6 +287,7 @@ class MovieFragment : DaggerFragment() {
             } else if (displayTitle && !displayingTitleInToolbar) {
                 toolbarAnimator?.cancel()
                 toolbarAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
+                    interpolator = FastOutSlowInInterpolator()
                     addUpdateListener {
                         val value = animatedValue as Float
                         appbar?.setBackgroundColor(
@@ -301,7 +297,6 @@ class MovieFragment : DaggerFragment() {
                                 toolbarColors[1]
                             ) as Int
                         )
-                        cinemais_border.scaleX = value
                     }
                     start()
                 }

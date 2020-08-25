@@ -7,9 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.animation.doOnEnd
 import androidx.core.view.isGone
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.transition.TransitionManager
 import com.diegobezerra.cinemaisapp.R
 import com.diegobezerra.cinemaisapp.databinding.FragmentPlayingCinemasBinding
@@ -17,28 +17,21 @@ import com.diegobezerra.cinemaisapp.ui.movie.playingcinemas.PlayingCinemasViewMo
 import com.diegobezerra.cinemaisapp.ui.schedule.ScheduleAdapter
 import com.diegobezerra.cinemaisapp.ui.schedule.filters.ScheduleFiltersAdapter
 import com.diegobezerra.cinemaisapp.widget.SpaceItemDecoration
-import com.diegobezerra.core.event.EventObserver
+import com.diegobezerra.shared.result.EventObserver
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
-import dagger.android.support.DaggerFragment
-import javax.inject.Inject
+import dagger.hilt.android.AndroidEntryPoint
 
-class PlayingCinemasFragment : DaggerFragment() {
+@AndroidEntryPoint
+class PlayingCinemasFragment : Fragment() {
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
+    private lateinit var binding: FragmentPlayingCinemasBinding
 
-    private val playingCinemasViewModel by lazy {
-        ViewModelProviders.of(this, viewModelFactory)
-            .get(PlayingCinemasViewModel::class.java)
-    }
-
+    private val playingCinemasViewModel: PlayingCinemasViewModel by viewModels()
     private val playingCinemasAdapter by lazy { PlayingCinemasAdapter(playingCinemasViewModel) }
 
     private val filtersAdapter by lazy { ScheduleFiltersAdapter(playingCinemasViewModel) }
-
-    private lateinit var binding: FragmentPlayingCinemasBinding
 
     private var behavior: BottomSheetBehavior<*>? = null
 
@@ -93,9 +86,10 @@ class PlayingCinemasFragment : DaggerFragment() {
             updateViews(it)
         })
 
-        playingCinemasViewModel.toggleSheetAction.observe(viewLifecycleOwner, EventObserver {
-            toggleSheet()
-        })
+        playingCinemasViewModel.toggleSheetAction.observe(viewLifecycleOwner,
+            EventObserver {
+                toggleSheet()
+            })
 
         return binding.root
     }

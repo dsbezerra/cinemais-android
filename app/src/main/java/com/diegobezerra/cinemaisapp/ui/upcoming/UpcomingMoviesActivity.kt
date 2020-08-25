@@ -4,14 +4,15 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
 import com.diegobezerra.cinemaisapp.R
 import com.diegobezerra.cinemaisapp.ui.main.movies.TabMoviesFragment
 import com.diegobezerra.cinemaisapp.util.setupActionBar
-import com.diegobezerra.cinemaisapp.util.setupTheme
 import com.diegobezerra.core.cinemais.data.movie.MovieRepository.Companion.UPCOMING
-import dagger.android.support.DaggerAppCompatActivity
+import dagger.hilt.android.AndroidEntryPoint
 
-class UpcomingMoviesActivity : DaggerAppCompatActivity() {
+@AndroidEntryPoint
+class UpcomingMoviesActivity : AppCompatActivity() {
 
     companion object {
 

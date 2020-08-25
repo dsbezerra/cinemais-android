@@ -5,6 +5,7 @@ import androidx.annotation.IdRes
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.fragment.app.Fragment
 import com.diegobezerra.cinemaisapp.data.local.PreferencesHelper
 import com.diegobezerra.cinemaisapp.data.local.PreferencesHelper.Companion.PREFS_NAME
 
@@ -26,4 +27,11 @@ fun AppCompatActivity.setupTheme() {
         )
         delegate.applyDayNight()
     }
+}
+
+fun AppCompatActivity.setFragment(@IdRes fragmentId: Int, instance: () -> Fragment) {
+    supportFragmentManager
+        .beginTransaction()
+        .replace(fragmentId, instance.invoke())
+        .commit()
 }

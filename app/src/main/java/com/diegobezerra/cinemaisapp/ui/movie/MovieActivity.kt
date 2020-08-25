@@ -3,11 +3,12 @@ package com.diegobezerra.cinemaisapp.ui.movie
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import com.diegobezerra.cinemaisapp.R
-import com.diegobezerra.cinemaisapp.util.setupTheme
-import dagger.android.support.DaggerAppCompatActivity
+import dagger.hilt.android.AndroidEntryPoint
 
-class MovieActivity : DaggerAppCompatActivity() {
+@AndroidEntryPoint
+class MovieActivity : AppCompatActivity() {
 
     private lateinit var fragment: MovieFragment
 

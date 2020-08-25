@@ -4,7 +4,9 @@ import android.os.Bundle
 import com.diegobezerra.cinemaisapp.R
 import com.diegobezerra.cinemaisapp.base.RevealActivity
 import com.diegobezerra.cinemaisapp.util.setupActionBar
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class TicketsActivity : RevealActivity() {
 
     companion object {

@@ -7,11 +7,11 @@ import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.diegobezerra.cinemaisapp.R
-import com.diegobezerra.core.result.Error
-import com.diegobezerra.core.result.Error.Data
-import com.diegobezerra.core.result.Error.Network
-import com.diegobezerra.core.result.Error.NoConnection
-import com.diegobezerra.core.result.Error.Timeout
+import com.diegobezerra.shared.result.Error
+import com.diegobezerra.shared.result.Error.Data
+import com.diegobezerra.shared.result.Error.Network
+import com.diegobezerra.shared.result.Error.NoConnection
+import com.diegobezerra.shared.result.Error.Timeout
 import kotlinx.android.synthetic.main.error_view.view.image_view
 import kotlinx.android.synthetic.main.error_view.view.text_message
 import kotlinx.android.synthetic.main.error_view.view.text_title

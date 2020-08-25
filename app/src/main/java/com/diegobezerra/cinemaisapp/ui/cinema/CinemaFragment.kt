@@ -11,11 +11,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isGone
-import androidx.fragment.app.FragmentTransaction
+import androidx.fragment.app.viewModels
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.Fade
 import androidx.transition.Slide
@@ -26,7 +24,6 @@ import com.diegobezerra.cinemaisapp.R
 import com.diegobezerra.cinemaisapp.base.RevealActivity
 import com.diegobezerra.cinemaisapp.databinding.FragmentCinemaBinding
 import com.diegobezerra.cinemaisapp.ui.main.MainFragment
-import com.diegobezerra.cinemaisapp.ui.main.cinemas.CinemasFragment
 import com.diegobezerra.cinemaisapp.ui.schedule.ScheduleAdapter
 import com.diegobezerra.cinemaisapp.ui.schedule.filters.ScheduleFiltersAdapter
 import com.diegobezerra.cinemaisapp.ui.tickets.TicketsActivity
@@ -37,13 +34,14 @@ import com.diegobezerra.cinemaisapp.widget.CinemaisTabLayout
 import com.diegobezerra.cinemaisapp.widget.SpaceItemDecoration
 import com.diegobezerra.core.cinemais.data.CinemaisService
 import com.diegobezerra.core.cinemais.domain.model.Schedule
-import com.diegobezerra.core.event.EventObserver
+import com.diegobezerra.shared.result.EventObserver
 import com.google.android.material.appbar.AppBarLayout
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.include_progress_bar.progress_bar
 import timber.log.Timber
-import javax.inject.Inject
 import kotlin.math.abs
 
+@AndroidEntryPoint
 class CinemaFragment : MainFragment() {
 
     companion object {
@@ -71,13 +69,7 @@ class CinemaFragment : MainFragment() {
         }
     }
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    private val cinemaViewModel by lazy {
-        ViewModelProviders.of(this, viewModelFactory)
-            .get(CinemaViewModel::class.java)
-    }
+    private val cinemaViewModel: CinemaViewModel by viewModels()
 
     private lateinit var viewPager: ViewPager
     private lateinit var tabs: CinemaisTabLayout
@@ -156,9 +148,10 @@ class CinemaFragment : MainFragment() {
                 openMaps(location.latitude, location.longitude)
             })
 
-        cinemaViewModel.navigateToInfoAction.observe(viewLifecycleOwner, EventObserver {
-            Toast.makeText(requireActivity(), "Indisponível", Toast.LENGTH_SHORT).show()
-        })
+        cinemaViewModel.navigateToInfoAction.observe(viewLifecycleOwner,
+            EventObserver {
+                Toast.makeText(requireActivity(), "Indisponível", Toast.LENGTH_SHORT).show()
+            })
 
         return root
     }
@@ -331,12 +324,4 @@ class CinemaFragment : MainFragment() {
     }
 
     override fun title(): String? = ""
-
-    override fun transition(ft: FragmentTransaction, to: String) {
-        if (to == CinemasFragment.TAG) {
-            ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right)
-        } else {
-            super.transition(ft, to)
-        }
-    }
 }

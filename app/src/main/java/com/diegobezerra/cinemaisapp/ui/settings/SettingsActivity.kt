@@ -10,6 +10,7 @@ import androidx.preference.PreferenceFragmentCompat
 import com.diegobezerra.cinemaisapp.R
 import com.diegobezerra.cinemaisapp.data.local.PreferencesHelper.Companion.PREFS_NAME
 import com.diegobezerra.cinemaisapp.data.local.PreferencesHelper.Companion.PREF_DARK_THEME
+import com.diegobezerra.cinemaisapp.util.setFragment
 import com.diegobezerra.cinemaisapp.util.setupActionBar
 import com.diegobezerra.cinemaisapp.util.setupTheme
 
@@ -32,10 +33,9 @@ class SettingsActivity : AppCompatActivity() {
             setDisplayHomeAsUpEnabled(true)
         }
 
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.settings, SettingsFragment())
-            .commit()
+        setFragment(R.id.settings) {
+            SettingsFragment()
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

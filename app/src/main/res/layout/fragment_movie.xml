@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/coordinator_layout"
@@ -20,8 +19,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
-            android:paddingBottom="@dimen/spacing_medium"
             android:paddingTop="@dimen/spacing_medium"
+            android:paddingBottom="@dimen/spacing_medium"
             >
 
             <FrameLayout
@@ -79,16 +78,16 @@
                             android:id="@+id/poster"
                             android:layout_width="@dimen/movie_poster_width_detail"
                             android:layout_height="@dimen/movie_poster_height_detail"
-                            android:layout_marginEnd="@dimen/spacing_medium"
                             android:layout_marginStart="@dimen/spacing_medium"
+                            android:layout_marginEnd="@dimen/spacing_medium"
                             android:contentDescription="@null"
                             />
 
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="@dimen/spacing_medium"
                             android:layout_marginTop="@dimen/spacing_small"
+                            android:layout_marginEnd="@dimen/spacing_medium"
                             >
 
                             <TextView
@@ -96,10 +95,10 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:ellipsize="end"
-                                android:textSize="24sp"
-                                android:textStyle="normal"
                                 android:maxLines="2"
                                 android:textColor="@color/subhead_text"
+                                android:textSize="24sp"
+                                android:textStyle="normal"
                                 tools:text="Movie Title"
                                 />
 
@@ -206,7 +205,7 @@
 
     </com.diegobezerra.cinemaisapp.widget.CinemaisSwipeRefreshLayout>
 
-    <include layout="@layout/include_movie_appbar"/>
+    <include layout="@layout/include_movie_appbar" />
 
     <fragment
         android:id="@+id/playing_cinemas_sheet"

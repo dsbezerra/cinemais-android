@@ -1,6 +1,7 @@
 package com.diegobezerra.cinemaisapp.ui.movie.playingcinemas
 
 import androidx.databinding.ObservableBoolean
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -16,13 +17,12 @@ import com.diegobezerra.core.cinemais.domain.model.Cinema
 import com.diegobezerra.core.cinemais.domain.model.Schedule
 import com.diegobezerra.core.cinemais.domain.model.Session
 import com.diegobezerra.core.cinemais.domain.model.SessionMatcher
-import com.diegobezerra.core.event.Event
+import com.diegobezerra.shared.result.Event
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import javax.inject.Inject
 
-class PlayingCinemasViewModel @Inject constructor(
+class PlayingCinemasViewModel @ViewModelInject constructor(
     private val cinemaRepository: CinemaRepository,
     private val movieRepository: MovieRepository,
     private val preferencesHelper: PreferencesHelper

@@ -2,7 +2,7 @@ package com.diegobezerra.core.cinemais.data.home
 
 import com.diegobezerra.core.cinemais.data.home.remote.HomeRemoteDataSource
 import com.diegobezerra.core.cinemais.domain.model.Home
-import com.diegobezerra.core.result.Result
+import com.diegobezerra.shared.result.Result
 import javax.inject.Inject
 
 class HomeRepository @Inject constructor(

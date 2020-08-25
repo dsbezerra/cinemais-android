@@ -3,8 +3,8 @@ package com.diegobezerra.core.cinemais.data.movie
 import com.diegobezerra.core.cinemais.data.movie.remote.MovieRemoteDataSource
 import com.diegobezerra.core.cinemais.domain.model.Cinema
 import com.diegobezerra.core.cinemais.domain.model.Movie
-import com.diegobezerra.core.result.Result
-import com.diegobezerra.core.result.getRemoteAndCache
+import com.diegobezerra.shared.result.Result
+import com.diegobezerra.shared.result.getRemoteAndCache
 import javax.inject.Inject
 
 class MovieRepository @Inject constructor(

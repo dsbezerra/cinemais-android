@@ -1,34 +1,5 @@
 dependencies {
-    implementation "androidx.appcompat:appcompat:${versions.appcompat}"
-    implementation "androidx.core:core-ktx:${versions.coreKtx}"
-
-    implementation "androidx.lifecycle:lifecycle-extensions:${versions.lifecycle}"
-    implementation "androidx.lifecycle:lifecycle-viewmodel:${versions.lifecycle}"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:${versions.lifecycle}"
-
-    implementation "com.google.android.material:material:${versions.material}"
-
-    implementation "com.github.bumptech.glide:glide:${versions.glide}"
-    implementation "jp.wasabeef:glide-transformations:${versions.glideTransformations}"
-
-    implementation "com.github.castorflex.smoothprogressbar:library:${versions.smoothHorizontal}"
-    implementation "com.github.castorflex.smoothprogressbar:library-circular:${versions.smoothCircular}"
-
-    implementation "com.google.dagger:dagger:${versions.dagger}"
-    implementation "com.google.dagger:dagger-android:${versions.dagger}"
-    implementation "com.google.dagger:dagger-android-support:${versions.dagger}"
-
-    implementation "com.squareup.retrofit2:retrofit:${versions.retrofit}"
-
-    implementation "com.jakewharton.timber:timber:${versions.timber}"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${versions.kotlin}"
-    implementation "org.jsoup:jsoup:${versions.jsoup}"
-
-    debugImplementation "com.squareup.leakcanary:leakcanary-android:${versions.leakCanary}"
-    releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${versions.leakCanary}"
-
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:${versions.mockitoKotlin}"
-    testImplementation "com.squareup.retrofit2:retrofit-mock:${versions.retrofit}"
     testImplementation "junit:junit:${versions.junit}"
     testImplementation "org.mockito:mockito-core:${versions.mockito}"
 }

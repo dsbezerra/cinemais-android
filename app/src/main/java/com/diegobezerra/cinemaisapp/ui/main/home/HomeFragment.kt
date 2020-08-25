@@ -5,18 +5,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isGone
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
+import androidx.fragment.app.viewModels
 import com.diegobezerra.cinemaisapp.R
 import com.diegobezerra.cinemaisapp.databinding.FragmentHomeBinding
 import com.diegobezerra.cinemaisapp.ui.main.MainFragment
 import com.diegobezerra.cinemaisapp.ui.movie.MovieActivity
 import com.diegobezerra.cinemaisapp.ui.upcoming.UpcomingMoviesActivity
 import com.diegobezerra.cinemaisapp.util.setupToolbarAsActionBar
-import com.diegobezerra.core.event.EventObserver
+import com.diegobezerra.shared.result.EventObserver
+import dagger.hilt.android.AndroidEntryPoint
 import fr.castorflex.android.circularprogressbar.CircularProgressBar
-import javax.inject.Inject
 
+@AndroidEntryPoint
 class HomeFragment : MainFragment() {
 
     companion object {
@@ -25,13 +25,7 @@ class HomeFragment : MainFragment() {
 
     }
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    private val homeViewModel by lazy {
-        ViewModelProviders.of(this, viewModelFactory)
-            .get(HomeViewModel::class.java)
-    }
+    private val homeViewModel: HomeViewModel by viewModels()
 
     private val homeAdapter by lazy { HomeAdapter(homeViewModel) }
 
@@ -67,13 +61,15 @@ class HomeFragment : MainFragment() {
             homeAdapter.data = it
         })
 
-        homeViewModel.navigateToMovieDetail.observe(viewLifecycleOwner, EventObserver { movieId ->
-            startActivity(MovieActivity.getStartIntent(requireActivity(), movieId))
-        })
+        homeViewModel.navigateToMovieDetail.observe(viewLifecycleOwner,
+            EventObserver { movieId ->
+                startActivity(MovieActivity.getStartIntent(requireActivity(), movieId))
+            })
 
-        homeViewModel.navigateToAllUpcomingMovies.observe(viewLifecycleOwner, EventObserver {
-            startActivity(UpcomingMoviesActivity.getStartIntent(requireActivity()))
-        })
+        homeViewModel.navigateToAllUpcomingMovies.observe(viewLifecycleOwner,
+            EventObserver {
+                startActivity(UpcomingMoviesActivity.getStartIntent(requireActivity()))
+            })
 
         return root
     }

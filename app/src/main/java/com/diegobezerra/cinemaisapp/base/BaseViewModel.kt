@@ -5,12 +5,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.diegobezerra.cinemaisapp.util.setValueIfNew
-import com.diegobezerra.core.result.Error
-import com.diegobezerra.core.result.Error.Network
-import com.diegobezerra.core.result.Error.NoConnection
-import com.diegobezerra.core.result.Error.Timeout
-import com.diegobezerra.core.result.Error.Unknown
-import com.diegobezerra.core.result.Result
+import com.diegobezerra.shared.result.Error
+import com.diegobezerra.shared.result.Error.Network
+import com.diegobezerra.shared.result.Error.NoConnection
+import com.diegobezerra.shared.result.Error.Timeout
+import com.diegobezerra.shared.result.Error.Unknown
+import com.diegobezerra.shared.result.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -53,7 +53,7 @@ open class BaseViewModel : ViewModel() {
     }
 
     private fun errorHandler(t: Throwable, handler: (t: Throwable) -> Unit) {
-        var err: Error? = null
+        var err: Error?
         when (t) {
             is HttpException -> {
                 if (t.code() == 504) { // Unsatisfiable Request (only-if-cached)
