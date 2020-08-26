@@ -91,99 +91,99 @@ object CinemaisScheduleConverter : Converter<ResponseBody, Schedule> {
     private fun parseSessions(
         element: Element,
         cinema: Cinema?,
-        disclaimer: Disclaimer
+        disclaimer: Disclaimer,
+        week: DateRange
     ): List<Session> {
         val result = mutableListOf<Session>()
-        val elements = element.select("table tr")
-        val dates = DateUtils.playingRange().dates()
+        val mapping = hashMapOf<String, Int>()
+
+        fun List<Element>.getBlock(name: String): Element? {
+            return getOrNull(mapping[name] ?: -1)
+        }
+
+        val elements = element.select("table tr").let {
+            it.first().select("td").forEachIndexed { index, column ->
+                mapping[column.text().trim()] = index
+            }
+            it.drop(1)
+        }
+        val dates = week.dates()
         val cinemaId = cinema?.id ?: 0
-        elements.forEachIndexed { index, it ->
-            if (index > 0) { // Skip header
-                val columns = it.select("td")
-                if (columns.size != 4) {
-                    // No-op
+        elements.forEach {
+            val columns = it.select("td")
+            val roomBlock = columns.getBlock("Sala")
+            val ratingBlock = columns.getBlock("Class.")
+            val movieBlock = columns.getBlock("Filme")
+            val sessionsBlock = columns.getBlock("Horário")
+
+            if (movieBlock == null || sessionsBlock == null) {
+                // Skip
+            } else {
+                val room = roomBlock?.text()?.toInt() ?: 0
+                val movieId = Movie.getIdFromUrl(movieBlock.select("a").attr("href"))
+                val movieTitle = movieBlock.text()
+                val movieRating = if (ratingBlock != null) {
+                    parseRating(ratingBlock.select("img").first())
                 } else {
-                    val room = columns[0].text().toInt()
-                    val movieBlock = columns[1]
-                    val movieId = Movie.getIdFromUrl(movieBlock.select("a").attr("href"))
-                    val movieTitle = movieBlock.text()
-                    val movieRating = parseRating(columns[2].select("img").first())
+                    0
+                }
 
-                    // Getting cinema id from print schedule button
+                // Getting cinema id from print schedule button
+                val is3D = movieBlock.select("img[title='Em 3D']").size == 1
+                val isMagicD = movieBlock.select("img[title='Magic D']").size == 1
+                val isVIP = movieBlock.select("img[title='Vip']").size == 1
+                val format = if (is3D) VideoFormat3D else VideoFormat2D
 
-                    val is3D = movieBlock.select("img[title='Em 3D']").size == 1
-                    val isMagicD = movieBlock.select("img[title='Magic D']").size == 1
-                    val isVIP = movieBlock.select("img[title='Vip']").size == 1
-                    val format = if (is3D) VideoFormat3D else VideoFormat2D
-
-                    var version = ""
-                    val sessionsBlock = columns[3].text()
-                    var startingTimesBlock: String? = null
-                    val parts = sessionsBlock.split(" - ")
-                    when {
-                        parts.size == 2 -> { // Dubbed or subtitled movie
-                            startingTimesBlock = parts[1]
-                            when (parts[0].trim()) {
-                                "Dub." -> version = VersionDubbed
-                                "Leg." -> version = VersionSubtitled
-                            }
-                        }
-                        parts.size == 1 -> { // National
-                            version = VersionNational
-                            startingTimesBlock = parts[0]
-                        }
-                        else -> {
-                            // TODO: Diagnostic
+                var version = ""
+                var startingTimesBlock: String? = null
+                val parts = sessionsBlock.text().split(" - ")
+                when (parts.size) {
+                    2 -> { // Dubbed or subtitled movie
+                        startingTimesBlock = parts[1]
+                        when (parts[0].trim()) {
+                            "Dub." -> version = VersionDubbed
+                            "Leg." -> version = VersionSubtitled
                         }
                     }
-                    startingTimesBlock?.let { block ->
-                        block.split(",").forEach {
-                            // NOTE: This may be empty as observed in this case
-                            // Leg. - , 00h01A
-                            if (it.isNotEmpty()) {
-                                val time = it.replace("h", ":").trim()
-                                val session = Session(
-                                    movieId = movieId,
-                                    cinemaId = cinemaId,
-                                    movieTitle = movieTitle,
-                                    movieRating = movieRating,
-                                    room = room,
-                                    startTime = time,
-                                    version = version,
-                                    format = format,
-                                    magic = isMagicD,
-                                    vip = isVIP
-                                )
-                                val lastChar = it.last()
-                                if (lastChar.isLetter()) {
-                                    if (disclaimer.containsKey(lastChar)) {
-                                        val entry = disclaimer[lastChar]
-                                            ?: throw IllegalStateException("unexpected state")
-                                        // Create sessions accordingly with disclaimer
-                                        val onlyTime = time.substring(0, time.lastIndex)
-                                        if (entry.type == ONLY) {
-                                            // NOTE: We wrap around dates here just to get correct year
-                                            // since entry dates don't contain year
-                                            dates.forEach { date ->
-                                                entry.days.forEach { day ->
-                                                    if (day.date == date.date && day.month == date.month) {
-                                                        result.add(session.copy().apply {
-                                                            startTime = onlyTime
-                                                            startTimeDate = withTime(date, onlyTime)
-                                                        })
-                                                    }
-                                                }
-                                            }
-                                        } else if (entry.type == EXCEPT) {
-                                            dates.forEach { date ->
-                                                var add = true
-                                                for (day in entry.days) {
-                                                    if (day.date == date.date && day.month == date.month) {
-                                                        add = false
-                                                        break
-                                                    }
-                                                }
-                                                if (add) {
+                    1 -> { // National
+                        version = VersionNational
+                        startingTimesBlock = parts[0]
+                    }
+                    else -> {
+                        // TODO: Diagnostic
+                    }
+                }
+                startingTimesBlock?.let { block ->
+                    block.split(",").forEach { part ->
+                        // NOTE: This may be empty as observed in this case
+                        // Leg. - , 00h01A
+                        if (part.isNotEmpty()) {
+                            val time = part.replace("h", ":").trim()
+                            val session = Session(
+                                movieId = movieId,
+                                cinemaId = cinemaId,
+                                movieTitle = movieTitle,
+                                movieRating = movieRating,
+                                room = room,
+                                startTime = time,
+                                version = version,
+                                format = format,
+                                magic = isMagicD,
+                                vip = isVIP
+                            )
+                            val lastChar = part.last()
+                            if (lastChar.isLetter()) {
+                                if (disclaimer.containsKey(lastChar)) {
+                                    val entry = disclaimer[lastChar]
+                                        ?: throw IllegalStateException("unexpected state")
+                                    // Create sessions accordingly with disclaimer
+                                    val onlyTime = time.substring(0, time.lastIndex)
+                                    if (entry.type == ONLY) {
+                                        // NOTE: We wrap around dates here just to get correct year
+                                        // since entry dates don't contain year
+                                        dates.forEach { date ->
+                                            entry.days.forEach { day ->
+                                                if (day.date == date.date && day.month == date.month) {
                                                     result.add(session.copy().apply {
                                                         startTime = onlyTime
                                                         startTimeDate = withTime(date, onlyTime)
@@ -191,26 +191,40 @@ object CinemaisScheduleConverter : Converter<ResponseBody, Schedule> {
                                                 }
                                             }
                                         }
+                                    } else if (entry.type == EXCEPT) {
+                                        dates.forEach { date ->
+                                            var add = true
+                                            for (day in entry.days) {
+                                                if (day.date == date.date && day.month == date.month) {
+                                                    add = false
+                                                    break
+                                                }
+                                            }
+                                            if (add) {
+                                                result.add(session.copy().apply {
+                                                    startTime = onlyTime
+                                                    startTimeDate = withTime(date, onlyTime)
+                                                })
+                                            }
+                                        }
                                     }
-                                } else {
-                                    dates.forEach { date ->
-                                        result.add(session.copy().apply {
-                                            startTime = time
-                                            startTimeDate = withTime(date, time)
-                                        })
-                                    }
+                                }
+                            } else {
+                                dates.forEach { date ->
+                                    result.add(session.copy().apply {
+                                        startTime = time
+                                        startTimeDate = withTime(date, time)
+                                    })
                                 }
                             }
                         }
                     }
-
                 }
             }
         }
         // NOTE(diego): Make sure we don't have any duplicates!
         return result.distinctBy { it.hashCode() }
     }
-
 
     /**
      * Parses cinema information inside tab "Informações"
@@ -261,7 +275,7 @@ object CinemaisScheduleConverter : Converter<ResponseBody, Schedule> {
         val week = parseWeek(scheduleBlock.select("small").first())
         val cinema = parseCinema(scheduleBlock, elements[3])
         val disclaimer = parseDisclaimer(scheduleBlock.select("div.disclaimer").first())
-        val sessions = parseSessions(scheduleBlock, cinema, disclaimer)
+        val sessions = parseSessions(scheduleBlock, cinema, disclaimer, week)
         return Schedule(
             cinema = cinema,
             week = week,

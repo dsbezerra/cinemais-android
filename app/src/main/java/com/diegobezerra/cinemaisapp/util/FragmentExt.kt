@@ -2,10 +2,14 @@ package com.diegobezerra.cinemaisapp.util
 
 import android.view.View
 import androidx.annotation.IdRes
+import androidx.annotation.MainThread
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import androidx.fragment.app.createViewModelLazy
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider.Factory
 import com.google.android.material.appbar.MaterialToolbar
 
 fun Fragment.setupToolbarAsActionBar(
@@ -43,3 +47,9 @@ fun FragmentTransaction.switchToAdded(
 
     return target
 }
+
+@MainThread
+inline fun <reified VM : ViewModel> Fragment.parentFragmentViewModels(
+    noinline factoryProducer: (() -> Factory)? = null
+) = createViewModelLazy(VM::class, { requireParentFragment().viewModelStore },
+    factoryProducer ?: { requireParentFragment().defaultViewModelProviderFactory })

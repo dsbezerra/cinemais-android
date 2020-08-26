@@ -9,8 +9,14 @@ class CinemasRemoteDataSource @Inject constructor(
     private val service: CinemaisService
 ) : CinemasDataSource {
 
-    override suspend fun getSchedule(id: Int) = safeRequest(
-        call = { service.schedule(id) }
+    override suspend fun getSchedule(id: Int, date: String?) = safeRequest(
+        call = {
+            if (date == null) {
+                service.schedule(id)
+            } else {
+                service.nextWeekSchedule(id, date)
+            }
+        }
     )
 
     override suspend fun getTickets(id: Int) = safeRequest(

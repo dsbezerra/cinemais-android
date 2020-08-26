@@ -103,6 +103,8 @@ class SessionsAdapter(
                 val context = itemView.context
 
                 room.text = context.getString(R.string.label_session_room, sessions.room)
+                room.isGone = sessions.room == 0
+
                 when (sessions.version) {
                     VersionNational -> {
                         version.text = context.getString(R.string.label_session_national)

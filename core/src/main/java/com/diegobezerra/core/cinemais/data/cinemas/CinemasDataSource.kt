@@ -11,7 +11,7 @@ interface CinemasDataSource {
      * Returns the schedule of the cinema with the given ID
      * @param id Cinema ID
      */
-    suspend fun getSchedule(id: Int): Result<Schedule>
+    suspend fun getSchedule(id: Int, date: String? = null): Result<Schedule>
 
     /**
      * Returns the tickets of the cinema with the given ID

@@ -62,6 +62,12 @@ interface CinemaisService {
         @Query("cc") id: Int
     ): Schedule
 
+    @GET("programacao/proxima_semana.php")
+    suspend fun nextWeekSchedule(
+        @Query("cc") id: Int,
+        @Query("d") date: String
+    ): Schedule
+
     @GET("programacao/mapa.php")
     suspend fun location(
         @Query("cc") id: Int

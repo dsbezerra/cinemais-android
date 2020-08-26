@@ -95,7 +95,13 @@ class CinemaViewModel @ViewModelInject constructor(
                 cinemaRepository.clearSchedule(it)
             }
             execute(
-                { cinemaRepository.getScheduleWithLocation(it, SessionMatcher(selectedFilters)) },
+                {
+                    cinemaRepository.getScheduleWithLocation(
+                        cinemaId = it,
+                        date = null,
+                        matcher = SessionMatcher(selectedFilters)
+                    )
+                },
                 onSuccess = { schedule ->
                     _cinema.value = schedule.cinema
                     _schedule.value = schedule

@@ -35,7 +35,11 @@ class CinemaRepository @Inject constructor(
      * Returns the schedule of the cinema with the given ID
      * @param id Cinema ID
      */
-    suspend fun getSchedule(id: Int, matcher: SessionMatcher? = null): Result<Schedule> {
+    suspend fun getSchedule(
+        id: Int,
+        date: String? = null,
+        matcher: SessionMatcher? = null
+    ): Result<Schedule> {
         val cached = scheduleCache[id]
         return if (cached != null) {
             // NOTE(diego): We recreate days here because these cached schedules may contain
@@ -44,7 +48,7 @@ class CinemaRepository @Inject constructor(
         } else {
             getRemoteAndCache(
                 call = {
-                    remoteDataSource.getSchedule(id).also {
+                    remoteDataSource.getSchedule(id, date).also {
                         if (it is Result.Success && matcher != null) {
                             it.data.recreateDays(matcher)
                         }
@@ -81,9 +85,10 @@ class CinemaRepository @Inject constructor(
      */
     suspend fun getScheduleWithLocation(
         cinemaId: Int,
+        date: String? = null,
         matcher: SessionMatcher? = null
     ): Result<Schedule> {
-        val scheduleResult = getSchedule(cinemaId, matcher)
+        val scheduleResult = getSchedule(cinemaId, date, matcher)
         if (scheduleResult is Result.Success) {
             getLocation(cinemaId).let {
                 if (it is Result.Success) {

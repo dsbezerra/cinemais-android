@@ -111,8 +111,9 @@ class PlayingCinemasViewModel @ViewModelInject constructor(
             execute(
                 {
                     cinemaRepository.getSchedule(
-                        cinemaId,
-                        SessionMatcher(selectedFilters, getMovieId())
+                        id = cinemaId,
+                        date = null,
+                        matcher = SessionMatcher(selectedFilters, getMovieId())
                     )
                 },
                 onSuccess = { schedule ->

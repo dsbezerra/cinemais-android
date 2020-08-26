@@ -5,10 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import com.diegobezerra.cinemaisapp.databinding.FragmentScheduleDayBinding
 import com.diegobezerra.cinemaisapp.ui.cinema.CinemaViewModel
 import com.diegobezerra.cinemaisapp.ui.movie.playingcinemas.PlayingCinemasViewModel
+import com.diegobezerra.cinemaisapp.util.parentFragmentViewModels
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -33,8 +33,8 @@ class ScheduleDayFragment : Fragment() {
         }
     }
 
-    private val playingCinemasViewModel: PlayingCinemasViewModel by viewModels()
-    private val cinemaViewModel: CinemaViewModel by viewModels()
+    private val playingCinemasViewModel: PlayingCinemasViewModel by parentFragmentViewModels()
+    private val cinemaViewModel: CinemaViewModel by parentFragmentViewModels()
 
     private lateinit var sessionsAdapter: SessionsAdapter
 
