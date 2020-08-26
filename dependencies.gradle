@@ -1,5 +1,0 @@
-dependencies {
-    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:${versions.mockitoKotlin}"
-    testImplementation "junit:junit:${versions.junit}"
-    testImplementation "org.mockito:mockito-core:${versions.mockito}"
-}
