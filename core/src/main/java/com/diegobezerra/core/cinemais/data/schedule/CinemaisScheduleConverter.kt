@@ -102,7 +102,7 @@ object CinemaisScheduleConverter : Converter<ResponseBody, Schedule> {
         }
 
         val elements = element.select("table tr").let {
-            it.first().select("td").forEachIndexed { index, column ->
+            it.first()?.select("td")?.forEachIndexed { index, column ->
                 mapping[column.text().trim()] = index
             }
             it.drop(1)
