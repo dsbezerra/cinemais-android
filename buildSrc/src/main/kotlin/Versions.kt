@@ -1,9 +1,9 @@
 object Versions {
     private const val versionMajor = 0
     private const val versionMinor = 0
-    private const val versionPatch = 48
+    private const val versionPatch = 49
 
-    const val versionCode = 35
+    const val versionCode = 36
     const val versionName = "$versionMajor.$versionMinor.$versionPatch"
     const val versionSuffix = "-beta"
 
