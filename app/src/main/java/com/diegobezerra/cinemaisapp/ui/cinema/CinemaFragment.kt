@@ -14,6 +14,7 @@ import androidx.core.view.isGone
 import androidx.fragment.app.viewModels
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.lifecycle.Observer
+import androidx.lifecycle.observe
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.Fade
 import androidx.transition.Slide
@@ -124,11 +125,11 @@ class CinemaFragment : MainFragment() {
         setupToolbarAsActionBar(root, R.id.toolbar) {
             title = getString(R.string.title_cinema)
             setDisplayHomeAsUpEnabled(true)
-        }
+        }.setNavigationOnClickListener { requireActivity().onBackPressed() }
 
-        cinemaViewModel.filters.observe(viewLifecycleOwner, {
+        cinemaViewModel.filters.observe(viewLifecycleOwner) {
             filtersAdapter.submitList(it)
-        })
+        }
 
         cinemaViewModel.navigateToSchedulePageAction.observe(
             viewLifecycleOwner,
@@ -186,9 +187,9 @@ class CinemaFragment : MainFragment() {
             }
         })
 
-        cinemaViewModel.loading.observe(viewLifecycleOwner, {
+        cinemaViewModel.loading.observe(viewLifecycleOwner) {
             progress_bar.isGone = cinemaViewModel.isCinemaLayoutVisible.get() || !it
-        })
+        }
     }
 
     override fun onStart() {
