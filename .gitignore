@@ -10,3 +10,4 @@ local.properties
 .gradle
 ktlint
 google-services.json
+*.aab
