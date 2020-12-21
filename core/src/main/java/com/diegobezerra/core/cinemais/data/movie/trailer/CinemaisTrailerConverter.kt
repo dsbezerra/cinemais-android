@@ -20,12 +20,11 @@ object CinemaisTrailerConverter : Converter<ResponseBody, Trailer> {
     private fun parseTrailer(element: Element): Trailer {
         val src = element.select("#filmeContainer > object > embed").attr("src")
         val matchResult = REGEX.find(src)
-        val id = if (matchResult != null) {
-            matchResult.groupValues[5]
+        return if (matchResult != null) {
+             Trailer.youtube(matchResult.groupValues[5], src)
         } else {
-            ""
+            Trailer.EMPTY
         }
-        return Trailer.youtube(id, src)
     }
 
 }

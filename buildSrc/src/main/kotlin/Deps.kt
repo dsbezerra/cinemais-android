@@ -33,6 +33,8 @@ object Deps {
 
     object Kotlin {
         const val stdlib = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${Versions.kotlin}"
+        const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.kotlin}"
+        const val coroutinesAndroid = "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.kotlin}"
     }
 
     object Hilt {

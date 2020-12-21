@@ -17,6 +17,7 @@ import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
+import androidx.lifecycle.Observer
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Priority
 import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions.withCrossFade
@@ -118,11 +119,11 @@ class MovieFragment : Fragment() {
         }
         movieViewModel.apply {
 
-            loading.observe(viewLifecycleOwner, {
+            loading.observe(viewLifecycleOwner, Observer {
                 swipeRefreshLayout.isRefreshing = it
             })
 
-            movie.observe(viewLifecycleOwner, {
+            movie.observe(viewLifecycleOwner, Observer {
                 initMovie(it)
             })
 
@@ -177,23 +178,6 @@ class MovieFragment : Fragment() {
             }
         }
 
-        movie.trailer?.let {
-            if (!it.isYoutube()) {
-                return
-            }
-            trailer.apply {
-                isGone = false
-                setOnClickListener { _ ->
-                    val youtubeUrl = "https://youtube.com/watch?v=${it.id}"
-                    try {
-                        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(youtubeUrl)))
-                    } catch (e: Exception) {
-                        // No-op
-                    }
-                }
-            }
-        }
-
         initInfo(movie)
 
         synopsis.apply {
@@ -222,6 +206,22 @@ class MovieFragment : Fragment() {
         cinemais_border?.let {
             it.scaleX = 0f
             it.visibility = View.VISIBLE
+        }
+
+        movie.trailer?.let {
+            if (it.isValid() && it.isYoutube()) {
+                trailer.apply {
+                    isGone = false
+                    setOnClickListener { _ ->
+                        val youtubeUrl = "https://youtube.com/watch?v=${it.id}"
+                        try {
+                            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(youtubeUrl)))
+                        } catch (e: Exception) {
+                            // No-op
+                        }
+                    }
+                }
+            }
         }
     }
 

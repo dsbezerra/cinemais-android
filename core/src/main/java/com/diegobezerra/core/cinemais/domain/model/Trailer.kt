@@ -2,11 +2,13 @@ package com.diegobezerra.core.cinemais.domain.model
 
 // Used to hold trailer data from Youtube or Cinemais
 data class Trailer(
-    val id: String,
-    val url: String,
-    val source: String
+    val id: String = "",
+    val url: String = "",
+    val source: String = ""
 ) {
     companion object {
+
+        val EMPTY = Trailer()
 
         const val SOURCE_CINEMAIS = "Cinemais"
         const val SOURCE_YOUTUBE = "YouTube"
@@ -14,6 +16,7 @@ data class Trailer(
         fun cinemais(id: String, url: String) = Trailer(id, url, SOURCE_CINEMAIS)
 
         fun youtube(id: String, url: String) = Trailer(id, url, SOURCE_YOUTUBE)
+
     }
 
     fun isValid() = id != ""
