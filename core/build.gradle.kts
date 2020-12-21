@@ -40,7 +40,16 @@ dependencies {
     // Timber
     implementation(Deps.timber)
 
+    // Coroutines
+    implementation(Deps.Kotlin.coroutines)
+    implementation(Deps.Kotlin.coroutinesAndroid)
+
+    // Instrumentation tests
+    androidTestImplementation(Deps.Test.coreKtx)
+    androidTestImplementation(Deps.Test.runner)
+
     // Local unit tests
+    testImplementation(Deps.Retrofit.mock)
     testImplementation(Deps.UnitTest.junit)
     testImplementation(Deps.UnitTest.mockitoCore)
     testImplementation(Deps.UnitTest.mockitoKotlin)

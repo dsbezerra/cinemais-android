@@ -98,7 +98,6 @@ dependencies {
 
     // Retrofit
     implementation(Deps.Retrofit.retrofit)
-    testImplementation(Deps.Retrofit.mock)
 
     // Timber
     implementation(Deps.timber)
@@ -108,6 +107,7 @@ dependencies {
     androidTestImplementation(Deps.Test.runner)
 
     // Local unit tests
+    testImplementation(Deps.Retrofit.mock)
     testImplementation(Deps.UnitTest.junit)
     testImplementation(Deps.UnitTest.mockitoCore)
     testImplementation(Deps.UnitTest.mockitoKotlin)
