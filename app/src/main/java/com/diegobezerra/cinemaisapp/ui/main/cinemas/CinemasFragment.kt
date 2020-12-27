@@ -4,12 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import androidx.core.view.isGone
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
-import androidx.recyclerview.widget.RecyclerView
 import com.diegobezerra.cinemaisapp.R
-import com.diegobezerra.cinemaisapp.ui.main.MainActivity
+import com.diegobezerra.cinemaisapp.databinding.FragmentCinemasBinding
 import com.diegobezerra.cinemaisapp.ui.main.MainFragment
 import com.diegobezerra.cinemaisapp.util.setupToolbarAsActionBar
 import com.diegobezerra.shared.result.EventObserver
@@ -31,36 +31,29 @@ class CinemasFragment : MainFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val root = inflater.inflate(R.layout.fragment_cinemas, container, false)
-        val progressBar = root.findViewById<View>(R.id.progress_bar)
-        val recyclerView = root.findViewById<RecyclerView>(R.id.recyclerView)
-        recyclerView.run {
+        val binding = FragmentCinemasBinding.inflate(inflater, container, false).apply {
+            lifecycleOwner = this@CinemasFragment
+            viewModel = cinemasViewModel
+        }
+        setupToolbarAsActionBar(binding.root, R.id.toolbar) {
+            title = title()
+        }
+
+        binding.recyclerView.run {
             adapter = cinemasAdapter
             setHasFixedSize(true)
         }
 
-        setupToolbarAsActionBar(root, R.id.toolbar) {
-            title = title()
+        cinemasViewModel.cinemas.observe(viewLifecycleOwner) {
+            cinemasAdapter.data = it
         }
 
-        cinemasViewModel.apply {
-            loading.observe(viewLifecycleOwner) {
-                progressBar.isGone = !it
-            }
+        cinemasViewModel.switchToCinemaDetail.observe(viewLifecycleOwner,
+            EventObserver {
+                mainViewModel.onShowCinema(it)
+            })
 
-            cinemas.observe(viewLifecycleOwner) {
-                cinemasAdapter.data = it
-            }
-
-            switchToCinemaDetail.observe(viewLifecycleOwner,
-                EventObserver {
-                    (requireActivity() as MainActivity).run {
-                        showCinemaFragment(it)
-                    }
-                })
-        }
-
-        return root
+        return binding.root
     }
 
     override fun title() = getString(R.string.title_theaters)

@@ -1,25 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.main.cinemas.CinemasFragment"
     >
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.diegobezerra.cinemaisapp.ui.main.cinemas.CinemasViewModel"
+            />
+
+    </data>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:paddingTop="?actionBarSize"
-        app:layoutManager="LinearLayoutManager"
-        tools:listitem="@layout/item_cinema"
-        />
+        tools:context=".ui.main.cinemas.CinemasFragment"
+        >
 
-    <include layout="@layout/include_progress_bar" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingTop="?actionBarSize"
+            app:layoutManager="LinearLayoutManager"
+            tools:listitem="@layout/item_cinema"
+            />
 
-    <include layout="@layout/include_appbar" />
+        <include
+            android:id="@+id/progress_bar"
+            layout="@layout/include_progress_bar"
+            app:goneUnless="@{viewModel.loading}"
+            />
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+        <include layout="@layout/include_appbar" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+</layout>

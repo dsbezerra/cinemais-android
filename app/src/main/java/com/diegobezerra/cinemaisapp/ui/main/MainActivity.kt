@@ -3,6 +3,7 @@ package com.diegobezerra.cinemaisapp.ui.main
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.diegobezerra.cinemaisapp.R
@@ -14,6 +15,7 @@ import com.diegobezerra.cinemaisapp.ui.main.home.HomeFragment
 import com.diegobezerra.cinemaisapp.ui.main.movies.MoviesFragment
 import com.diegobezerra.cinemaisapp.ui.settings.SettingsActivity
 import com.diegobezerra.cinemaisapp.util.switchToAdded
+import com.diegobezerra.shared.result.EventObserver
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
@@ -34,6 +36,8 @@ class MainActivity : AppCompatActivity() {
     private var fragment: MainFragment? = null
     private val fragments: MutableList<MainFragment> = mutableListOf()
 
+    private val mainViewModel: MainViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -44,6 +48,10 @@ class MainActivity : AppCompatActivity() {
         } else {
             fragment = supportFragmentManager.findFragmentById(FRAGMENT_ID) as MainFragment
         }
+
+        mainViewModel.navigateToCinemaDetail.observe(this, EventObserver {
+            showCinemaFragment(it)
+        })
     }
 
     override fun onAttachFragment(fragment: Fragment) {

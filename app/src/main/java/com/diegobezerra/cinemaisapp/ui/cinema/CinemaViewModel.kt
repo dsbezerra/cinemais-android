@@ -49,8 +49,8 @@ class CinemaViewModel @ViewModelInject constructor(
     val navigateToTicketsAction: LiveData<Event<Int>>
         get() = _navigateToTicketsAction
 
-    private val _navigateToLocationAction = MutableLiveData<Event<Location>>()
-    val navigateToLocationAction: LiveData<Event<Location>>
+    private val _navigateToLocationAction = MutableLiveData<Event<Cinema>>()
+    val navigateToLocationAction: LiveData<Event<Cinema>>
         get() = _navigateToLocationAction
 
     private val _navigateToInfoAction = MutableLiveData<Event<Unit>>()
@@ -128,7 +128,7 @@ class CinemaViewModel @ViewModelInject constructor(
     }
 
     fun onLocationClicked() {
-        getCinemaLocation()?.let {
+        getCinema()?.let {
             _navigateToLocationAction.value = Event(it)
         }
     }
@@ -201,8 +201,8 @@ class CinemaViewModel @ViewModelInject constructor(
     /**
      * Returns the current cinema's location or null if not available.
      */
-    private fun getCinemaLocation(): Location? {
-        return cinema.value?.location
+    private fun getCinema(): Cinema? {
+        return cinema.value
     }
 
 }

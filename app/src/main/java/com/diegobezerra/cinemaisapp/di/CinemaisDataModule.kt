@@ -27,12 +27,12 @@ object CinemaisDataModule {
 
     @Singleton
     @Provides
-    fun provideConverterFactory(): CinemaisConverterFactory =
+    fun providesConverterFactory(): CinemaisConverterFactory =
         CinemaisConverterFactory()
 
     @Singleton
     @Provides
-    fun provideOkHttpClient(@ApplicationContext context: Context): OkHttpClient {
+    fun providesOkHttpClient(@ApplicationContext context: Context): OkHttpClient {
         // NOTE: Each cache must have its own directory.
         // See https://github.com/square/okhttp/wiki/Recipes#response-caching for more information!
         val cacheSize = 10L * 1024 * 1024 // 10 MiB
@@ -58,7 +58,7 @@ object CinemaisDataModule {
 
     @Singleton
     @Provides
-    fun provideCinemaisService(
+    fun providesCinemaisService(
         client: OkHttpClient,
         converterFactory: CinemaisConverterFactory
     ): CinemaisService {
@@ -85,7 +85,7 @@ object CinemaisDataModule {
 
     @Singleton
     @Provides
-    fun provideMovieRepository(
+    fun providesMovieRepository(
         remoteDataSource: MovieRemoteDataSource
     ): MovieRepository = MovieRepository(remoteDataSource)
 }

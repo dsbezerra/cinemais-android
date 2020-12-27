@@ -107,7 +107,7 @@ class CinemaFragment : MainFragment() {
 
         val root = binding.root
         setupToolbarAsActionBar(root, R.id.toolbar) {
-            title = getString(R.string.title_cinema)
+            title = ""
             setDisplayHomeAsUpEnabled(true)
         }.setNavigationOnClickListener { requireActivity().onBackPressed() }
 
@@ -153,8 +153,12 @@ class CinemaFragment : MainFragment() {
 
         cinemaViewModel.navigateToLocationAction.observe(
             viewLifecycleOwner,
-            EventObserver { location ->
-                openMaps(location.latitude, location.longitude)
+            EventObserver { cinema ->
+                if (cinema.location?.hasLatLng() == true) {
+                    openMaps(cinema.location!!.latitude, cinema.location!!.longitude)
+                } else {
+                    Toast.makeText(requireActivity(), "Indisponível", Toast.LENGTH_SHORT).show()
+                }
             })
 
         cinemaViewModel.navigateToInfoAction.observe(viewLifecycleOwner,
@@ -312,6 +316,15 @@ class CinemaFragment : MainFragment() {
         val packageManager = requireActivity().packageManager
         if (mapIntent.resolveActivity(packageManager) != null) {
             startActivity(mapIntent)
+        }
+    }
+
+    private fun openMapsPage(cinemaId: Int) {
+        val url = "${CinemaisService.ENDPOINT}programacao/cinema.php?cc=$cinemaId"
+        try {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+        } catch (e: Exception) {
+            // No-op
         }
     }
 

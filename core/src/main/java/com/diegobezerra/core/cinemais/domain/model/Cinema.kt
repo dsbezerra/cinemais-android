@@ -17,10 +17,19 @@ data class Cinema(
 }
 
 data class Location(
+    var query: String? = null,
     val latitude: Double,
     val longitude: Double,
-    val addressLine: String
-)
+    val addressLine: String? = null
+) {
+
+    fun hasQuery() = !query.isNullOrEmpty()
+
+    fun hasLatLng() = latitude != 0.0 && longitude != 0.0
+
+    fun hasAddressLine() = !addressLine.isNullOrEmpty()
+
+}
 
 class Cinemas(
     val cinemas: List<Cinema> = listOf()

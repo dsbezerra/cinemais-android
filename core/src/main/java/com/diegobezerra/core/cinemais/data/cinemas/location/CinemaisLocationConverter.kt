@@ -1,5 +1,6 @@
 package com.diegobezerra.core.cinemais.data.cinemas.location
 
+import android.net.Uri
 import com.diegobezerra.core.cinemais.data.asJsoup
 import com.diegobezerra.core.cinemais.domain.model.Location
 import okhttp3.ResponseBody
@@ -28,21 +29,24 @@ object CinemaisLocationConverter : Converter<ResponseBody, Location> {
         }
         val addressLine = "\\s*var\\s*contentString\\s*=\\s*'(.*)';".toRegex()
             .find(scriptContent)?.groupValues?.get(1)?.let {
-            val elements = Jsoup.parse(it).select("span")
-            var line = ""
-            if (elements.size == 2) {
-                elements[1].childNodes().forEach { node ->
-                    if (node is TextNode) {
-                        line += node.text()
-                    } else if (node is Element && node.`is`("br")) {
-                        line += "\n"
+                val elements = Jsoup.parse(it).select("span")
+                var line = ""
+                if (elements.size == 2) {
+                    elements[1].childNodes().forEach { node ->
+                        if (node is TextNode) {
+                            line += node.text()
+                        } else if (node is Element && node.`is`("br")) {
+                            line += "\n"
+                        }
                     }
                 }
-            }
-            line
-        } ?: ""
-
+                line
+            } ?: ""
+        val query = element.select("iframe").first().attr("src").let {
+            Uri.parse(it).getQueryParameter("q")
+        }
         return Location(
+            query = query,
             latitude = latLng[0],
             longitude = latLng[1],
             addressLine = addressLine

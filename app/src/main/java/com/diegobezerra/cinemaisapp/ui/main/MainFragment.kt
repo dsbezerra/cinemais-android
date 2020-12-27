@@ -3,9 +3,12 @@ package com.diegobezerra.cinemaisapp.ui.main
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import com.diegobezerra.cinemaisapp.util.safeRequireActivity
 
 abstract class MainFragment : Fragment() {
+
+    protected val mainViewModel: MainViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

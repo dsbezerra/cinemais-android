@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.core.view.isGone
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.observe
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.diegobezerra.cinemaisapp.R
@@ -60,14 +61,14 @@ class TabMoviesFragment : Fragment() {
         }
 
         tabMoviesViewModel.apply {
-            loading.observe(viewLifecycleOwner, {
+            loading.observe(viewLifecycleOwner) {
                 swipeRefreshLayout.isRefreshing = it
-            })
+            }
 
-            movies.observe(viewLifecycleOwner, {
+            movies.observe(viewLifecycleOwner) {
                 moviesAdapter.submitList(it)
                 emptyView.isGone = it.isNotEmpty()
-            })
+            }
 
             navigateToMovieDetail.observe(viewLifecycleOwner,
                 EventObserver { movieId ->
