@@ -97,9 +97,9 @@
                 android:layout_marginEnd="56dp"
                 android:contentDescription="@null"
                 android:onClick="@{() -> viewModel.onFilterClick()}"
+                android:tint="@{viewModel.isFilterEnabled ? @color/filter_active : @android:color/white}"
                 app:goneUnless="@{viewModel.isViewingSchedule &amp;&amp; !viewModel.loading}"
                 app:srcCompat="@drawable/ic_filter_list"
-                app:tint="@{viewModel.isFilterEnabled ? @color/filter_active : @android:color/white}"
                 />
 
             <ImageButton
