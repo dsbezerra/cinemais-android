@@ -73,7 +73,7 @@
                     android:text="@{viewModel.cinema.location.addressLine}"
                     android:textAlignment="center"
                     android:textAppearance="@style/TextAppearance.Cinemais.Body"
-                    app:goneUnless="@{viewModel.cinema.location == null &amp;&amp; viewModel.cinema.location.hasAddressLine()}"
+                    app:goneUnless="@{viewModel.cinema.location != null &amp;&amp; viewModel.cinema.location.hasAddressLine()}"
                     tools:text="Avenida Donato Quintino, 90\nCidade Nova - Montes Claros Shopping"
                     />
 
