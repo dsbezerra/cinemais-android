@@ -28,8 +28,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
             android:animateLayoutChanges="true"
+            android:orientation="vertical"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             >
 
@@ -47,13 +47,13 @@
 
             <com.diegobezerra.cinemaisapp.widget.CinemaisTabLayout
                 android:id="@+id/tabs"
+                style="@style/Widget.Cinemais.TabLayout.Schedule"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:goneUnless="@{!viewModel.isScheduleEmpty &amp;&amp; !viewModel.loading}"
-                style="@style/Widget.Cinemais.TabLayout.Schedule"
                 />
 
-            <androidx.viewpager.widget.ViewPager
+            <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/viewpager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

@@ -24,7 +24,7 @@ class MovieInfoView @JvmOverloads constructor(
         ContextCompat.getColor(context, R.color.primary_text)
     }
 
-    var label: String? = null
+    private var label: String? = null
         set(value) {
             if (field != value) {
                 field = value

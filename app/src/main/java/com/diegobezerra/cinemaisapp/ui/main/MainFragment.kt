@@ -1,15 +1,19 @@
 package com.diegobezerra.cinemaisapp.ui.main
 
 import android.os.Bundle
+import android.view.View
 import androidx.fragment.app.Fragment
+import com.diegobezerra.cinemaisapp.util.safeRequireActivity
 
 abstract class MainFragment : Fragment() {
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        (requireActivity() as MainActivity).supportActionBar?.let {
-            it.title = title()
+        safeRequireActivity(MainActivity::class) { activity ->
+            activity.supportActionBar?.let {
+                it.title = title()
+            }
         }
     }
 

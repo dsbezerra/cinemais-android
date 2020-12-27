@@ -11,6 +11,7 @@ import androidx.fragment.app.createViewModelLazy
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider.Factory
 import com.google.android.material.appbar.MaterialToolbar
+import kotlin.reflect.KClass
 
 fun Fragment.setupToolbarAsActionBar(
     rootView: View, @IdRes toolbarId: Int,
@@ -46,6 +47,17 @@ fun FragmentTransaction.switchToAdded(
     }
 
     return target
+}
+
+fun <T : AppCompatActivity> Fragment.safeRequireActivity(
+    clazz: KClass<out T>,
+    invoke: (activity: T) -> Unit
+) {
+    try {
+        invoke(clazz.javaObjectType.cast(requireActivity())!!)
+    } catch (e: Exception) {
+        // No-op
+    }
 }
 
 @MainThread

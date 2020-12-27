@@ -1,8 +1,7 @@
 package com.diegobezerra.cinemaisapp.ui.schedule
 
-import android.content.Context
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentStatePagerAdapter
+import androidx.fragment.app.Fragment
+import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.diegobezerra.cinemaisapp.R
 import com.diegobezerra.core.cinemais.domain.model.Schedule
 import com.diegobezerra.core.util.DateUtils
@@ -13,28 +12,27 @@ private val DATE_TITLE_NO_WEEKDAY = SimpleDateFormat("d 'de' MMM", BRAZIL)
 private val DATE_TITLE_WEEKDAY = SimpleDateFormat("E', 'd 'de' MMM", BRAZIL)
 
 class ScheduleAdapter(
-    fm: FragmentManager,
-    val context: Context,
+    val fragment: Fragment,
     val schedule: Schedule,
-    val playingRooms: Boolean = false
-) : FragmentStatePagerAdapter(fm) {
+    private val playingRooms: Boolean = false
+) : FragmentStateAdapter(fragment) {
 
-    override fun getItem(position: Int) =
+    override fun createFragment(position: Int): Fragment =
         ScheduleDayFragment.newInstance(schedule.cinema.id, position, playingRooms)
 
-    override fun getPageTitle(position: Int): CharSequence? {
+    fun getPageTitle(position: Int): CharSequence? {
         val day = schedule.days[position].day
         return when {
             DateUtils.isToday(day.time) -> {
-                context.getString(R.string.today_with_date, DATE_TITLE_NO_WEEKDAY.format(day))
+                fragment.getString(R.string.today_with_date, DATE_TITLE_NO_WEEKDAY.format(day))
             }
             DateUtils.isTomorrow(day.time) -> {
-                context.getString(R.string.tomorrow_with_date, DATE_TITLE_NO_WEEKDAY.format(day))
+                fragment.getString(R.string.tomorrow_with_date, DATE_TITLE_NO_WEEKDAY.format(day))
             }
             else -> DATE_TITLE_WEEKDAY.format(day.time)
         }
     }
 
-    override fun getCount() = schedule.days.size
+    override fun getItemCount(): Int = schedule.days.size
 
 }

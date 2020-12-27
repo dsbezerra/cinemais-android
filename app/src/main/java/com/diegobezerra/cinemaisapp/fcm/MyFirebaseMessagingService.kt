@@ -38,6 +38,10 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         const val ACTION_VIEW_TRAILER = "view_trailer"
     }
 
+    override fun onNewToken(token: String) {
+        // Added to remove warning.
+    }
+
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         val data = remoteMessage.data
         val context = applicationContext

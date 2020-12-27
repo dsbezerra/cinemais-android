@@ -5,14 +5,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
-import androidx.viewpager.widget.ViewPager
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
 import com.diegobezerra.cinemaisapp.R
-import com.diegobezerra.cinemaisapp.R.string
 import com.diegobezerra.cinemaisapp.ui.main.MainFragment
 import com.diegobezerra.cinemaisapp.util.setupToolbarAsActionBar
 import com.diegobezerra.cinemaisapp.widget.CinemaisTabLayout
+import com.diegobezerra.cinemaisapp.widget.CinemaisTabLayout.Tab
+import com.diegobezerra.cinemaisapp.widget.CinemaisTabLayoutMediator
+import com.diegobezerra.cinemaisapp.widget.CinemaisTabLayoutMediator.TabConfigurationStrategy
 
 class MoviesFragment : MainFragment() {
 
@@ -27,41 +28,54 @@ class MoviesFragment : MainFragment() {
 
     }
 
+    private lateinit var mediator: CinemaisTabLayoutMediator
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val root = inflater.inflate(R.layout.fragment_movies, container, false)
-        val pager = root.findViewById<ViewPager>(R.id.viewpager)
+        val pager = root.findViewById<ViewPager2>(R.id.viewpager)
+        val tabs = root.findViewById<CinemaisTabLayout>(R.id.tabs)
 
         setupToolbarAsActionBar(root, R.id.toolbar) {
             title = title()
         }
 
-        pager.adapter = MoviesAdapter(childFragmentManager)
+        pager.adapter = MoviesAdapter(this)
 
-        root.findViewById<CinemaisTabLayout>(R.id.tabs).run {
-            setupWithViewPager(pager)
-        }
+        mediator = CinemaisTabLayoutMediator(tabs, pager,
+            object : TabConfigurationStrategy {
+                override fun onConfigureTab(tab: Tab, position: Int) {
+                    tab.setText(
+                        when (position) {
+                            NOW_PLAYING -> R.string.title_tab_now_playing
+                            else -> R.string.title_tab_upcoming
+                        }
+                    )
+                }
+            })
+
+        mediator.attach()
+
         return root
+    }
+
+    override fun onDestroyView() {
+        mediator.detach()
+
+        super.onDestroyView()
     }
 
     override fun title(): String? = getString(R.string.title_movies)
 
-    inner class MoviesAdapter(fm: FragmentManager) :
-        FragmentPagerAdapter(fm) {
+    inner class MoviesAdapter(fragment: Fragment) :
+        FragmentStateAdapter(fragment) {
 
-        override fun getCount() = COUNT
+        override fun getItemCount(): Int = COUNT
 
-        override fun getItem(position: Int): Fragment {
+        override fun createFragment(position: Int): Fragment {
             return TabMoviesFragment.newInstance(position)
-        }
-
-        override fun getPageTitle(position: Int): CharSequence {
-            return when (position) {
-                NOW_PLAYING -> getString(string.title_tab_now_playing)
-                else -> getString(string.title_tab_upcoming)
-            }
         }
     }
 

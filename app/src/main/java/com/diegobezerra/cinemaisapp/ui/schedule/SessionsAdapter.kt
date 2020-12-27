@@ -120,9 +120,8 @@ class SessionsAdapter(
                 magic.isGone = !sessions.magic
                 format.isGone = sessions.format != VideoFormat3D
 
-                // TODO: Replace this TextView with a RecyclerView once we integrate with VeloxTickets
+                // TODO: Replace this TextView with RecyclerView?
                 times.text = sessions.sessions.joinToString(", ") { it.startTime }
-
             }
         }
     }
@@ -205,10 +204,6 @@ class SessionGroup(
             return
         }
         sessions += session
-    }
-
-    fun clear() {
-        sessions.clear()
     }
 
     /**

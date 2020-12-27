@@ -11,13 +11,11 @@ class ContextUtils {
             if (context == null) {
                 return true
             }
-
             if (context is Activity &&
                 (context.isDestroyed || context.isFinishing)
             ) {
                 return true
             }
-
             return false
         }
 

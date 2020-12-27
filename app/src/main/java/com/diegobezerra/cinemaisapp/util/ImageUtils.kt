@@ -38,21 +38,21 @@ class ImageUtils {
                 }
             }
 
-        fun getPosterPlaceholder(context: Context): Drawable =
+        private fun getPosterPlaceholder(context: Context): Drawable =
             POSTER_PLACEHOLDER ?: synchronized(this) {
                 POSTER_PLACEHOLDER ?: buildPosterPlaceholder(context).also {
                     POSTER_PLACEHOLDER = it
                 }
             }
 
-        fun getPosterOptions(context: Context): GlideOptions =
+        private fun getPosterOptions(context: Context): GlideOptions =
             POSTER_OPTIONS ?: synchronized(this) {
                 POSTER_OPTIONS ?: buildPosterOptions(context).also {
                     POSTER_OPTIONS = it
                 }
             }
 
-        fun getDefaultTransition(): DrawableTransitionOptions =
+        private fun getDefaultTransition(): DrawableTransitionOptions =
             DEFAULT_TRANSITION ?: synchronized(this) {
                 DEFAULT_TRANSITION ?: buildDefaultTransition().also {
                     DEFAULT_TRANSITION = it

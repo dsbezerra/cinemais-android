@@ -59,7 +59,10 @@ object CinemaisScheduleConverter : Converter<ResponseBody, Schedule> {
                             val days = mutableListOf<Date>().also {
                                 dayRegex.findAll(content).map { it.groupValues[1] }.distinct()
                                     .forEach { s ->
-                                        it.add(DATE_FORMAT.parse(s)) // We don't care about the year
+                                        // We don't care about the year
+                                        DATE_FORMAT.parse(s)?.also { date ->
+                                            it.add(date)
+                                        }
                                     }
                             }
                             // This is unexpected. No-op for now

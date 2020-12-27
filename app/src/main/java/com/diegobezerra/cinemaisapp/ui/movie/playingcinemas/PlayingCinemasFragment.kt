@@ -6,16 +6,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.animation.doOnEnd
-import androidx.core.view.isGone
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
+import androidx.lifecycle.observe
 import androidx.transition.TransitionManager
 import com.diegobezerra.cinemaisapp.R
 import com.diegobezerra.cinemaisapp.databinding.FragmentPlayingCinemasBinding
 import com.diegobezerra.cinemaisapp.ui.movie.playingcinemas.PlayingCinemasViewModel.Companion.STATE_SCHEDULE
 import com.diegobezerra.cinemaisapp.ui.schedule.ScheduleAdapter
 import com.diegobezerra.cinemaisapp.ui.schedule.filters.ScheduleFiltersAdapter
+import com.diegobezerra.cinemaisapp.widget.CinemaisTabLayout.Tab
+import com.diegobezerra.cinemaisapp.widget.CinemaisTabLayoutMediator
 import com.diegobezerra.cinemaisapp.widget.SpaceItemDecoration
 import com.diegobezerra.shared.result.EventObserver
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -35,6 +37,9 @@ class PlayingCinemasFragment : Fragment() {
 
     private var behavior: BottomSheetBehavior<*>? = null
 
+    private lateinit var mediator: CinemaisTabLayoutMediator
+    private lateinit var scheduleAdapter: ScheduleAdapter
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -46,7 +51,6 @@ class PlayingCinemasFragment : Fragment() {
             viewModel = playingCinemasViewModel
         }
 
-        binding.tabs.setupWithViewPager(binding.viewpager)
         binding.playingCinemas.run {
             adapter = playingCinemasAdapter
             setHasFixedSize(true)
@@ -65,26 +69,38 @@ class PlayingCinemasFragment : Fragment() {
             setHasFixedSize(true)
         }
 
-        playingCinemasViewModel.filters.observe(viewLifecycleOwner, {
-            filtersAdapter.submitList(it)
-        })
+        mediator = CinemaisTabLayoutMediator(binding.tabs, binding.viewpager,
+            object : CinemaisTabLayoutMediator.TabConfigurationStrategy {
+                override fun onConfigureTab(tab: Tab, position: Int) {
+                    tab.setText(scheduleAdapter.getPageTitle(position))
+                }
+            })
 
-        playingCinemasViewModel.cinemas.observe(viewLifecycleOwner, {
+        playingCinemasViewModel.filters.observe(viewLifecycleOwner) {
+            filtersAdapter.submitList(it)
+        }
+
+        playingCinemasViewModel.cinemas.observe(viewLifecycleOwner) {
             playingCinemasAdapter.data = it
             playingCinemasAdapter.notifyDataSetChanged()
-        })
+        }
 
-        playingCinemasViewModel.schedule.observe(viewLifecycleOwner, { schedule ->
-            binding.viewpager.adapter =
-                ScheduleAdapter(childFragmentManager, requireActivity(), schedule, true)
-        })
+        playingCinemasViewModel.schedule.observe(viewLifecycleOwner) { schedule ->
+            if (::scheduleAdapter.isInitialized) {
+                mediator.detach()
+            }
+            scheduleAdapter =
+                ScheduleAdapter(this, schedule, true)
+            binding.viewpager.adapter = scheduleAdapter
+            mediator.attach()
+        }
 
-        playingCinemasViewModel.state.observe(viewLifecycleOwner, {
+        playingCinemasViewModel.state.observe(viewLifecycleOwner) {
             // Make sure our views are visible just in case the last onSlide
             // set them to invisible.
             interpolateChildViews(1f)
             updateViews(it)
-        })
+        }
 
         playingCinemasViewModel.toggleSheetAction.observe(viewLifecycleOwner,
             EventObserver {
@@ -94,9 +110,12 @@ class PlayingCinemasFragment : Fragment() {
         return binding.root
     }
 
+    @Suppress("DEPRECATION")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        // NOTE: Keeping here because it throws an IllegalStateException
+        // if we move it to onViewCreated.
         behavior = BottomSheetBehavior.from(binding.sheet)
         behavior?.addBottomSheetCallback(
             object : BottomSheetBehavior.BottomSheetCallback() {
@@ -143,11 +162,11 @@ class PlayingCinemasFragment : Fragment() {
 
     private fun interpolateChildViews(offset: Float) {
         binding.expandOrCollapseArrow.rotation = offset * 180f
-        if (!binding.scheduleContainer.isGone) {
+        if (binding.scheduleContainer.visibility != View.GONE) {
             binding.scheduleContainer.alpha = offset
             binding.filterButton.alpha = offset
         }
-        if (!binding.playingCinemas.isGone) {
+        if (binding.playingCinemas.visibility != View.GONE) {
             binding.playingCinemas.alpha = offset
         }
     }

@@ -26,7 +26,7 @@ abstract class RevealActivity : AppCompatActivity() {
             return makeReveal(options[0], options[1], options[2], extras)
         }
 
-        fun makeReveal(x: Int, y: Int, startRadius: Int, extras: Bundle?): Bundle {
+        private fun makeReveal(x: Int, y: Int, startRadius: Int, extras: Bundle?): Bundle {
             return Bundle().apply {
                 putInt(EXTRA_REVEAL_X, x)
                 putInt(EXTRA_REVEAL_Y, y)

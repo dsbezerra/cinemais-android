@@ -71,7 +71,6 @@ import androidx.core.view.GravityCompat
 import androidx.core.view.MarginLayoutParamsCompat
 import androidx.core.view.PointerIconCompat
 import androidx.core.view.ViewCompat
-import androidx.core.view.children
 import androidx.core.widget.TextViewCompat
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
@@ -186,6 +185,7 @@ class CinemaisTabLayout @JvmOverloads constructor(
     internal var tabTextColors: ColorStateList? = null
     internal var tabIconTint: ColorStateList? = null
     internal var tabRippleColorStateList: ColorStateList? = null
+
     /**
      * Returns the selection indicator drawable for this CinemaisTabLayout.
      *
@@ -211,6 +211,7 @@ class CinemaisTabLayout @JvmOverloads constructor(
 
     internal var tabGravity: Int = 0
     internal var tabIndicatorAnimationDuration: Int = 0
+
     /**
      * Get the current indicator gravity used to align the tab selection indicator in the [ ].
      *
@@ -748,8 +749,8 @@ class CinemaisTabLayout @JvmOverloads constructor(
      *
      * @param listener listener to add
      */
-    fun addOnTabSelectedListener(listener: OnTabSelectedListener) {
-        if (!selectedListeners.contains(listener)) {
+    fun addOnTabSelectedListener(listener: OnTabSelectedListener?) {
+        if (!selectedListeners.contains(listener) && listener != null) {
             selectedListeners.add(listener)
         }
     }
@@ -773,7 +774,7 @@ class CinemaisTabLayout @JvmOverloads constructor(
      *
      * @param listener listener to remove
      */
-    fun removeOnTabSelectedListener(listener: OnTabSelectedListener) {
+    fun removeOnTabSelectedListener(listener: OnTabSelectedListener?) {
         selectedListeners.remove(listener)
     }
 
@@ -1630,10 +1631,12 @@ class CinemaisTabLayout @JvmOverloads constructor(
         private var tag: Any? = null
         private var icon: Drawable? = null
         internal var text: CharSequence? = null
+
         // This represents the content description that has been explicitly set on the Tab or TabItem
         // in XML or through #setContentDescription. If the content description is empty, text should
         // be used as the content description instead, but contentDesc should remain empty.
         internal var contentDesc: CharSequence? = null
+
         /**
          * Return the current position of this tab in the action bar.
          *
@@ -1647,6 +1650,7 @@ class CinemaisTabLayout @JvmOverloads constructor(
 
         // TODO: make package private after the widget migration is finished
         var parent: CinemaisTabLayout? = null
+
         // TODO: make package private after the widget migration is finished
         internal var view: TabView? = null
 
@@ -2715,7 +2719,8 @@ class CinemaisTabLayout @JvmOverloads constructor(
      * This class stores the provided CinemaisTabLayout weakly, meaning that you can use [ ][ViewPager.addOnPageChangeListener] without removing the listener and not cause a
      * leak.
      */
-    class TabLayoutOnPageChangeListener(tabLayout: CinemaisTabLayout) : ViewPager.OnPageChangeListener {
+    class TabLayoutOnPageChangeListener(tabLayout: CinemaisTabLayout) :
+        ViewPager.OnPageChangeListener {
         private val tabLayoutRef: WeakReference<CinemaisTabLayout>
         private var previousScrollState: Int = 0
         private var scrollState: Int = 0

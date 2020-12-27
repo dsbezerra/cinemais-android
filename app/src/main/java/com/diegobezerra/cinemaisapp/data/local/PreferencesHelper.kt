@@ -61,6 +61,4 @@ class PreferencesHelper @Inject constructor(
         }
     }
 
-    fun isDarkTheme(): Boolean =
-        prefs.getBoolean(PREF_DARK_THEME, false)
 }

@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.core.view.isGone
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.observe
 import com.diegobezerra.cinemaisapp.R
 import com.diegobezerra.cinemaisapp.databinding.FragmentTicketsBinding
 import com.diegobezerra.cinemaisapp.ui.cinema.CinemaFragment.Companion.CINEMA_ID
@@ -53,13 +54,13 @@ class TicketsFragment : Fragment() {
             setHasFixedSize(true)
         }
 
-        ticketsViewModel.loading.observe(viewLifecycleOwner, {
+        ticketsViewModel.loading.observe(viewLifecycleOwner) {
             progress.isGone = !it
-        })
+        }
 
-        ticketsViewModel.tickets.observe(viewLifecycleOwner, {
+        ticketsViewModel.tickets.observe(viewLifecycleOwner) {
             ticketsAdapter.data = it.tickets
-        })
+        }
 
         ticketsViewModel.navigateToBuyWebsiteAction.observe(
             viewLifecycleOwner,

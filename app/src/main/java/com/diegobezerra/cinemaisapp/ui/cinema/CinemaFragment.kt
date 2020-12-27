@@ -20,7 +20,7 @@ import androidx.transition.Fade
 import androidx.transition.Slide
 import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
-import androidx.viewpager.widget.ViewPager
+import androidx.viewpager2.widget.ViewPager2
 import com.diegobezerra.cinemaisapp.R
 import com.diegobezerra.cinemaisapp.base.RevealActivity
 import com.diegobezerra.cinemaisapp.databinding.FragmentCinemaBinding
@@ -32,6 +32,8 @@ import com.diegobezerra.cinemaisapp.ui.tickets.TicketsActivity.Companion.EXTRA_C
 import com.diegobezerra.cinemaisapp.util.setupToolbarAsActionBar
 import com.diegobezerra.cinemaisapp.widget.CinemaActionView
 import com.diegobezerra.cinemaisapp.widget.CinemaisTabLayout
+import com.diegobezerra.cinemaisapp.widget.CinemaisTabLayout.Tab
+import com.diegobezerra.cinemaisapp.widget.CinemaisTabLayoutMediator
 import com.diegobezerra.cinemaisapp.widget.SpaceItemDecoration
 import com.diegobezerra.core.cinemais.data.CinemaisService
 import com.diegobezerra.core.cinemais.domain.model.Schedule
@@ -72,8 +74,10 @@ class CinemaFragment : MainFragment() {
 
     private val cinemaViewModel: CinemaViewModel by viewModels()
 
-    private lateinit var viewPager: ViewPager
+    private lateinit var viewPager: ViewPager2
     private lateinit var tabs: CinemaisTabLayout
+    private lateinit var mediator: CinemaisTabLayoutMediator
+    private lateinit var scheduleAdapter: ScheduleAdapter
 
     private lateinit var ticketsAction: CinemaActionView
 
@@ -101,14 +105,16 @@ class CinemaFragment : MainFragment() {
             viewModel = cinemaViewModel
         }
 
-        viewPager = binding.viewpager
-
         val root = binding.root
+        setupToolbarAsActionBar(root, R.id.toolbar) {
+            title = getString(R.string.title_cinema)
+            setDisplayHomeAsUpEnabled(true)
+        }.setNavigationOnClickListener { requireActivity().onBackPressed() }
+
+        viewPager = binding.viewpager
         tabs = root.findViewById(R.id.tabs)
-        tabs.setupWithViewPager(viewPager)
         cinemaLayout = root.findViewById(R.id.cinema_layout)
         sessionsLayout = root.findViewById(R.id.sessions_layout)
-
         root.findViewById<RecyclerView>(R.id.filters_recycler_view).apply {
             adapter = filtersAdapter
             addItemDecoration(
@@ -122,10 +128,12 @@ class CinemaFragment : MainFragment() {
             setHasFixedSize(true)
         }
 
-        setupToolbarAsActionBar(root, R.id.toolbar) {
-            title = getString(R.string.title_cinema)
-            setDisplayHomeAsUpEnabled(true)
-        }.setNavigationOnClickListener { requireActivity().onBackPressed() }
+        mediator = CinemaisTabLayoutMediator(tabs, viewPager,
+            object : CinemaisTabLayoutMediator.TabConfigurationStrategy {
+                override fun onConfigureTab(tab: Tab, position: Int) {
+                    tab.setText(scheduleAdapter.getPageTitle(position))
+                }
+            })
 
         cinemaViewModel.filters.observe(viewLifecycleOwner) {
             filtersAdapter.submitList(it)
@@ -177,10 +185,14 @@ class CinemaFragment : MainFragment() {
             val noAdapter = viewPager.adapter == null
             val copy = it.copy()
             if (copy != currentSchedule) {
-                val activity = requireActivity()
-                viewPager.adapter =
-                    ScheduleAdapter(childFragmentManager, activity, copy)
+                if (::scheduleAdapter.isInitialized) {
+                    mediator.detach()
+                }
                 currentSchedule = copy
+                scheduleAdapter =
+                    ScheduleAdapter(this, copy)
+                viewPager.adapter = scheduleAdapter
+                mediator.attach()
             }
             if (noAdapter) {
                 runDisplayTransition(view as ViewGroup)
@@ -190,6 +202,12 @@ class CinemaFragment : MainFragment() {
         cinemaViewModel.loading.observe(viewLifecycleOwner) {
             progress_bar.isGone = cinemaViewModel.isCinemaLayoutVisible.get() || !it
         }
+    }
+
+    override fun onDestroyView() {
+        mediator.detach()
+
+        super.onDestroyView()
     }
 
     override fun onStart() {

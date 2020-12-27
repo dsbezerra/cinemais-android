@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.observe
 import com.diegobezerra.cinemaisapp.databinding.FragmentScheduleDayBinding
 import com.diegobezerra.cinemaisapp.ui.cinema.CinemaViewModel
 import com.diegobezerra.cinemaisapp.ui.movie.playingcinemas.PlayingCinemasViewModel
@@ -16,7 +17,7 @@ class ScheduleDayFragment : Fragment() {
 
     companion object {
 
-        const val CINEMA_ID = "arg.CINEMA_ID"
+        private const val CINEMA_ID = "arg.CINEMA_ID"
         const val DAY_POSITION = "arg.DAY_POSITION"
 
         // Whether the fragment was created inside a PlayingRoomsFragment or not.
@@ -61,12 +62,12 @@ class ScheduleDayFragment : Fragment() {
         // @Temporary
         val schedule =
             if (playingRooms) playingCinemasViewModel.schedule else cinemaViewModel.schedule
-        schedule.observe(viewLifecycleOwner, {
+        schedule.observe(viewLifecycleOwner) {
             it.getDay(dayPosition)?.let { day ->
                 sessionsAdapter.data = day.sessions
                 sessionsAdapter.notifyDataSetChanged()
             }
-        })
+        }
 
         return binding.root
     }

@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isGone
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.observe
 import androidx.recyclerview.widget.RecyclerView
 import com.diegobezerra.cinemaisapp.R
 import com.diegobezerra.cinemaisapp.ui.main.MainActivity
@@ -43,13 +44,13 @@ class CinemasFragment : MainFragment() {
         }
 
         cinemasViewModel.apply {
-            loading.observe(viewLifecycleOwner, {
+            loading.observe(viewLifecycleOwner) {
                 progressBar.isGone = !it
-            })
+            }
 
-            cinemas.observe(viewLifecycleOwner, {
+            cinemas.observe(viewLifecycleOwner) {
                 cinemasAdapter.data = it
-            })
+            }
 
             switchToCinemaDetail.observe(viewLifecycleOwner,
                 EventObserver {

@@ -258,6 +258,7 @@ class ScheduleFilterView @JvmOverloads constructor(
         }
     }
 
+    @Suppress("SameParameterValue")
     private fun lerp(a: Float, b: Float, t: Float): Float {
         return a + (b - a) * t
     }

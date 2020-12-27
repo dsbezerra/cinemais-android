@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isGone
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.observe
 import com.diegobezerra.cinemaisapp.R
 import com.diegobezerra.cinemaisapp.databinding.FragmentHomeBinding
 import com.diegobezerra.cinemaisapp.ui.main.MainFragment
@@ -53,13 +54,13 @@ class HomeFragment : MainFragment() {
             title = title()
         }
 
-        homeViewModel.loading.observe(viewLifecycleOwner, {
+        homeViewModel.loading.observe(viewLifecycleOwner) {
             progressBar.isGone = !it
-        })
+        }
 
-        homeViewModel.home.observe(viewLifecycleOwner, {
+        homeViewModel.home.observe(viewLifecycleOwner) {
             homeAdapter.data = it
-        })
+        }
 
         homeViewModel.navigateToMovieDetail.observe(viewLifecycleOwner,
             EventObserver { movieId ->
