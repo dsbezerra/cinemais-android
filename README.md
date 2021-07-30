@@ -1,6 +1,6 @@
 <p align="center"><img src="logo/512px.png" alt="Cine+" height="200px"></p>
 
-Cine+
+[DESATUALIZADO] Cine+
 ===================================
 
 Este aplicativo serve como uma alternativa para o site da rede de cinemas [Cinemais](http://www.cinemais.com.br).
